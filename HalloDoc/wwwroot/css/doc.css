@@ -1,0 +1,62 @@
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: auto;
+}
+
+td,
+th {
+    padding: 5px;
+}
+.dBlock {
+    display: none;
+}
+
+@media only screen and (max-width: 760px) {
+
+    table, tbody, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+        clear: both;
+    }
+
+        thead tr {
+            position: absolute;
+            left: -9999px;
+        }
+
+    tr {
+        border-top: 1px solid #ccc;
+    }
+
+    td,
+    th {
+        border: none !important;
+    }
+
+        td:before {
+            float: left;
+            width: 95%;
+            margin-left: -100%;
+        }
+
+    td {
+        padding-left: 5%;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .table td {
+        padding: 5px 20px 10px;
+    }
+    .dNone{
+        display:none;
+    }
+    .dBlock{
+        display:block;
+    }
+}
+
+

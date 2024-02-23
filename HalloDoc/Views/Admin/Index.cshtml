@@ -1,0 +1,172 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using static HalloDoc.Entity.Models.Constant;
+@model List<HalloDoc.Entity.Models.AdminList>
+@{
+    Layout = "_AdminDashboardLayout";
+}
+<div class="table-responsive dNone ">
+    <table class="table table-responsive p-3">
+        <thead class="bg-light">
+            <tr>
+                <th scope="col">Name </th>
+                <th></th>
+                <th scope="col">Date Of Birth</th>
+                <th scope="col">Requester</th>
+                <th scope="col">Requested date</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Address</th>
+                <th scope="col">Note</th>
+                <th scope="col">Chat with</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider mx-5 bg-white">
+            @foreach (var item in Model)
+            {
+                <tr class="@Enum.GetName(typeof(RequestTypes),item.RequestTypeId) text-white border-bottom border-white">
+                    <td><small>@item.PatientName</small></td>
+                    <td>
+                        <button class="btn border-white text-white">
+                            <i class="fa-regular fa-envelope"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <small>@item.DateOfBirth.ToString("MMM d , yyyy")</small>
+                    </td>
+                    <td><small>@item.Requestor</small></td>
+                    <td><small>@item.RequestedDate.ToString("MMM d , yyyy")</small></td>
+                    <td>
+                        <button class="btn border border-white text-white mt-2">
+                            <i class="fa-solid fa-phone pe-2"></i>
+                            <small>@item.PatientPhoneNumber</small>
+                        </button>
+                        <div>
+                            <small>(Patient)</small>
+                        </div>
+
+                        @if (item.RequestTypeId != 2)
+                        {
+                            <button class="btn border border-white text-white mt-2">
+                                <i class="fa-solid fa-phone pe-2"></i>
+                                <small>@item.RequestorPhoneNumber</small>
+                            </button>
+                            <div>
+                                <small>
+                                    (@Enum.GetName(typeof(RequestTypes), item.RequestTypeId))
+                                </small>
+                            </div>
+                          }
+                    </td>
+                    <td><small>@item.Address</small></td>
+                    <td><small>@item.Notes</small></td>
+                    <td>
+                        <button class="btn border border-white text-white my-2">
+                            <small>Patient</small>
+                        </button>
+                        <button class="btn border border-white text-white my-2">
+                            <small>Provider</small>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn border border-white text-white my-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <small>Actions</small>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-journal-text"></i> View Case</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-card-checklist"></i> View Uploads</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-journals"></i> View Notes</a></li>
+                        </ul>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="dBlock">
+    @foreach (var item in Model)
+    {
+        <div class="accordion-item btn-i text-secondary">
+            <h2 class="accordion-header" id="flush-heading-@item.RequestId">
+                <div class="h5 p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-@item.RequestId" aria-expanded="false" aria-controls="collapse_@item.RequestId">
+                    <div class="row w-100">
+                        <div class="col-6 mb-3 h4">
+                            <small>@item.PatientName</small>
+                        </div>
+                        <div class="col-6 mb-3 text-end">
+                            <small>@Enum.GetName(typeof(RequestTypes), item.RequestTypeId)</small>
+                            <i class="fa-solid fa-circle fa-xs ms-2 txt-@Enum.GetName(typeof(RequestTypes),item.RequestTypeId)"></i>
+                            <span class="rounded-circle @Enum.GetName(typeof(RequestTypes),item.RequestTypeId)"></span>
+                        </div>
+                        <div class="col-6 h6">
+                            @item.Address
+                        </div>
+                        <div class="col-6  text-end">
+                            <button class="btn btn-sm btn-white border-info text-info rounded-pill 2px">
+                                <small>Map Location</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </h2>
+             <div id="flush-@item.RequestId" class="accordion-collapse collapse mb-3 border-top" data-bs-parent="#accordionExample">
+                <div class="accordion-body container-fluid">
+                    <p> <i class="fa fa-calendar border border-info rounded-pill p-1 me-2" aria-hidden="true"></i>Date of Birth: @item.DateOfBirth</p>
+                    <p> <i class="fa fa-envelope border border-info rounded-pill p-1 me-2"></i> Email : @item.Email</p>
+                    <p> <i class="fa fa-phone border  border-info rounded-pill p-1 me-2"></i> Patient : @item.PatientPhoneNumber</p>
+                    <p><i class="fa fa-sticky-note border border-info rounded-pill p-1 me-2"></i> Transfer Notes : @item.Notes</p>
+                    <p><i class="fa fa-calendar border border-info rounded-pill p-1 me-2"></i>Date of service : @item.RequestedDate</p>
+                    <p><i class="fa fa-user border border-info rounded-pill p-1 me-2"></i>Requestor : @item.Requestor</p>
+
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
+                                <small>View Notes</small>
+                            </button>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <button class="btn btn-success text-white rounded-pill 2px w-100">
+                                <small>Doctors Note</small>
+                            </button>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
+                                <small>View Uploads</small>
+                            </button>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
+                                <small>Encounter</small>
+                            </button>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #FFD43B;">
+                                <small>Orders</small>
+                            </button>
+                        </div>
+                        <div class="col-6 mb-3 ">
+                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
+                                <small>Email</small>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-end d-md-flex justify-content-md-end">
+                        <span>Chat With:</span>
+                        <button class="btn btn-white border-info text-info me-md-2 mb-2" type="button">
+                            <i class="fa-regular fa-user me-1"></i>
+                            Patient
+                        </button>
+                        <button class="btn btn-white border-info text-info mb-2" type="button">
+                            <i class="fa-solid fa-user-doctor me-1"></i>
+                            Provider
+                        </button>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    }
+</div>
+
+
