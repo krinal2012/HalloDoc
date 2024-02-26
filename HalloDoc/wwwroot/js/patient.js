@@ -11,19 +11,18 @@ const phoneInput1 = window.intlTelInput(phoneInputField1, {
         "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
 });
 //file upload
-//function displayFilename() {
-//    var input = document.getElementById('myFile');
-//    var output = document.getElementById('selectedFilename');
-//    output.textContent = input.files[0].name;
-//}
 function displayFilename() {
     var input = document.getElementById('myFile');
     var output = document.getElementById('selectedFilename');
-    for (let i = 0; i < selectedFilename.length; i++) {
-        output.append = input.files[i].name;
-    }
-   
+    output.textContent = input.files[0].name;
 }
+//function displayFilename() {
+//    var input = document.getElementById('myFile');
+//    var output = document.getElementById('selectedFilename');
+//    for (let i = 0; i < selectedFilename.length; i++) {
+//        output.append = input.files[i].name;
+//    }   
+//}
 
 //sweet alert
 swal({

@@ -2,10 +2,102 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @using static HalloDoc.Entity.Models.Constant;
-@model List<HalloDoc.Entity.Models.AdminList>
+@using HalloDoc.Entity.Models.ViewModel;
+@model List<AdminList>
 @{
     Layout = "_AdminDashboardLayout";
 }
+<div class="row mb-5">
+    <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start">
+        <i class="fa fa-solid fa-circle-plus me-2" aria-hidden="true"></i><b>New</b>
+        <p class="h4">1456</p>
+    </button>
+    <button class="col-lg col-3 btn btn-outline-info btn-i m-2 py-3 -5 rounded text-start">
+        <i class="fa fa-user-md me-2" aria-hidden="true"></i><b>Pending</b>
+        <p class="h4">1456</p>
+    </button>
+    <div class=" col-lg col-3 btn btn-outline-success m-2 py-3  rounded text-start">
+        <i class="fa fa-check-square-o me-2" aria-hidden="true"></i><b>Active</b>
+        <p class="h4">1456</p>
+    </div>
+    <div class="col-lg col-3 btn btn-b  py-3 m-2 rounded text-start">
+        <i class="fa-solid fa-clock-rotate-left me-2" aria-hidden="true"></i>
+        <b>Conclude </b>
+        <p class="h4">1456</p>
+    </div>
+    <div class="col-lg col-3 btn btn-c m-2 py-3  rounded text-start">
+        <i class="fa-solid fa-user-xmark me-2" aria-hidden="true"></i><b>To close </b>
+        <p class="h4">1456</p>
+    </div>
+    <div class=" col-lg col-3 btn btn-u m-2 py-3  rounded text-start">
+        <i class="fa-solid fa-circle-dollar-to-slot me-2" aria-hidden="true"></i><b>Unpaid </b>
+        <p class="h4">1456</p>
+    </div>
+</div>
+<div class=" d-flex justify-content-between m-2 searchBar">
+    <h4><b>Patients(@Enum.GetName(typeof(status),1)) </b></h4>
+    <div>
+        <button type="button" class="btn btn-info">
+            <i class="fa fa-send"></i>
+            <span class="dNone">Send Link</span>
+        </button>
+        <button type="button" class="btn btn-info">
+            <i class="fa fa-file-pen"></i>
+            <span class="dNone">Create Request</span>
+        </button>
+        <button type="button" class="btn btn-info">
+            <i class="fa-solid fa-share"></i>
+            <span class="dNone"> Export</span>
+        </button>
+        <button type="button" class="btn btn-info">
+            <i class="fa-solid fa-share-from-square"></i>
+            <span class="dNone">Export All</span>
+        </button>
+        <button type="button" class="btn btn-info">
+            <i class="fa-solid fa-user-nurse"></i>
+            <span class="dNone">Request DIY Support</span>
+        </button>
+    </div>
+</div>
+<div class="  align-items-center m-2 bg-white p-2">
+    <div class="mt-2 mx-2 bg-white">
+        <div class="searchBar px-2">
+            <div class="searchPatientRegion py-2">
+                <div class="search m-1">
+                    <i class="fa fa-search bg-white"></i>
+                    <input type="text" class="form-control" placeholder="Search Patients">
+                </div>
+                <div class="search m-1">
+                    <i class="fa fa-search"></i>
+                    <select class="form-select shadow-none" id="floatingSelectGrid">
+                        <option selected class="text-secondary">All Regions</option>
+                        <option value="1">Maryland</option>
+                        <option value="2">New York</option>
+                        <option value="3">Virginia</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="text-secondary requestType">
+                <div class="me-2">
+                    <i class="fa fa-circle" aria-hidden="true"></i> All
+                </div>
+                <div class="me-2">
+                    <i class="fa fa-circle text-success" aria-hidden="true"></i> Patient
+                </div>
+                <div class="me-2">
+                    <i class="fa fa-circle text-warning" aria-hidden="true"></i> Family/Friend
+                </div>
+                <div class="me-2">
+                    <i class="fa fa-circle text-primary" aria-hidden="true"></i> Business
+                </div>
+                <div class="me-2">
+                    <i class="fa fa-circle text-danger" aria-hidden="true"></i> Concierge
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="table-responsive dNone ">
     <table class="table table-responsive p-3">
         <thead class="bg-light">
@@ -74,7 +166,7 @@
                             <small>Actions</small>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-journal-text"></i> View Case</a></li>
+                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'"><i class="bi bi-journal-text"></i> View Case</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-card-checklist"></i> View Uploads</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-journals"></i> View Notes</a></li>
                         </ul>

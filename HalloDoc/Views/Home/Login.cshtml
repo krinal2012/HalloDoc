@@ -1,0 +1,45 @@
+﻿
+@model Hallodoc.Entity.Models.ViewModel.viewPatientReq
+@{
+    ViewData["Title"] = "Login Page";
+   
+}
+<div class=" container text-center bg-img maindiv">   
+        <div class="col-lg-8 col-md-8 col-sm-3 col-5">
+            <a asp-action ="Index" asp-controller="Home"><i class="fa fa-angle-left fa-lg p-3 text-info"> Back</i> </a>
+        </div>
+        <div class="d-flex text-center justify-content-center align-items-center">
+            <div class="col-lg-5 col-md-8 col-sm-12 text-center ">
+                <h2 class="mb-2 text-body-secondary">Login To Your Account</h2>
+            @TempData["emailmessage"]
+            
+            <form method="post" asp-controller="Login" asp-action="Login">
+                    <div class="form-floating mb-3 email">
+                    <input asp-for="Email" type="text" class="form-control shadow-none" name="Email" placeholder="email" required>
+                        <button><i class='fa fa-user-circle field-icon'></i></button>
+                    <label for="Email">Email</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating mb-3 password">
+                    <input asp-for="Pass" type="password" class="form-control shadow-none" name="PasswordHash" placeholder="Password" id="floatingPassword" required>
+                        <button type="button" onclick="toggle()">
+                        <span class="fa fa-eye-slash fa-lg field-icon toggle-password"></span>
+                            <span class="fa fa-eye fa-lg field-icon toggle-password"></span>                            
+                        </button>
+                        <label for="floatingPassword">Password</label>
+                    <span asp-validation-for="Pass" class="text-danger"></span>
+
+                         <div class="text-danger bg-light">
+                    @ViewData["Error"]
+                   
+                    </div>
+                    </div>
+                   
+                    <button type="submit" class="btn btn-info text-light form-control mb-3">Log in</button>
+                    <a asp-action="ForgotPass" asp-controller="Home" class=" text-decoration-none mb-3 text-info">
+                        Forgot Password?
+                    </a>
+                </form>
+            </div>      
+        </div>
+</div>

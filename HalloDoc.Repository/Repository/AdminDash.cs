@@ -1,11 +1,6 @@
 ﻿using HalloDoc.Entity.DataContext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HalloDoc.Entity.Models;
 using HalloDoc.Repository.Repository.Interface;
+using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Entity.DataModels;
 
 namespace HalloDoc.Repository.Repository
@@ -26,7 +21,8 @@ namespace HalloDoc.Repository.Repository
                         )
                         .Where(req => req.Request.Status == 1)
                         .Select(req => new AdminList()
-                        {
+                        
+                         {
                             RequestId = req.Request.RequestId,
                             PatientName = req.Requestclient.FirstName + " " + req.Requestclient.LastName,
                             Email = req.Requestclient.Email,
@@ -41,8 +37,28 @@ namespace HalloDoc.Repository.Repository
                         })
                         .OrderByDescending(req => req.RequestedDate)
                         .ToList();
-            return list;                               
-            
+            return list;                                   
+        }
+        public ViewCaseModel ViewCaseData(int? RequestID)
+        {
+            ViewCaseModel list = _context.Requests.Join
+                        (_context.RequestClients,
+                        requestclients => requestclients.RequestId, requests => requests.RequestId,
+                        (requests, requestclients) => new { Request = requests, Requestclient = requestclients }
+                        ).Where(req => req.Request.RequestId== RequestID)
+                        .Select(req=> new ViewCaseModel()
+                        {
+                            RequestTypeId = req.Request.RequestTypeId,
+                            ConfNo = req.Requestclient.City.Substring(0, 2) + req.Requestclient.IntDate.ToString() + req.Requestclient.StrMonth + req.Requestclient.IntYear.ToString() + req.Requestclient.LastName.Substring(0, 2) + req.Requestclient.FirstName.Substring(0, 2) + "002",
+                            Symptoms = req.Requestclient.Notes,
+                            FirstName = req.Requestclient.FirstName,
+                            LastName = req.Requestclient.LastName,
+                            DOB = new DateTime((int)req.Requestclient.IntYear, Convert.ToInt32(req.Requestclient.StrMonth.Trim()), (int)req.Requestclient.IntDate),
+                            Mobile = req.Requestclient.PhoneNumber,
+                            Email = req.Requestclient.Email,
+                            Address = req.Requestclient.Address
+                        }).FirstOrDefault();
+            return list;
         }
     }
 }

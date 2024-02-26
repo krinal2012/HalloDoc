@@ -15,5 +15,15 @@ namespace HalloDoc.Entity.Models
             Family = 3,
             Concierge=4
         }
+        public enum status
+        {
+            New = 1,
+            Pending = 2,
+            Active = 3,
+            Conclude = 4,
+            Close = 5,
+            Unpaid = 6
+
+        }
     }
 }

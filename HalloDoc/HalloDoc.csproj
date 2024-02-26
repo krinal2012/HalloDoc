@@ -22,4 +22,8 @@
     <ProjectReference Include="..\HalloDoc.Repository\HalloDoc.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Upload\" />
+  </ItemGroup>
+
 </Project>

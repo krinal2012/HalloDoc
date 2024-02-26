@@ -16,5 +16,10 @@ namespace HalloDoc.Controllers
             var data = _IAdminDash.NewRequestData();
             return View(data);
         }
+        public IActionResult viewCase(int RequestId)
+        {
+            var result = _IAdminDash.ViewCaseData(RequestId);
+            return View(result);
+        }
     }
 }

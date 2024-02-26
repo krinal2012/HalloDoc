@@ -3,6 +3,17 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="row text-center justify-content-center align-items-center maindiv">
+        <div class="col-lg-5 col-md-8 col-sm-12 text-center ">
+            <form>
+                <a asp-action="Index" asp-controller="PatientForm" type="button" class="btn btn-info text-light form-control mb-3 p-3">
+                    Submit A Request
+                </a>
+                <a asp-action="Login" asp-controller="Home" type="button" class="btn btn-r text-light form-control mb-3 p-3">
+                    Registered Patients
+                </a>
+            </form>
+        </div>
+    </div>
+ 
 </div>

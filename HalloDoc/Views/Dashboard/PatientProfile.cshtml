@@ -1,0 +1,113 @@
+﻿
+
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var userId = HttpContextAccessor.HttpContext.Session.GetString("UserID");
+}
+@using HalloDoc.Entity.Models.ViewModel;
+@model viewProfile;
+@{
+    ViewData["Title"] = "Dashboard Profile";
+    Layout = "_PatientDashboardLayout";
+   
+}
+
+@*<div id="Tab2" class="tabcontent defaulttab py-3 container" >*@
+    <div class="d-flex justify-content-between align-items-center container p-4">
+        <h3 class="mt-1">User Profile</h3>
+        <div class=" btn d-flex justify-content-end">
+            <a asp-action="Index" asp-controller="Dashboard" class=" border border-info rounded p-1 m-1 "><i class="fa fa-angle-left p-2 fa-sm text-info"> Back</i> </a>
+        </div>
+    </div>
+<div class="bg-white reqform p-3 container ">
+        <form class="bg-white sbox" method="post">
+        <input type="hidden" asp-for="UserId" />
+
+            <h5><b>General Information</b></h5>
+            <div class="row">
+                <div class="mb-3 col-lg-6 form-floating">
+                    <input type="text" asp-for="FirstName" class="form-control" id="FormControlInput1" placeholder="First Name">
+                    <label for="FormControlInput1" class="form-label">First Name</label>
+                </div>
+                <div class="mb-3 col-lg-6 form-floating">
+                    <input type="text" asp-for="LastName" class="form-control" id="FormControlInput2" placeholder="last Name">
+                    <label for="FormControlInput2" class="form-label">Last Name</label>
+                </div>
+                <div class="mb-3 col-lg-6 form-floating">
+                    <input type="date" asp-for="DOB" class="form-control" id="Date">
+                    <label class="form-label" for="Date">Date of Birth</label>
+                </div>
+            </div>
+            <h5><b>Contact Information</b></h5>
+            <div class="row">
+                <div class="mb-3 col-lg-2 form-floating align-items-center">
+                    <select class="form-select " aria-label="Default select example" placeholder="Type">
+                        <option value="1">Mobile</option>
+                        <option value="2">Phone</option>
+                        <option value="3">Landline</option>
+                    </select>
+                <label class="form-label" for="select">Type</label>
+                </div>
+
+                <div class="mb-3 col-lg-4 form-floating phone">
+                    <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone">
+                </div>
+                <div class="mb-3 col-lg-6 form-floating">
+                    <input type="email" asp-for="Email" class="form-control" id="email" placeholder="abc@email.com"
+                           aria-describedby="emailHelp">
+                    <label for="email" class="form-label">E-mail</label>
+                </div>
+            </div>
+            <h5><b> Location Information</b></h5>
+            <div class="row">
+                <div class="mb-3 col-lg-6 form-floating">
+                    <input type="text" asp-for="Street" class="form-control" id="Street" placeholder="Street">
+                    <label for="Street" class="form-label">Street</label>
+                </div>
+                <div class="mb-3 col-lg-6 form-floating">
+                    <input type="text" asp-for="City" class="form-control" id="City" placeholder="City">
+                    <label for="City" class="form-label">City</label>
+                </div>
+                <div class="mb-3 col-lg-6 form-floating">
+                    <input type="text" asp-for="State" class="form-control" id="State" placeholder="State">
+                    <label for="State" class="form-label">State</label>
+                </div>
+                <div class="mb-3 col-lg-4 form-floating">
+                    <input type="text" asp-for="Zipcode" class="form-control" id="Zip-code" placeholder="Zip-code">
+                    <label for="Zip-code" class="form-label">Zip-code</label>
+                </div>
+                <div class="mb-3 col-lg-2 form-floating">
+                    <a class=" border border-info rounded p-3 m-1 ">
+                        <i class="fa fa-map-marker p-4 me-2 fa-lg text-info"> Map</i>
+                    </a>
+                </div>
+            </div>
+
+        <div class="row px-3 d-flex justify-content-end">
+            <a id="editprofile" onclick="enable_disable()" class="col-1 btn btn-info text-white rounded p-2">Edit</a>
+            <input type="submit" id="submit" class="col-1 btn bg-info text-white rounded p-2" value="save">
+        </div>
+        </form>
+    </div>
+<script src="~/js/site.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("input").prop("readonly", true);
+            $("select").prop("readonly", true);
+            $("input").css("background-color", "#e9ecef");
+            $("select").css("background-color", "#e9ecef");
+            $("#submit").css("display", "none");        
+          
+        });
+        function enable_disable() {
+            $("input").prop("readonly", false);
+            $("#submit").prop("readonly", false);           
+            $("#submit").css("display", "block");         
+            $("#editprofile").css("display", "none");
+            $("input").css("background-color", "transparent");
+            $("select").css("background-color", "transparent");
+        }
+    </script>
+
+

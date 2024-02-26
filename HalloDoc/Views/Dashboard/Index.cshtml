@@ -1,0 +1,131 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@using Microsoft.AspNetCore.Http
+@using static HalloDoc.Entity.Models.Constant;
+@using HalloDoc.Entity.Models.ViewModel;
+@model List<PatientDashList>;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Dashboard";
+    //var userId = HttpContextAccessor.HttpContext.Session.GetString("UserID");
+}
+
+
+<div  class="tabcontent defaulttab py-4 mx-5 ">
+    <h2 class="py-4"><b>Medical History </b></h2>
+   <div class="reqform">
+    <div class=" d-flex justify-content-end bg-white ">
+        <button type="button" class="btn btn-outline-info rounded p-2 m-4 dNone" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Create New Request
+        </button>
+            <button type="button" class="btn btn-outline-info rounded p-2 m-4 dBlock" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+               +
+            </button>
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered ">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <h5 class="modal-title text-white bg-info" id="staticBackdropLabel"> Create New Request</h5>
+                        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            Here, I want to Create new request for...
+                        </div>
+                            <button id="me" type="button" class="btn btn-outline-info">Me</button>
+                            <button id="else" type="button" class="btn btn-outline-info">Some One Else</button>                           
+                    </div>
+                    <div class="modal-footer">
+                         <button id="cont" type="button" class="btn btn-outline-info">Continue</button>
+                        <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancle</button>
+                    </div>
+                  </div>    
+                
+            </div>
+        </div>
+        </div>
+        <div class="table-responsive dNone">
+          <table class="table table-responsive p-3">
+                <thead class="bg-light">
+                    <tr >
+                        <th scope="col" width="25%">Created Date <i class="bi bi-arrow-down"></i></th>
+                        <th scope="col" width="55%">Current Status</th>
+                        <th scope="col">Document</th>
+                    </tr>
+                </thead>
+               <tbody class="table-group-divider mx-5 bg-white">
+                    @if (Model !=null)
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td scope="row"> @item.createdDate</td>                                
+                                <td>@item.Status</td>
+                                
+                                <td>
+                                    @{
+                                        if (@item.Fcount !=null)
+                                        {
+                                            <a onclick="location.href='@Url.Action("UploadDocument", "Dashboard",new {RequestId=item.RequestId})'" class="btn btn-outline-info btn-sm">
+                                                (@item.Fcount)  Documents
+                                            </a>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+               </tbody>    
+          </table>     
+        </div>
+        <div class="dBlock">
+            <div class="accordion" id="accordionExample">
+             @foreach (var item in Model)
+            {               
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading-@item.RequestId">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-@item.RequestId" aria-expanded="true" aria-controls="collapseOne">
+                            <i class="fa fa-clock text-info me-2"></i>
+                            <b>Created Date :  </b>
+                            @item.createdDate.ToString("MMM d, yyyy")
+                        </button>
+                    </h2>
+                    <div id="flush-@item.RequestId" class="accordion-collapse collapse" aria-labelledby="flush-heading-@item.RequestId" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="mb-1">
+                                <i class="fa-solid fa-user text-info border border-info rounded-circle"></i>
+                                <b> Provider : </b>
+                            </div>                      
+                            
+                            <div class="mb-1">
+                                <i class="fa fa-check text-info border border-info rounded-circle"></i>
+                                <b> Current Status : </b>
+                                @item.Status
+                            </div>
+                            <div>
+                                @{
+                                    if(@item.Fcount!= null)
+                                    {
+                                        <a asp-action="UploadDocument" asp-controller="Dashboard" asp-route-id="@item.RequestId" class="btn btn-outline-info btn-sm">
+                                            Documents
+                                            <i class="fa-solid fa-download"></i>
+                                        </a>
+                                            
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            }
+            </div>
+        </div>
+        
+   </div>
+</div>
+

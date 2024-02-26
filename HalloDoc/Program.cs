@@ -9,6 +9,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<HelloDocContext>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
+builder.Services.AddScoped<IPatientRequest, PatientRequest>();
+builder.Services.AddScoped<IPatientDash, PatientDash>();
 builder.Services.AddScoped<IAdminDash, AdminDash>();
 var app = builder.Build();
 

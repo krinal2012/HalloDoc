@@ -53,22 +53,22 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-dark  @(path.StartsWith("/Admin") ? "activeNav" : "")" aria-current="page" asp-action="Index" asp-controller="Admin">Dashboard</a>
+                            <a class="nav-link px-2 text-dark  @(path.StartsWith("/Admin") ? "activeNav" : "")" aria-current="page" asp-action="Index" asp-controller="Admin">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Provider Location</a>
+                            <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Provider Location</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">My Profile</a>
+                            <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">My Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Providers</a>
+                            <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Providers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Partners</a>
+                            <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Partners</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Access</a>
+                            <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Access</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Records</a>
@@ -98,97 +98,7 @@
     </div>
 
     <main role="main" class="container-fluid my-5 pb-3">
-        <div class="row mb-5">
-            <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start">
-                <i class="fa fa-solid fa-circle-plus me-2" aria-hidden="true"></i><b>New</b>
-                <p class="h4">1456</p>
-            </button>
-            <button class="col-lg col-3 btn btn-outline-info btn-i m-2 py-3 -5 rounded text-start">
-                <i class="fa fa-user-md me-2" aria-hidden="true"></i><b>Pending</b>
-                <p class="h4">1456</p>
-            </button>
-            <div class=" col-lg col-3 btn btn-outline-success m-2 py-3  rounded text-start">
-                <i class="fa fa-check-square-o me-2" aria-hidden="true"></i><b>Active</b>
-                <p class="h4">1456</p>
-            </div>
-            <div class="col-lg col-3 btn btn-b  py-3 m-2 rounded text-start">
-                <i class="fa-solid fa-clock-rotate-left me-2" aria-hidden="true"></i>
-                <b>Conclude </b>
-                <p class="h4">1456</p>
-            </div>
-            <div class="col-lg col-3 btn btn-c m-2 py-3  rounded text-start">
-                <i class="fa-solid fa-user-xmark me-2" aria-hidden="true"></i><b>To close </b>
-                <p class="h4">1456</p>
-            </div>
-            <div class=" col-lg col-3 btn btn-u m-2 py-3  rounded text-start">
-                <i class="fa-solid fa-circle-dollar-to-slot me-2" aria-hidden="true"></i><b>Unpaid </b>
-                <p class="h4">1456</p>
-            </div>
-        </div>
-        <div class=" d-flex justify-content-between m-2 searchBar">
-            <h4><b>Patients(New) </b></h4>
-            <div>
-                <button type="button" class="btn btn-info">
-                    <i class="fa fa-send"></i>
-                    <span class="dNone">Send Link</span>
-                </button>
-                <button type="button" class="btn btn-info">
-                    <i class="fa fa-file-pen"></i>
-                    <span class="dNone">Create Request</span>
-                </button>
-                <button type="button" class="btn btn-info">
-                    <i class="fa-solid fa-share"></i>
-                    <span class="dNone"> Export</span>
-                </button>
-                <button type="button" class="btn btn-info">
-                    <i class="fa-solid fa-share-from-square"></i>
-                    <span class="dNone">Export All</span>
-                </button>
-                <button type="button" class="btn btn-info">
-                    <i class="fa-solid fa-user-nurse"></i>
-                    <span class="dNone">Request DIY Support</span>
-                </button>
-            </div>
-        </div>
-        <div class="  align-items-center m-2 bg-white p-2">
-            <div class="mt-2 mx-2 bg-white">
-                <div class="searchBar px-2">
-                    <div class="searchPatientRegion py-2">
-                        <div class="search m-1">
-                            <i class="fa fa-search bg-white"></i>
-                            <input type="text" class="form-control" placeholder="Search Patients">
-                        </div>
-                        <div class="search m-1">
-                            <i class="fa fa-search"></i>
-                            <select class="form-select shadow-none" id="floatingSelectGrid">
-                                <option selected class="text-secondary">All Regions</option>
-                                <option value="1">Maryland</option>
-                                <option value="2">New York</option>
-                                <option value="3">Virginia</option>
-                            </select>
-                        </div>
-                    </div>                 
-              
-                    <div class="text-secondary requestType">
-                        <div class="me-2">
-                            <i class="fa fa-circle" aria-hidden="true"></i> All
-                        </div>
-                        <div class="me-2">
-                            <i class="fa fa-circle text-success" aria-hidden="true"></i> Patient
-                        </div>
-                        <div class="me-2">
-                            <i class="fa fa-circle text-warning" aria-hidden="true"></i> Family/Friend
-                        </div>
-                        <div class="me-2">
-                            <i class="fa fa-circle text-primary" aria-hidden="true"></i> Business
-                        </div>
-                        <div class="me-2">
-                            <i class="fa fa-circle text-danger" aria-hidden="true"></i> Concierge
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
 
         @RenderBody()
     </main>

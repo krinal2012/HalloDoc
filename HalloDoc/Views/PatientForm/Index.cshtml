@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewData["Title"] = "Submit Request";
+}
+<body class="bg-light">
+    
+    <div class="border border-info rounded p-1 m-3 btn btn-sm backBtn">
+        <a asp-action="Index" asp-controller="Home">
+            <i class="fa fa-angle-left p-2 fa-lg text-info"> Back</i>
+        </a>
+    </div>
+    <div class="text-center p-5">
+        <h1>I am a...</h1>
+        <div class="btn-group-vertical">
+            <a asp-action="PatientReq" asp-controller="PatientForm"
+               type="button"
+               class="btn btn-p m-3 py-3 px-5 rounded"><b>Patient</b></a>
+            <a asp-action="FamilyReq" asp-controller="PatientForm"
+               type="button"
+               class="btn btn-outline-info btn-i m-3 py-3 px-5 rounded"><b>Family/Friend</b></a>
+            <a asp-action ="ConciergeReq" asp-controller="PatientForm"
+               type="button"
+               class="btn btn-outline-success m-3 py-3 px-5 rounded"><b>Concierge</b></a>
+            <a asp-action="BusinessReq" asp-controller="PatientForm"
+               type="button"
+               class="btn btn-b m-3 py-3 px-5 rounded"><b>Business Partners</b></a>
+        </div>
+    </div>
+  
+</body>
+
