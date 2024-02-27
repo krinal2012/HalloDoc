@@ -10,6 +10,7 @@ namespace HalloDoc.Entity.Models.ViewModel
     {
         public int RequestId { get; set; }
         public string PatientName { get; set; }
+        public string ProviderName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public int RequestTypeId { get; set; }
         public string Requestor { get; set; }
@@ -17,6 +18,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string PatientPhoneNumber { get; set; }
         public string RequestorPhoneNumber { get; set; }
         public string Address { get; set; }
+        public string Region { get; set; }
         public string Notes { get; set; }
         public string Email { get; set; }
     }

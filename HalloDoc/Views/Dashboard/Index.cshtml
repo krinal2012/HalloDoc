@@ -9,8 +9,7 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
-    ViewData["Title"] = "Dashboard";
-    //var userId = HttpContextAccessor.HttpContext.Session.GetString("UserID");
+    ViewData["Title"] = "Dashboard";   
 }
 
 
@@ -68,7 +67,7 @@
                                 
                                 <td>
                                     @{
-                                        if (@item.Fcount !=null)
+                                        if (@item.Fcount != 0)
                                         {
                                             <a onclick="location.href='@Url.Action("UploadDocument", "Dashboard",new {RequestId=item.RequestId})'" class="btn btn-outline-info btn-sm">
                                                 (@item.Fcount)  Documents

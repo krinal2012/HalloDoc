@@ -1,6 +1,8 @@
-﻿
+﻿@using Microsoft.AspNetCore.Http;
+
 @{
     string path = Context.Request.Path;
+   // int name = (string)_httpContextAccessor.HttpContext.Session.GetString("PatientName");
 }
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -30,8 +32,9 @@
                  class="mx-5 my-1" />
        
             <div class="position-absolute top-0 end-0 d-flex btn btn-sm align-items-center">
-                <span class="dNone"> Welcome 
-                  @*  @sessionCV.UserName()*@ </span>
+                <span class="dNone"> Welcome
+                    @ViewData["UserName"]
+                </span>
                 <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" asp-action="Logout" asp-controller="Login">
                     Log Out
                 </a>
@@ -57,10 +60,10 @@
 
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-dark  @(path.StartsWith("/Dashboard") ? "activeNav" : "")" aria-current="page" asp-action="Index" asp-controller="Dashboard">Dashboard</a>
+                            <a class="nav-link px-3 currentpage text-dark @(path.EndsWith ("/Dashboard") ? "activeNav" : "")"  asp-action="Index" asp-controller="Dashboard">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-dark @(path.StartsWith("/Dashboard/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="Dashboard">Profile</a>
+                            <a class="nav-link px-3 text-dark @(path.EndsWith("/Dashboard/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="Dashboard">Profile</a>
                         </li>
                     </ul>
                 </div>

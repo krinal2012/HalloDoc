@@ -21,28 +21,30 @@
     <form class="bg-white sbox" method="post">
        
         <h5><b>Patient Information</b></h5>
-        <p class="text-secondary">Conformation Number</p>
+        <p class="text-secondary">Conformation Number<br />
+        <span class="text-info h3">@Model.ConfNo</span>
+        </p>
         <div class="row">
             <div class="form-group col-lg-12 mb-3">
                 <textarea asp-for="Symptoms" class="form-control" rows="4"
-                          placeholder="Patient Notes"></textarea>
+                          placeholder="Patient Notes" disabled></textarea>
                 <span asp-validation-for="Symptoms" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input asp-for="FirstName" type="text" class="form-control" placeholder="First Name">
+                <input asp-for="FirstName" type="text" class="form-control" placeholder="First Name" disabled>
                 <label for="FormControlInput1" class="form-label">First Name</label>
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="LastName" class="form-control" placeholder="last Name">
+                <input type="text" asp-for="LastName" class="form-control" placeholder="last Name" disabled>
                 <label for="FormControlInput2" class="form-label">Last Name</label>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="date" asp-for="DOB" class="form-control" id="Date">
+                <input type="date" asp-for="DOB" class="form-control" id="Date" disabled>
                 <label class="form-label" for="Date">Date of Birth</label>
             </div>
             <div class="mb-3 col-lg-5 form-floating phone">
-                <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone">
+                <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone" disabled>
             </div>
             <div class="mb-3 col-lg-1 form-floating">
                 <a class=" border border-info rounded p-3 mt-1 ">
@@ -52,7 +54,7 @@
      
             <div class="mb-3 col-lg-6 form-floating">
                 <input type="email" asp-for="Email" class="form-control" id="email" placeholder="abc@email.com"
-                       aria-describedby="emailHelp">
+                       aria-describedby="emailHelp" disabled>
                 <label for="email" class="form-label">E-mail</label>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
@@ -60,12 +62,12 @@
         <h5><b> Location Information</b></h5>
         <div class="row">
             <div class="mb-3 col-lg-6 form-floating">
-                    <input type="text" asp-for="Region" class="form-control" placeholder="Region">
-                    <label for="Region" class="form-label">Region</label>
+                    <input type="text" asp-for="Region" class="form-control" placeholder="Region" disabled>
+                    <label for="Region" class="form-label" >Region</label>
             </div>
             <div class="mb-3 col-lg-5 form-floating">
-                    <input type="text" asp-for="Address" class="form-control" placeholder="Address">
-                    <label for="Address" class="form-label">Address</label>
+                    <input type="text" asp-for="Address" class="form-control" placeholder="Address" disabled>
+                    <label for="Address" class="form-label" >Address</label>
             </div>
                 <div class="mb-3 col-lg-1 form-floating">
                     <a class=" border border-info rounded p-3 mt-1 ">
@@ -73,7 +75,7 @@
                     </a>
                 </div>
             <div class="mb-3 col-lg-6 form-floating">
-                    <input type="text" asp-for="Room" class="form-control" placeholder="Room">
+                    <input type="text" asp-for="Room" class="form-control" placeholder="Room" disabled>
                     <label for="Room" class="form-label">Room</label>
             </div>          
            
@@ -81,7 +83,7 @@
 
         <div class="row px-3 d-flex justify-content-end">
             <a class="col-1 btn btn-info text-white rounded p-2 me-2">Assign</a>
-            <a class="col-1 btn btn-info text-white rounded p-2 me-2" > View Notes </a>
+            <a class="col-1 btn btn-info text-white rounded p-2 me-2" asp-action="viewNotes" asp-controller="Admin"> View Notes </a>
             <a class="col-1 btn btn-danger text-white rounded p-2 me-2"> Cancle </a>
 
         </div>

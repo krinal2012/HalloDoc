@@ -2,12 +2,7 @@
 using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Repository.Repository.Interface;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -36,8 +31,7 @@ namespace HalloDoc.Repository.Repository
                 Aspnetuser.PhoneNumber = viewPatientReq.Mobile;
                 Aspnetuser.CreatedDate = DateTime.Now;
                 _context.AspNetUsers.Add(Aspnetuser);
-                 _context.SaveChanges();
-
+                _context.SaveChanges();
                 User.AspNetUserId = Aspnetuser.Id;
                 User.FirstName = viewPatientReq.FirstName;
                 User.LastName = viewPatientReq.LastName;
@@ -47,16 +41,15 @@ namespace HalloDoc.Repository.Repository
                 User.City = viewPatientReq.City;
                 User.State = viewPatientReq.State;
                 User.ZipCode = viewPatientReq.ZipCode;
-                User.StrMonth = (viewPatientReq.DOB.Month).ToString();
+                User.StrMonth = viewPatientReq.DOB.Month.ToString();
                 User.IntDate = viewPatientReq.DOB.Day;
                 User.IntYear = viewPatientReq.DOB.Year;
-                User.Status = 1;
+                User.Status = 1; //for new request
                 User.CreatedBy = Aspnetuser.Id;
                 User.CreatedDate = DateTime.Now;
                 _context.Users.Add(User);
                 _context.SaveChanges();
             }
-
             Request.RequestTypeId = 2;
             Request.Status = 1;
             if (isexist == null)

@@ -1,5 +1,7 @@
-﻿using HalloDoc.Repository.Repository.Interface;
+﻿using HalloDoc.Repository.Repository;
+using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
+using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Controllers
 {
@@ -13,13 +15,30 @@ namespace HalloDoc.Controllers
         }
         public IActionResult Index()
         {
-            var data = _IAdminDash.NewRequestData();
-            return View(data);
+            return View();
         }
-        public IActionResult viewCase(int RequestId)
+        public IActionResult GetPartialView(string btnName, int statusid)
         {
-            var result = _IAdminDash.ViewCaseData(RequestId);
+            var partialview = "_" + btnName;
+            var result = _IAdminDash.NewRequestData(statusid);
+            return PartialView(partialview, result);
+        }
+        public IActionResult _new(int statusid)
+        {
+            var result = _IAdminDash.NewRequestData(statusid);
+            return PartialView( result);
+          
+        }
+        public IActionResult viewCase(int RequestId, int RequestTypeId)
+        {
+            var result = _IAdminDash.ViewCaseData(RequestId, RequestTypeId);
             return View(result);
         }
+        public IActionResult viewNotes()
+        {
+           
+            return View();
+        }
+       
     }
 }

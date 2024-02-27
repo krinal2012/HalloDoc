@@ -2,6 +2,7 @@
 using HalloDoc.Repository.Repository.Interface;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Entity.DataModels;
+using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -12,8 +13,9 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
         }
-        public List<AdminList> NewRequestData()
+        public List<AdminList> NewRequestData(int statusid)
         {
+
             var list = _context.Requests.Join
                         (_context.RequestClients,
                         requestclients => requestclients.RequestId, requests => requests.RequestId,
@@ -39,24 +41,22 @@ namespace HalloDoc.Repository.Repository
                         .ToList();
             return list;                                   
         }
-        public ViewCaseModel ViewCaseData(int? RequestID)
+        public ViewCaseModel ViewCaseData(int RequestID,int RequestTypeId)
         {
-            ViewCaseModel list = _context.Requests.Join
-                        (_context.RequestClients,
-                        requestclients => requestclients.RequestId, requests => requests.RequestId,
-                        (requests, requestclients) => new { Request = requests, Requestclient = requestclients }
-                        ).Where(req => req.Request.RequestId== RequestID)
+            ViewCaseModel list = 
+                        _context.RequestClients
+                       .Where(req => req.Request.RequestId== RequestID)
                         .Select(req=> new ViewCaseModel()
                         {
-                            RequestTypeId = req.Request.RequestTypeId,
-                            ConfNo = req.Requestclient.City.Substring(0, 2) + req.Requestclient.IntDate.ToString() + req.Requestclient.StrMonth + req.Requestclient.IntYear.ToString() + req.Requestclient.LastName.Substring(0, 2) + req.Requestclient.FirstName.Substring(0, 2) + "002",
-                            Symptoms = req.Requestclient.Notes,
-                            FirstName = req.Requestclient.FirstName,
-                            LastName = req.Requestclient.LastName,
-                            DOB = new DateTime((int)req.Requestclient.IntYear, Convert.ToInt32(req.Requestclient.StrMonth.Trim()), (int)req.Requestclient.IntDate),
-                            Mobile = req.Requestclient.PhoneNumber,
-                            Email = req.Requestclient.Email,
-                            Address = req.Requestclient.Address
+                            RequestTypeId = RequestTypeId,
+                            ConfNo = req.Address.Substring(0, 2) + req.IntDate.ToString() + req.StrMonth + req.IntYear.ToString() + req.LastName.Substring(0, 2) + req.FirstName.Substring(0, 2) + "002",
+                            Symptoms = req.Notes,
+                            FirstName = req.FirstName,
+                            LastName = req.LastName,
+                            DOB = new DateTime((int)req.IntYear, Convert.ToInt32(req.StrMonth.Trim()), (int)req.IntDate),
+                            Mobile = req.PhoneNumber,
+                            Email = req.Email,
+                            Address = req.Address
                         }).FirstOrDefault();
             return list;
         }

@@ -1,117 +1,22 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@{
+}
 @using static HalloDoc.Entity.Models.Constant;
 @using HalloDoc.Entity.Models.ViewModel;
 @model List<AdminList>
-@{
-    Layout = "_AdminDashboardLayout";
-}
-<div class="row mb-5">
-    <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start" data-btn="new" data-id="1">
-        <i class="fa fa-solid fa-circle-plus me-2" aria-hidden="true"></i><b>New</b>
-        <p class="h4"></p>
-    </button>
-    <button class="col-lg col-3 btn btn-outline-info btn-i m-2 py-3 -5 rounded text-start" data-btn="pending" data-id="2">
-        <i class="fa fa-user-md me-2" aria-hidden="true"></i><b>Pending</b>
-        <p class="h4">1456</p>
-    </button>
-    <button class=" col-lg col-3 btn btn-outline-success m-2 py-3  rounded text-start" data-btn="active" data-id="3">
-        <i class="fa fa-check-square-o me-2" aria-hidden="true"></i><b>Active</b>
-        <p class="h4">1456</p>
-    </button>
-    <button class="col-lg col-3 btn btn-b  py-3 m-2 rounded text-start" data-btn="conclude" data-id="4">
-        <i class="fa-solid fa-clock-rotate-left me-2" aria-hidden="true"></i>
-        <b>Conclude </b>
-        <p class="h4">1456</p>
-    </button>
-    <button class="col-lg col-3 btn btn-c m-2 py-3  rounded text-start" data-btn="toClose" data-id="5">
-        <i class="fa-solid fa-user-xmark me-2" aria-hidden="true"></i><b>To close </b>
-        <p class="h4">1456</p>
-    </button>
-    <button class=" col-lg col-3 btn btn-u m-2 py-3  rounded text-start " data-btn="unpaid" data-id="6">
-        <i class="fa-solid fa-circle-dollar-to-slot me-2" aria-hidden="true"></i><b>Unpaid </b>
-        <p class="h4">1456</p>
-    </button>
-</div>
-
-<div class=" d-flex justify-content-between m-2 searchBar">
-    <h4><b>Patients(@Enum.GetName(typeof(status),1)) </b></h4>
-    <div>
-        <button type="button" class="btn btn-info">
-            <i class="fa fa-send"></i>
-            <span class="dNone">Send Link</span>
-        </button>
-        <button type="button" class="btn btn-info">
-            <i class="fa fa-file-pen"></i>
-            <span class="dNone">Create Request</span>
-        </button>
-        <button type="button" class="btn btn-info">
-            <i class="fa-solid fa-share"></i>
-            <span class="dNone"> Export</span>
-        </button>
-        <button type="button" class="btn btn-info">
-            <i class="fa-solid fa-share-from-square"></i>
-            <span class="dNone">Export All</span>
-        </button>
-        <button type="button" class="btn btn-info">
-            <i class="fa-solid fa-user-nurse"></i>
-            <span class="dNone">Request DIY Support</span>
-        </button>
-    </div>
-</div>
-<div class="  align-items-center m-2 bg-white p-2">
-    <div class="mt-2 mx-2 bg-white">
-        <div class="searchBar px-2">
-            <div class="searchPatientRegion py-2">
-                <div class="search m-1">
-                    <i class="fa fa-search bg-white"></i>
-                    <input type="text" class="form-control" placeholder="Search Patients">
-                </div>
-                <div class="search m-1">
-                    <i class="fa fa-search"></i>
-                    <select class="form-select shadow-none" id="floatingSelectGrid">
-                        <option selected class="text-secondary">All Regions</option>
-                        <option value="1">Maryland</option>
-                        <option value="2">New York</option>
-                        <option value="3">Virginia</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="text-secondary requestType">
-                <div class="me-2">
-                    <i class="fa fa-circle" aria-hidden="true"></i> All
-                </div>
-                <div class="me-2">
-                    <i class="fa fa-circle text-success" aria-hidden="true"></i> Patient
-                </div>
-                <div class="me-2">
-                    <i class="fa fa-circle text-warning" aria-hidden="true"></i> Family/Friend
-                </div>
-                <div class="me-2">
-                    <i class="fa fa-circle text-primary" aria-hidden="true"></i> Business
-                </div>
-                <div class="me-2">
-                    <i class="fa fa-circle text-danger" aria-hidden="true"></i> Concierge
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="btnContent">  </div>
-@*<div class="table-responsive dNone ">
+<div class="table-responsive dNone ">
     <table class="table table-responsive p-3">
         <thead class="bg-light">
             <tr>
                 <th scope="col">Name </th>
                 <th></th>
                 <th scope="col">Date Of Birth</th>
-                <th scope="col">Requester</th>
-                <th scope="col">Requested date</th>
+                <th scope="col">Physician Name</th>
+                <th scope="col">Date of Service</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Address</th>
-                <th scope="col">Note</th>
                 <th scope="col">Chat with</th>
                 <th scope="col">Actions</th>
             </tr>
@@ -129,7 +34,7 @@
                     <td>
                         <small>@item.DateOfBirth.ToString("MMM d , yyyy")</small>
                     </td>
-                    <td><small>@item.Requestor</small></td>
+                    <td><small>@item.ProviderName</small></td>
                     <td><small>@item.RequestedDate.ToString("MMM d , yyyy")</small></td>
                     <td>
                         <button class="btn border border-white text-white mt-2">
@@ -151,11 +56,13 @@
                                     (@Enum.GetName(typeof(RequestTypes), item.RequestTypeId))
                                 </small>
                             </div>
-                          }
+                        }
                     </td>
                     <td><small>@item.Address</small></td>
-                    <td><small>@item.Notes</small></td>
                     <td>
+                        <button class="btn border border-white text-white my-2">
+                    <small>Patient</small>
+                    </button>
                         <button class="btn border border-white text-white my-2">
                             <small>Provider</small>
                         </button>
@@ -164,13 +71,14 @@
                         <button class="btn border border-white text-white my-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <small>Actions</small>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-journal-text"></i> Assign Case</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-x-circle"></i> Cancel Case</a></li>
-                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'"><i class="bi bi-journal-text"></i> View Case</a></li>
-                            <li><a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin"><i class="bi bi-journals"></i> View Notes</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-ban"></i> Block Patient</a></li>
 
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'"><i class="bi bi-journal-text"></i> View Case</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-journal-text"></i> View Uploads</a></li>
+                            <li><a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin"><i class="bi bi-journals"></i> View Notes</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-x-circle"></i> Orders</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-ban"></i> Doctor's Note</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-ban"></i> Encounter</a></li>
                         </ul>
                     </td>
                 </tr>
@@ -204,7 +112,7 @@
                     </div>
                 </div>
             </h2>
-             <div id="flush-@item.RequestId" class="accordion-collapse collapse mb-3 border-top" data-bs-parent="#accordionExample">
+            <div id="flush-@item.RequestId" class="accordion-collapse collapse mb-3 border-top" data-bs-parent="#accordionExample">
                 <div class="accordion-body container-fluid">
                     <p> <i class="fa fa-calendar border border-info rounded-pill p-1 me-2" aria-hidden="true"></i>Date of Birth: @item.DateOfBirth</p>
                     <p> <i class="fa fa-envelope border border-info rounded-pill p-1 me-2"></i> Email : @item.Email</p>
@@ -212,6 +120,7 @@
                     <p><i class="fa fa-sticky-note border border-info rounded-pill p-1 me-2"></i> Transfer Notes : @item.Notes</p>
                     <p><i class="fa fa-calendar border border-info rounded-pill p-1 me-2"></i>Date of service : @item.RequestedDate</p>
                     <p><i class="fa fa-user border border-info rounded-pill p-1 me-2"></i>Requestor : @item.Requestor</p>
+
                     <div class="row">
                         <div class="col-6 mb-3">
                             <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
@@ -257,53 +166,8 @@
                         </button>
                     </div>
                 </div>
-            </div>            
+            </div>
         </div>
     }
-</div>*@
+</div>
 
-<script>
-    $(document).ready(function () {
-        console.log("Document ready");
-
-        // Set the default partial view to load
-        var defaultPartial = '/Admin/_new';
-
-        // Make an AJAX request to get the default partial view content and set up click event handling
-        $.ajax({
-            url: defaultPartial,
-            method: 'GET',
-            success: function (data) {
-                // Replace the content of the btnContent div with the retrieved partial view
-                $("#btnContent").html(data);
-
-                // Handle click events on buttons
-                $(document).on("click", ".btn", function () {
-                    var btnName = $(this).data("btn");
-                    console.log("Button clicked: " + btnName);
-
-                    var statusid = $(this).data("id");
-                    // Make an AJAX request to get the partial view content
-                    $.ajax({
-                        url: '@Url.Action("GetPartialView", "Admin")',
-                        //url: '/Admin/GetPartialView?btn=' + btnName,
-                        method: 'GET',
-                        data: { btnName: btnName, statusid: statusid },
-                        success: function (data) {
-                            console.log("AJAX success");
-                            // Replace the content of the btnContent div with the retrieved partial view
-                            $("#btnContent").html(data);
-                            console.log("data added");
-                        },
-                        error: function () {
-                            console.error('Error fetching partial view.');
-                        }
-                    });
-                });
-            },
-            error: function () {
-                console.error('Error fetching default partial view.');
-            }
-        });
-    });
-</script>

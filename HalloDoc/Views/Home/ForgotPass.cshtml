@@ -1,0 +1,25 @@
+﻿@model Hallodoc.Entity.Models.ViewModel.viewPatientReq
+@{
+    ViewData["Title"] = "Reset Password";
+}
+<div class="container text-center maindiv bg-img">
+    <div class="col-lg-8 col-md-8 col-sm-3 col-5">
+        <a asp-action="Login" asp-controller="Home"><i class="fa fa-angle-left fa-lg p-3 text-info"> Back</i> </a>
+    </div>
+    <div class="d-flex text-center justify-content-center align-items-center">
+        <div class="col-lg-5 col-md-8 col-sm-12 text-center ">
+          
+            <h2 class="mb-2 text-body-secondary">Reset Your Password</h2>
+            <form method="post" asp-action="ResetEmail" asp-controller="Home">
+                <div class="form-floating mb-3 email">
+                    <input type="email" asp-for="Email" class="form-control shadow-none" id="email" name="email" placeholder="name">
+                    <button><i class='fa fa-user-circle field-icon'></i></button>
+                    <label for="floatingInput" id="firstNameLabel">E-mail</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-info text-light form-control mb-3">Reset Password</button>
+                <a asp-action="Login" asp-controller="Home"><i class="fa fa-angle-left fa-lg p-3 text-info"> Back to Login</i> </a>
+            </form>
+        </div>
+    </div>
+</div>

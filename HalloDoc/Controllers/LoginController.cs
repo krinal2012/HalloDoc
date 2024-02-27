@@ -40,7 +40,7 @@ namespace HellodocMVC.Controllers
             string userName = _context.Users.Where(x => x.AspNetUserId == user.Id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault();
 
             _httpContextAccessor.HttpContext.Session.SetInt32("id", id);
-            _httpContextAccessor.HttpContext.Session.SetString("PatientName", userName);
+            _httpContextAccessor.HttpContext.Session.SetString("Name", userName);
 
             return RedirectToAction("Index", "Dashboard");
         }

@@ -1,11 +1,7 @@
-﻿using HalloDoc.Entity.Models.ViewModel;
+﻿using Hallodoc.Entity.Models.ViewModel;
+using HalloDoc.Entity.Models.ViewModel;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-    
+
 namespace HalloDoc.Repository.Repository.Interface
 {
     public interface IPatientDash
@@ -15,5 +11,8 @@ namespace HalloDoc.Repository.Repository.Interface
         public void EditProfile(int id, viewProfile vp);
         public void uploadDocument(int id, IFormFile UploadFile);
         public List<viewDocument> viewDocuments(int requestid);
+        public viewPatientReq viewMeData(int id);
+        public void meRequset(viewPatientReq viewPatientReq);
+        public void elseRequset(viewFamilyReq viewFamilyReq);
     }
 }

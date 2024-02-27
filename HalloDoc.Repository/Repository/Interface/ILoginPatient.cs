@@ -8,5 +8,6 @@ namespace HalloDoc.Repository.Repository.Interface
 {
     public interface ILoginPatient
     {
+
     }
 }

@@ -5,18 +5,18 @@ namespace Hallodoc.Entity.Models.ViewModel
 {
     public class viewPatientReq
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         [Required(ErrorMessage = "Symptoms is required")]
-        public string Symptoms { get; set; }
+        public   string Symptoms { get; set; }
         [Required(ErrorMessage = "First name is required")]      
-        public string FirstName { get; set; }       
+        public required string FirstName { get; set; }       
         public string? LastName { get; set; }       
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
-        public string Email { get; set; }
+        public required string Email { get; set; }
         public string Pass { get; set; }
-        [CompareAttribute("Pass", ErrorMessage = "Password doesn't match.")]
+        [Compare("Pass", ErrorMessage = "Password doesn't match.")]
         public string ConformPass { get; set; }
         public string? Mobile { get; set; }
         public string? Street { get; set; }
