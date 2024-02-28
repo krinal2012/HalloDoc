@@ -9,7 +9,9 @@ namespace HalloDoc.Repository.Repository.Interface
 {
     public interface IAdminDash
     {
+        public CountStatusWiseRequestModel CountRequestData();
         public List<AdminList> NewRequestData(int statusid);
         public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId);
+        public ViewCaseModel EditViewCaseData(int RequestID, int RequestTypeId, ViewCaseModel vp);
     }
 }
