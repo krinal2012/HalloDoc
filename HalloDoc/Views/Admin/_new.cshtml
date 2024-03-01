@@ -75,7 +75,7 @@
                         </button>
                        
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-journal-text"></i> Assign Case</a></li>
+                            <li><a class="dropdown-item" data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase" data-id="@item.RequestId"><i class="bi bi-journal-text"></i> Assign Case</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-x-circle"></i> Cancel Case</a></li>
                             <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'"><i class="bi bi-journal-text"></i> View Case</a></li>
                             <li><a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin"><i class="bi bi-journals"></i> View Notes</a></li>
@@ -172,3 +172,29 @@
         </div>
     }
 </div>
+<script>
+    function Assigncaseid(id) {
+    var RequestId = id ;
+        console.log(RequestId);
+        document.getElementById('RequestID_ModelAssignCase').value = RequestId;
+     //   console.log("Button clicked: " );
+     //   $(document).on('submit', '',function(event)
+     //   {
+     //   var formdata = $("#AssignForm").serialize();
+     //   $.ajax({
+         
+     //       url:
+     //       method: 'Post',
+     //           data: 
+     //       success: function (data) {
+     //           console.log("AJAX success");
+     //           // Replace the content of the btnContent div with the retrieved partial view
+              
+     //       },
+     //       error: function () {
+     //           console.error('Error fetching partial view.');
+     //       }
+     //   });
+     //});
+}
+</script>

@@ -4,6 +4,7 @@ using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Xml.Linq;
 using static HalloDoc.Entity.Models.Constant;
 
@@ -13,6 +14,7 @@ namespace HalloDoc.Controllers
     {
         private readonly IAdminDash _IAdminDash;
         private readonly HelloDocContext _context;
+      
         public AdminController(IAdminDash IAdminDash, HelloDocContext context)
         {
             _IAdminDash = IAdminDash;
@@ -20,6 +22,7 @@ namespace HalloDoc.Controllers
         }
         public IActionResult Index()
         {
+            ViewBag.AssignCase = _IAdminDash.AssignCase();
             CountStatusWiseRequestModel count = _IAdminDash.CountRequestData();
             return View(count);
             
@@ -52,21 +55,20 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-        //public IActionResult AssignCase()
-        //{
-        //    AdminDash r = new AdminDash();
-        //    r.AdminDashList = new List<AdminDash>();
-        //    foreach(var item in result)
-        //    {
-        //        r.AdminDash.add(new AdminDash
-        //        {
-        //            Name = item.Name;
-        //            RegionId = item.RegionId.ToString();
-        //        }
-        //    });
-
-        //    return View();
-        //}
        
+        public IActionResult PhysicianbyRegion(int Regionid)
+        {
+            var v = _IAdminDash.ProviderbyRegion(Regionid);
+            return Json(v);
+        }
+        [HttpPost]
+        public IActionResult AssignCase(int RequestId, int PhysicianId, string Notes)
+        {
+             _IAdminDash.AssignCaseInfo(RequestId, PhysicianId, Notes);
+            return RedirectToAction("Index","Admin");
+        }
+
     }
+
 }
+

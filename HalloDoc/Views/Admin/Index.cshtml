@@ -8,36 +8,39 @@
     Layout = "_AdminDashboardLayout";
     ViewData["Title"] = "Dashboard";
 }
+<div>
+    @Html.Partial("AssignCase.cshtml") 
+</div>
 <div class="row mb-5">
-    <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start" data-btn="new" data-id="1">
+    <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6" data-btn="new" data-id="1">
         <i class="fa fa-solid fa-circle-plus me-2" aria-hidden="true"></i><b>New</b>
         <p class="h4">@Model.NewRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-outline-info btn-i m-2 py-3 -5 rounded text-start" data-btn="pending" data-id="2">
+    <button class="col-lg col-3 btn btn-outline-info btn-i m-2 py-3 -5 rounded text-start btn6" data-btn="pending" data-id="2">
         <i class="fa fa-user-md me-2" aria-hidden="true"></i><b>Pending</b>
         <p class="h4">@Model.PendingRequest</p>
     </button>
-    <button class=" col-lg col-3 btn btn-outline-success m-2 py-3  rounded text-start" data-btn="active" data-id="3">
+    <button class=" col-lg col-3 btn btn-outline-success m-2 py-3  rounded text-start btn6" data-btn="active" data-id="3">
         <i class="fa fa-check-square-o me-2" aria-hidden="true"></i><b>Active</b>
         <p class="h4">@Model.ActiveRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-b  py-3 m-2 rounded text-start" data-btn="conclude" data-id="4">
+    <button class="col-lg col-3 btn btn-b  py-3 m-2 rounded text-start btn6" data-btn="conclude" data-id="4">
         <i class="fa-solid fa-clock-rotate-left me-2" aria-hidden="true"></i>
         <b>Conclude </b>
         <p class="h4">@Model.ConcludeRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-c m-2 py-3  rounded text-start" data-btn="toClose" data-id="5">
+    <button class="col-lg col-3 btn btn-c m-2 py-3  rounded text-start btn6" data-btn="toClose" data-id="5">
         <i class="fa-solid fa-user-xmark me-2" aria-hidden="true"></i><b>To close </b>
         <p class="h4">@Model.ToCloseRequest</p>
     </button>
-    <button class=" col-lg col-3 btn btn-u m-2 py-3  rounded text-start " data-btn="unpaid" data-id="6">
+    <button class=" col-lg col-3 btn btn-u m-2 py-3  rounded text-start btn6" data-btn="unpaid" data-id="6">
         <i class="fa-solid fa-circle-dollar-to-slot me-2" aria-hidden="true"></i><b>Unpaid </b>
         <p class="h4">@Model.UnpaidRequest</p>
     </button>
 </div>
 
 <div class=" d-flex justify-content-between m-2 searchBar">
-    <h4><b>Patients(@Enum.GetName(typeof(status),1)) </b></h4>
+    <h4><b>Patients </b></h4>
     <div>
         <button type="button" class="btn btn-info">
             <i class="fa fa-send"></i>
@@ -118,7 +121,7 @@
                 $("#btnContent").html(data);
 
                 // Handle click events on buttons
-                $(document).on("click", ".btn", function () {
+                $(document).on("click", ".btn6", function () {
                     var btnName = $(this).data("btn");
                     console.log("Button clicked: " + btnName);
 
@@ -147,50 +150,4 @@
         });
     });
 </script>
-<div id="btnContent">  </div>
 
-<script>
-    $(document).ready(function () {
-        console.log("Document ready");
-
-        // Set the default partial view to load
-        var defaultPartial = '/Admin/_new';
-
-        // Make an AJAX request to get the default partial view content and set up click event handling
-        $.ajax({
-            url: defaultPartial,
-            method: 'GET',
-            success: function (data) {
-                // Replace the content of the btnContent div with the retrieved partial view
-                $("#btnContent").html(data);
-
-                // Handle click events on buttons
-                $(document).on("click", ".btn", function () {
-                    var btnName = $(this).data("btn");
-                    console.log("Button clicked: " + btnName);
-
-                    var statusid = $(this).data("id");
-                    // Make an AJAX request to get the partial view content
-                    $.ajax({
-                        url: '@Url.Action("GetPartialView", "Admin")',
-                        //url: '/Admin/GetPartialView?btn=' + btnName,
-                        method: 'GET',
-                        data: { btnName: btnName, statusid: statusid },
-                        success: function (data) {
-                            console.log("AJAX success");
-                            // Replace the content of the btnContent div with the retrieved partial view
-                            $("#btnContent").html(data);
-                            console.log("data added");
-                        },
-                        error: function () {
-                            console.error('Error fetching partial view.');
-                        }
-                    });
-                });
-            },
-            error: function () {
-                console.error('Error fetching default partial view.');
-            }
-        });
-    });
-</script>

@@ -68,7 +68,6 @@ namespace HalloDoc.Repository.Repository
             Request.IsUrgentEmailSent = new BitArray(1);
             _context.Requests.Add(Request);
              _context.SaveChanges();
-
             Requestclient.RequestId = Request.RequestId;
             Requestclient.FirstName = viewPatientReq.FirstName;
             Requestclient.LastName = viewPatientReq.LastName;

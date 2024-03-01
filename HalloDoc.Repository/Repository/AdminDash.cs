@@ -4,6 +4,8 @@ using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Entity.DataModels;
 using static HalloDoc.Entity.Models.Constant;
 using System.Globalization;
+using System.Web.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -113,6 +115,43 @@ namespace HalloDoc.Repository.Repository
                             Address = req.Address
                         }).FirstOrDefault();
             return list;
+        }
+        public List<Physician> ProviderbyRegion(int Regionid)
+        {
+            var result = _context.Physicians
+                        .Where(req => req.RegionId == Regionid)
+                        .Select(req => new Physician()
+                        {
+                            PhysicianId = req.PhysicianId,
+                            FirstName = req.FirstName,
+                            LastName =req.LastName
+                        }).ToList();
+            return result;
+
+        }
+        public List<Region> AssignCase()
+        {
+            var regiondata = _context.Regions.ToList();
+            return (regiondata);
+        }
+        public void AssignCaseInfo(int RequestId, int PhysicianId, string Notes)
+        {
+            var request =  _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
+            request.PhysicianId = PhysicianId;
+            request.Status = 2;
+            _context.Requests.Update(request);
+            _context.SaveChanges();
+
+            RequestStatusLog rsl = new RequestStatusLog();
+            rsl.RequestId = RequestId;
+            rsl.PhysicianId = PhysicianId;
+            rsl.Notes = Notes;
+            rsl.CreatedDate = DateTime.Now;
+            rsl.Status = 2;
+            _context.RequestStatusLogs.Add(rsl);
+            _context.SaveChanges();
+            
+
         }
     }
 }
