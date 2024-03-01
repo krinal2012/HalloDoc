@@ -14,5 +14,9 @@ namespace HalloDoc.Repository.Repository.Interface
         public List<Physician> ProviderbyRegion(int Regionid);
         public List<Region> AssignCase();
         public void AssignCaseInfo(int RequestId, int PhysicianId, string Notes);
+        public List<CaseTag> CaseReason();
+        public bool CancleCaseInfo(int? RequestId, string caseTag, string Notes);
+        public bool BlockCaseInfo(int RequestId, string Notes);
+        
     }
 }

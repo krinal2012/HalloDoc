@@ -53,7 +53,6 @@ namespace HalloDoc.Repository.Repository
 
             if (userToUpdate != null)
             {
-
                 userToUpdate.FirstName = vp.FirstName;
                 userToUpdate.LastName = vp.LastName;
                 userToUpdate.Mobile = vp.Mobile;
@@ -70,7 +69,6 @@ namespace HalloDoc.Repository.Repository
                 _context.Update(userToUpdate);
                 _context.SaveChanges();
             }
-
         }
         public List<viewDocument> viewDocuments(int requestid)
         {

@@ -8,7 +8,7 @@
 @using HalloDoc.Entity.Models.ViewModel;
 @using static HalloDoc.Entity.Models.Constant;
 @model ViewCaseModel;
-
+@Html.Partial("AssignCase.cshtml")
 <div class="d-flex justify-content-between align-items-center container pb-1">
     <div class="d-flex align-self-center">
     <h3 class="">New Request</h3>
@@ -86,9 +86,9 @@
         </div>
 
         <div class="row px-3 d-flex justify-content-end">
-            <a class="col-1 btn btn-info text-white rounded p-2 me-2">Assign</a>
+                <a class="col-1 btn btn-info text-white rounded p-2 me-2" onclick="Assigncaseid(@Model.RequestId)" data-bs-toggle="modal" data-bs-target=" #assigncase"> Assign</a>
             <a class="col-1 btn btn-info text-white rounded p-2 me-2" asp-action="viewNotes" asp-controller="Admin"> View Notes </a>
-            <a class="col-1 btn btn-danger text-white rounded p-2 me-2"> Cancle </a>
+            <a class="col-1 btn btn-danger text-white rounded p-2 me-2"> Cancel </a>
         </div>
     </form>
 </div>
@@ -101,6 +101,11 @@
         $("#phone").removeAttr('disabled');
         $("#submit").css("display", "block");
         $("#editprofile").css("display", "none");       
+    }
+    function Assigncaseid(id) {
+        var RequestId = id;
+        console.log(RequestId);
+        document.getElementById('RequestID_ModelAssignCase').value = RequestId;
     }
 </script>
 

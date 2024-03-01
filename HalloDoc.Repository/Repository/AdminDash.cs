@@ -63,7 +63,7 @@ namespace HalloDoc.Repository.Repository
                             Region = rg.Name,
                             ProviderName = p.FirstName + " " + p.LastName,
                             PatientPhoneNumber = rc.PhoneNumber,
-                            Address = rc.Address + "," + rc.Street + "," + rc.City + "," + rc.State + "," + rc.ZipCode,
+                            Address = rc.Address,
                             Notes = rc.Notes,
                            // ProviderID = req.Physicianid,
                             RequestorPhoneNumber = req.PhoneNumber
@@ -77,6 +77,7 @@ namespace HalloDoc.Repository.Repository
                        .Where(req => req.Request.RequestId== RequestID)
                         .Select(req=> new ViewCaseModel()
                         {
+                            RequestId = RequestID,
                             RequestTypeId = RequestTypeId,
                             ConfNo = req.Address.Substring(0, 2) + req.IntDate.ToString() + req.StrMonth + req.IntYear.ToString() + req.LastName.Substring(0, 2) + req.FirstName.Substring(0, 2) + "002",
                             Symptoms = req.Notes,
@@ -153,5 +154,71 @@ namespace HalloDoc.Repository.Repository
             
 
         }
+        public List<CaseTag> CaseReason()
+        {
+            var data = _context.CaseTags.ToList();
+            return (data);
+        }
+        public bool CancleCaseInfo(int? RequestId, string caseTag, string Notes)
+        {
+            try
+            {
+                var requestData = _context.Requests.FirstOrDefault(e => e.RequestId == RequestId);
+                if (requestData != null)
+                {
+                    requestData.CaseTag = caseTag;
+                    requestData.Status = 8;
+                    _context.Requests.Update(requestData);
+                    _context.SaveChanges();
+                    RequestStatusLog rsl = new RequestStatusLog();
+                    rsl.RequestId = (int)RequestId;                   
+                    rsl.Notes = Notes;
+                    rsl.CreatedDate = DateTime.Now;
+                    rsl.Status = 2;
+                    _context.RequestStatusLogs.Add(rsl);
+                    _context.SaveChanges();
+                    return true;
+                }
+                else { return false; }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool BlockCaseInfo(int RequestId, string Notes)
+        {
+            try
+            {
+                var requestData = _context.Requests.FirstOrDefault(e => e.RequestId == RequestId);
+                if (requestData != null)
+                {
+                    requestData.Status = 11;
+                    _context.Requests.Update(requestData);
+                    _context.SaveChanges();
+                    BlockRequest block = new BlockRequest
+                    {
+                        RequestId = requestData.RequestId,
+                        PhoneNumber = requestData.PhoneNumber,
+                        Email = requestData.Email,
+                        Reason = Notes,
+                        CreatedDate = DateTime.Now,
+                    };
+                    _context.BlockRequests.Add(block);
+                    _context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+             
+            catch (Exception ex)
+            {
+                return false;
+            }
+}              
     }
 }

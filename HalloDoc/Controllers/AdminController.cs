@@ -23,9 +23,9 @@ namespace HalloDoc.Controllers
         public IActionResult Index()
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
+            ViewBag.CaseReason = _IAdminDash.CaseReason();
             CountStatusWiseRequestModel count = _IAdminDash.CountRequestData();
-            return View(count);
-            
+            return View(count);            
         }
 
         public IActionResult GetPartialView(string btnName, int statusid)
@@ -42,12 +42,14 @@ namespace HalloDoc.Controllers
         }
         public IActionResult viewCase(int RequestId, int RequestTypeId)
         {
+            ViewBag.AssignCase = _IAdminDash.AssignCase();
             var result = _IAdminDash.ViewCaseData(RequestId, RequestTypeId);
-            return View(result);
+            return View(result);    
         }
         [HttpPost]
         public IActionResult viewCase(int RequestId, int RequestTypeId, ViewCaseModel vp)
         {
+            ViewBag.AssignCase = _IAdminDash.AssignCase();
             var result = _IAdminDash.EditViewCaseData(RequestId, RequestTypeId, vp);
             return View(result);
         }
@@ -64,9 +66,22 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult AssignCase(int RequestId, int PhysicianId, string Notes)
         {
-             _IAdminDash.AssignCaseInfo(RequestId, PhysicianId, Notes);
-            return RedirectToAction("Index","Admin");
+            _IAdminDash.AssignCaseInfo(RequestId, PhysicianId, Notes);
+            return RedirectToAction("Index", "Admin");
         }
+        [HttpPost]
+        public IActionResult CancleCase(int? RequestId, string Notes, string CaseTag)
+        {
+            var result = _IAdminDash.CancleCaseInfo(RequestId, Notes, CaseTag);
+            return RedirectToAction("Index", "Admin");
+        }
+        [HttpPost]
+        public IActionResult BlockCase(int RequestId, string Notes)
+        {
+            var res= _IAdminDash.BlockCaseInfo(RequestId, Notes);
+            return RedirectToAction("Index", "Admin");
+        }
+
 
     }
 

@@ -9,7 +9,11 @@
     ViewData["Title"] = "Dashboard";
 }
 <div>
-    @Html.Partial("AssignCase.cshtml") 
+    @Html.Partial("_BlockCase.cshtml")
+    @Html.Partial("AssignCase.cshtml")
+    @Html.Partial("_CancleCase.cshtml")
+    
+
 </div>
 <div class="row mb-5">
     <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6" data-btn="new" data-id="1">

@@ -71,7 +71,7 @@ namespace HalloDoc.Repository.Repository
             Requestclient.RequestId = Request.RequestId;
             Requestclient.FirstName = viewPatientReq.FirstName;
             Requestclient.LastName = viewPatientReq.LastName;
-            Requestclient.Address = viewPatientReq.Street;
+            Requestclient.Address = viewPatientReq.Street + "," + viewPatientReq.City + "," + viewPatientReq.State + "," + viewPatientReq.ZipCode;
             Requestclient.Email = viewPatientReq.Email;
             Requestclient.PhoneNumber = viewPatientReq.Mobile;
             Requestclient.Notes = viewPatientReq.Symptoms;
@@ -166,38 +166,37 @@ namespace HalloDoc.Repository.Repository
             Requestclient.RequestId = Request.RequestId;
             Requestclient.FirstName = viewFamilyReq.FirstName;
             Requestclient.LastName = viewFamilyReq.LastName;
-            Requestclient.Address = viewFamilyReq.Street;
+            Requestclient.Address = viewFamilyReq.Street + "," + viewFamilyReq.City + "," + viewFamilyReq.State + "," + viewFamilyReq.ZipCode;
             Requestclient.Email = viewFamilyReq.Email;
             Requestclient.PhoneNumber = viewFamilyReq.Mobile;
             Requestclient.IntDate = viewFamilyReq.DOB.Day;
             Requestclient.IntYear = viewFamilyReq.DOB.Year;
             Requestclient.StrMonth = (viewFamilyReq.DOB.Month).ToString();
-            Requestclient.Notes = viewFamilyReq.Symptoms;
-            Requestclient.Address = viewFamilyReq.Street + "," + viewFamilyReq.City + "," + viewFamilyReq.State;
+            Requestclient.Notes = viewFamilyReq.Symptoms;           
             _context.RequestClients.Add(Requestclient);
             _context.SaveChanges();
 
 
-            //if (viewFamilyReq.file != null)
-            //{
-            //    string FilePath = "wwwroot\\Upload";
-            //    string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
-            //    string fileNameWithPath = Path.Combine(path, viewFamilyReq.file.FileName);
-            //    //viewPatientReq.UploadImage = "~" + FilePath.Replace("wwwroot\\", "/") + "/" + viewpatientcreaterequest.UploadFile.FileName;
+            if (viewFamilyReq.file != null)
+            {
+                string FilePath = "wwwroot\\Upload";
+                string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
+                string fileNameWithPath = Path.Combine(path, viewFamilyReq.file.FileName);
+                //viewPatientReq.UploadImage = "~" + FilePath.Replace("wwwroot\\", "/") + "/" + viewpatientcreaterequest.UploadFile.FileName;
 
-            //    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
-            //    {
-            //        viewFamilyReq.file.CopyTo(stream);
-            //    }
-            //    var requestwisefile = new RequestWiseFile
-            //    {
-            //        RequestId = Request.RequestId,
-            //        FileName = viewFamilyReq.file.FileName,
-            //        CreatedDate = DateTime.Now,
-            //    };
-            //    _context.RequestWiseFiles.Add(requestwisefile);
-            //    _context.SaveChanges();
-            //}
+                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    viewFamilyReq.file.CopyTo(stream);
+                }
+                var requestwisefile = new RequestWiseFile
+                {
+                    RequestId = Request.RequestId,
+                    FileName = viewFamilyReq.file.FileName,
+                    CreatedDate = DateTime.Now,
+                };
+                _context.RequestWiseFiles.Add(requestwisefile);
+                _context.SaveChanges();
+            }
 
         }
         public void BusinessReq(viewBusinessReq viewBusinessReq)
@@ -259,7 +258,7 @@ namespace HalloDoc.Repository.Repository
             Requestclient.RequestId = Request.RequestId;
             Requestclient.FirstName = viewBusinessReq.FirstName;
             Requestclient.LastName = viewBusinessReq.LastName;
-            Requestclient.Address = viewBusinessReq.Street;
+            Requestclient.Address = viewBusinessReq.Street + "," + viewBusinessReq.City + "," + viewBusinessReq.State + "," + viewBusinessReq.ZipCode;
             Requestclient.Email = viewBusinessReq.Email;
             Requestclient.PhoneNumber = viewBusinessReq.Mobile;
             Requestclient.IntDate = viewBusinessReq.DOB.Day;
@@ -343,7 +342,7 @@ namespace HalloDoc.Repository.Repository
             Requestclient.RequestId = Request.RequestId;
             Requestclient.FirstName = viewConciergeReq.FirstName;
             Requestclient.LastName = viewConciergeReq.LastName;
-            Requestclient.Address = viewConciergeReq.Street;
+            Requestclient.Address = viewConciergeReq.Street + "," + viewConciergeReq.City + "," + viewConciergeReq.State + "," + viewConciergeReq.ZipCode;
             Requestclient.Email = viewConciergeReq.Email;
             Requestclient.PhoneNumber = viewConciergeReq.Mobile;
             Requestclient.IntDate = viewConciergeReq.DOB.Day;

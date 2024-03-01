@@ -75,11 +75,25 @@
                         </button>
                        
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase" data-id="@item.RequestId"><i class="bi bi-journal-text"></i> Assign Case</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-x-circle"></i> Cancel Case</a></li>
-                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'"><i class="bi bi-journal-text"></i> View Case</a></li>
-                            <li><a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin"><i class="bi bi-journals"></i> View Notes</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-ban"></i> Block Patient</a></li>
+                            <li><a class="dropdown-item" data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase">
+                                <i class="bi bi-journal-text"></i> Assign Case</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" data-bs-toggle="modal" onclick="Canclecaseid('@item.RequestId','@item.PatientName')" data-bs-target=" #Cancelcase">
+                                    <i class="bi bi-x-circle">
+                                </i> Cancel Case</a>
+                            </li>
+                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'">
+                                <i class="bi bi-journal-text"></i> View Case</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin">
+                                <i class="bi bi-journals"></i> View Notes</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" onclick="Blockcaseid('@item.RequestId','@item.PatientName')" data-bs-toggle="modal" data-bs-target="#Blockcase">
+                                <i class="bi bi-ban"></i>Block Patient</a>
+                            </li >
 
                         </ul>
                     </td>
@@ -110,12 +124,19 @@
                             <button class="btn btn-sm btn-white border-info text-info rounded-pill 2px">
                                 <small>Map Location</small>
                             </button>
+                           
+                           
                         </div>
                     </div>
                 </div>
             </h2>
             <div id="flush-@item.RequestId" class="accordion-collapse collapse mb-3 border-top" data-bs-parent="#accordionExample">
                 <div class="accordion-body container-fluid">
+                    
+                    <a class=" btn bg-white border border-info rounded-pill position-relative top-0 end-0" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'">
+                        <i class="bi bi-journal-text"></i> View Case
+                        </a>
+                   
                     <p> <i class="fa fa-calendar border border-info rounded-pill p-1 me-2" aria-hidden="true"></i>Date of Birth: @item.DOB</p>
                     <p> <i class="fa fa-envelope border border-info rounded-pill p-1 me-2"></i> Email : @item.Email</p>
                     <p> <i class="fa fa-phone border  border-info rounded-pill p-1 me-2"></i> Patient : @item.PatientPhoneNumber</p>
@@ -125,33 +146,28 @@
 
                     <div class="row">
                         <div class="col-6 mb-3">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
-                                <small>View Notes</small>
+                            <button class="btn btn-warning text-white rounded-pill 2px w-100 " data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase">
+                                <small>Assign Case</small>
                             </button>
                         </div>
                         <div class="col-6 mb-3">
-                            <button class="btn btn-success text-white rounded-pill 2px w-100">
-                                <small>Doctors Note</small>
+                            <button class="btn btn-danger text-white rounded-pill 2px w-100" data-bs-toggle="modal" onclick="Canclecaseid('@item.RequestId','@item.PatientName')" data-bs-target=" #Cancelcase">
+                                <small>Cancel case</small>
                             </button>
                         </div>
 
-                        <div class="col-6 mb-3">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
-                                <small>View Uploads</small>
-                            </button>
+                        <div class="col-6 mb-3" >
+                            <a class="btn btn-success text-white rounded-pill 2px w-100" asp-action="viewNotes" asp-controller="Admin">
+                                <small>View Notes</small>
+                            </a>
                         </div>
                         <div class="col-6 mb-3">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
-                                <small>Encounter</small>
+                            <button class="btn btn-danger text-white rounded-pill 2px w-100" onclick="Blockcaseid('@item.RequestId','@item.PatientName')" data-bs-toggle="modal" data-bs-target="#Blockcase">
+                                <small>Block Patient</small>
                             </button>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #FFD43B;">
-                                <small>Orders</small>
-                            </button>
-                        </div>
+                        </div>                       
                         <div class="col-6 mb-3 ">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
+                            <button class="btn btn-success text-white rounded-pill 2px w-100" >
                                 <small>Email</small>
                             </button>
                         </div>
@@ -176,25 +192,27 @@
     function Assigncaseid(id) {
     var RequestId = id ;
         console.log(RequestId);
-        document.getElementById('RequestID_ModelAssignCase').value = RequestId;
-     //   console.log("Button clicked: " );
-     //   $(document).on('submit', '',function(event)
-     //   {
-     //   var formdata = $("#AssignForm").serialize();
-     //   $.ajax({
-         
-     //       url:
-     //       method: 'Post',
-     //           data: 
-     //       success: function (data) {
-     //           console.log("AJAX success");
-     //           // Replace the content of the btnContent div with the retrieved partial view
-              
-     //       },
-     //       error: function () {
-     //           console.error('Error fetching partial view.');
-     //       }
-     //   });
-     //});
+        document.getElementById('RequestID_ModelAssignCase').value = RequestId;    
 }
+    
+</script>
+<script>
+    function Canclecaseid(id, patientname) {
+        var RequestId = id;
+        var patientname = patientname;
+        console.log(RequestId);
+        console.log(patientname);
+        document.getElementById('RequestID_ModelCancelCase').value = RequestId;
+        document.getElementById('PatientName_ModelCancelCase').innerText = patientname;
+    }
+</script>
+<script>
+    function Blockcaseid(id, patientname) {
+    var RequestId = id ;
+    var patientname = patientname;
+        console.log(RequestId);
+        console.log(patientname);
+        document.getElementById('RequestID_ModelBlockCase').value = RequestId;
+        document.getElementById('PatientName_ModelBlockCase').innerText = patientname;  
+    }
 </script>
