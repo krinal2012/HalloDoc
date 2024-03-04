@@ -84,7 +84,6 @@ body {
 }
 
 .btn-p,
-
 .btn-p:visited,
 .btn-p:focus {
     background-color: #dcdcef;
@@ -110,7 +109,6 @@ body {
 }
 
 .btn-b,
-
 .btn-b:visited,
 .btn-b:focus {
     background-color: #f8e6ee;
@@ -124,16 +122,14 @@ body {
         color: #e4e4e4;
     }
 
-.btn-c,
-
-.btn-c:visited,
-.btn-c:focus {
+.btn-c
+ {
     background-color: #a4d6f0;
     border-color: #2b6ba2;
     color: #2b6ba2;
 }
 
-    .btn-c:active, .btn-c:hover {
+    .btn-c:active, .btn-c:hover, .btn-c:focus{
         background-color: #2b6ba2;
         border-color: #2b6ba2;
         color: #e4e4e4;

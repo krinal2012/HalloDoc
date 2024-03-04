@@ -28,15 +28,15 @@ namespace HalloDoc.Controllers
             return View(count);            
         }
 
-        public IActionResult GetPartialView(string btnName, int statusid)
+        public IActionResult GetPartialView(string btnName, int statusid, string searchValue)
         {
             var partialview = "_" + btnName;
-            var result = _IAdminDash.NewRequestData(statusid);
+            var result = _IAdminDash.NewRequestData(statusid, searchValue);
             return PartialView(partialview, result);
         }
         public IActionResult _new()
         {
-            var result = _IAdminDash.NewRequestData(1);
+            var result = _IAdminDash.NewRequestData(1, null);
             return PartialView(result);
           
         }
@@ -86,4 +86,5 @@ namespace HalloDoc.Controllers
     }
 
 }
+
 

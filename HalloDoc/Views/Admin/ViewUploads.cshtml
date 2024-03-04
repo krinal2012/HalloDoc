@@ -12,57 +12,57 @@
     <div class="d-flex justify-content-between align-items-center py-4">
         <h4><b>Documents </b></h4>
         <div class=" btn">
-            <a asp-action="Index" asp-controller="Dashboard" class=" border border-info rounded p-1 m-1 "><i class="fa fa-angle-left p-2 fa-sm text-info"> Back</i> </a>
+            <a asp-action="Index" asp-controller="Admin" class=" border border-info rounded p-1 m-1 "><i class="fa fa-angle-left p-2 fa-sm text-info"> Back</i> </a>
         </div>
     </div>
     <div class="reqform p-3 text-secondary">
         <h5>Patient name</h5>
         <span class="d-flex align-items-center">
             <h4 class="Patient-name text-info"> @ViewData["UserName"]</h4>
-             @*<div class="doc-text-card mx-2 ">(@item.Confirmationnumber)</div> *@           
+            @*<div class="doc-text-card mx-2 ">(@item.Confirmationnumber)</div> *@
         </span>
         <p>
-            Check here for any files that you or the
-            doctors of yours subsequents requestors have attached for you to
-            review.
+            Check here to review and add files that you or the client has attached to the request.
         </p>
 
         <form method="post" enctype="multipart/form-data">
             <div class="d-flex justify-content-between bg-light border border-secondary rounded">
-                        <button type="button" id="choosenfile" class="col btn text-start text-secondary" onclick="document.getElementById('files').click()">
-                            Select File
-                        </button>
-                        <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
-                       
-                        <button type="submit" class="btn btn-info text-white py-2" value="Upload">
-                            <i class="fa fa-cloud-upload"></i>
-                        <span class="dNone"> Upload </span>
-                        </button>
-                    </div>
-           </form>
-           
-       
+                <button type="button" id="choosenfile" class="col btn text-start text-secondary" onclick="document.getElementById('files').click()">
+                    Select File
+                </button>
+                <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
+
+                <button type="submit" class="btn btn-info text-white py-2" value="Upload">
+                    <i class="fa fa-cloud-upload"></i>
+                    <span class="dNone"> Upload </span>
+                </button>
+            </div>
+        </form>
+
+
         <div class="container-fluid">
-        <div class="m-4 d-flex justify-content-between align-items-center">
-            <h5 class="text-black"><b>Documents </b> </h5>
-            <a class="btn btn-outline-info dNone" onclick="DownloadAll()">Download all</a>
+            <div class="m-4 d-flex justify-content-between align-items-center">
+                <h5 class="text-black"><b>Documents </b> </h5>
+                <a class="btn btn-outline-info dNone" onclick="DownloadAll()">Download all</a>
                 <a class="btn btn-outline-info dBlock" onclick="DownloadAll()"> + </a>
-        </div>
-        <table class="table m-0">
-            <thead>
-                <tr class="table-secondary">
-                    <th scope="col" class="table-text-header px-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="selectall" onchange="selectDeselectAll()">
-                        </div>
-                    </th>
-                    <th scope="col" class="table-text-header">Document Name</th>
-                    <th scope="col" class="table-text-header ">Uploader</th>
-                    <th scope="col" class="table-text-header">Upload date</th>
-                    <th scope="col" class="table-text-header">Action</th>
-                </tr>
-            </thead>
-            <tbody>
+                <a class="btn btn-outline-info dNone" onclick="DeleteAll()">Delete all</a>
+                <a class="btn btn-outline-info dNone" onclick="SendMail()">Send Mail</a>
+            </div>
+            <table class="table m-0">
+                <thead>
+                    <tr class="table-secondary">
+                        <th scope="col" class="table-text-header px-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="selectall" onchange="selectDeselectAll()">
+                            </div>
+                        </th>
+                        <th scope="col" class="table-text-header">Document Name</th>
+                        <th scope="col" class="table-text-header ">Uploader</th>
+                        <th scope="col" class="table-text-header">Upload date</th>
+                        <th scope="col" class="table-text-header">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
                     @foreach (var item2 in Model)
                     {
                         <tr>
@@ -72,9 +72,9 @@
                                 </div>
                             </td>
                             <td class="table-text ">@item2.Filename</td>
-                        
-                                <td class="table-text "> @item2.FirstName </td>
-                       
+
+                            <td class="table-text "> @item2.FirstName </td>
+
                             <td class="table-text ">@item2.uploaddate</td>
                             <td class="table-text">
                                 <a class="btn btn-sm btn-outline-info px-3 p-1 mx-2 download-link document-button" download href="/Upload/@item2.Filename">
@@ -83,10 +83,10 @@
                             </td>
                         </tr>
                     }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         </div>
-</div>
+    </div>
 
 </div>
 
@@ -119,13 +119,13 @@
         if (i == allCheckboxes.length) {
             selectAllCheckbox.checked = true;
         }
-    } 
+    }
 
     function DownloadAll() {
         var allcheckbox = document.getElementsByClassName('doc-checkbox');
         var alllinks = document.getElementsByClassName('download-link');
-       
-        for (var i = 0; i < allcheckbox.length; i++) { 
+
+        for (var i = 0; i < allcheckbox.length; i++) {
             if (allcheckbox[i].checked) {
                 console.log(alllinks[i]);
                 alllinks[i].click();

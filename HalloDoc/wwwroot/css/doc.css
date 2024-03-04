@@ -9,6 +9,7 @@ td,
 th {
     padding: 5px;
 }
+
 .dBlock {
     display: none;
 }
@@ -51,12 +52,12 @@ th {
     .table td {
         padding: 5px 20px 10px;
     }
-    .dNone{
-        display:none;
+
+    .dNone {
+        display: none;
     }
-    .dBlock{
-        display:block;
+
+    .dBlock {
+        display: block;
     }
 }
-
-

@@ -17,7 +17,6 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
         }
-
         public List<PatientDashList> PatientList(int id)
         {
             var items = _context.Requests.Include(x => x.RequestWiseFiles).Where(x => x.UserId == id).Select(x => new PatientDashList
@@ -26,16 +25,13 @@ namespace HalloDoc.Repository.Repository
                 Status = (status)x.Status,
                 RequestId = x.RequestId,
                 Fcount = x.RequestWiseFiles.Count()
-
             }).ToList();
             return items;
         }
-
         public viewProfile viewProfile(int id)
         {
             User singleUser = _context.Users.FirstOrDefault(u => u.UserId == id);
             viewProfile user = new();
-
             user.FirstName = singleUser.FirstName;
             user.LastName = singleUser.LastName;
             user.Email = singleUser.Email;
@@ -43,9 +39,7 @@ namespace HalloDoc.Repository.Repository
             user.Street = singleUser.Street;
             user.City = singleUser.City;
             user.State = singleUser.State;
-
             return user;
-
         }
         public void EditProfile(int id, viewProfile vp)
         {
@@ -72,11 +66,13 @@ namespace HalloDoc.Repository.Repository
         }
         public List<viewDocument> viewDocuments(int requestid)
         {
-            var items = _context.RequestWiseFiles.Where(x => x.RequestId == requestid).Select(m => new viewDocument
-            {
-                uploaddate = m.CreatedDate,
-                uploader = m.FileName
-            }).ToList();
+            var items = _context.RequestWiseFiles.Include(m => m.Request)
+                .Where(x => x.RequestId == requestid).Select(m => new viewDocument
+                {
+                    uploaddate = m.CreatedDate,   
+                    FirstName = m.Request.FirstName,
+                    Filename= m.FileName
+                }).ToList();
             return items;
         }
         public void uploadDocument(int RequestId, IFormFile UploadFile)
@@ -102,7 +98,6 @@ namespace HalloDoc.Repository.Repository
                 _context.SaveChanges();
             }
         }
-
         public viewPatientReq viewMeData(int id)
         {
             
@@ -119,7 +114,6 @@ namespace HalloDoc.Repository.Repository
                               .FirstOrDefault();
             return ViewPatientCreateRequest;
         }
-
         public void meRequset(viewPatientReq viewPatientReq)
         {
             var Request = new Request();

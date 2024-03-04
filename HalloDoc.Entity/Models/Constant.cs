@@ -17,12 +17,16 @@ namespace HalloDoc.Entity.Models
         }
         public enum status
         {
-            New = 1,
-            Pending = 2,
-            Active = 3,
-            Conclude = 4,
-            Close = 5,
-            Unpaid = 6
+            Unassigned = 1,
+            Accepted = 2,
+            Cancelled = 3,
+            MDEnRoute = 4,
+            MDOnSite = 5,
+            Conclude = 6,
+            CancelledByPatient = 7,
+            Closed =8,
+            Ubpaid =9,
+            Clear=10
 
         }
     }

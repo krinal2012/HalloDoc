@@ -8,7 +8,7 @@ namespace HalloDoc.Entity.Models.ViewModel
 {
     public class viewDocument
     {
-        public string uploader { get; set; }
+        public string FileName { get; set; }
         public DateTime? uploaddate { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
