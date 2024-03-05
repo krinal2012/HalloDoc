@@ -78,7 +78,7 @@
 
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#"><i class="bi bi-journal-text"></i> View Case</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-x-circle"></i> View Uploads</a></li>
+                            <li><a class="dropdown-item" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId" ><i class="bi bi-x-circle"></i> View Uploads</a></li>
                             <li><a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin"><i class="bi bi-journal-text"></i> View Notes</a></li>
                             <li><a class="dropdown-item" ><i class="bi bi-journals"></i> Transfer</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-ban"></i> Clear Case</a></li>

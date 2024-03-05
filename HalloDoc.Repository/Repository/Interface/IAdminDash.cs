@@ -1,7 +1,6 @@
-﻿
-using System.Web.Mvc;
-using HalloDoc.Entity.DataModels;
+﻿using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
+using Microsoft.AspNetCore.Http;
 
 namespace HalloDoc.Repository.Repository.Interface
 {
@@ -17,6 +16,8 @@ namespace HalloDoc.Repository.Repository.Interface
         public List<CaseTag> CaseReason();
         public bool CancleCaseInfo(int? RequestId, string caseTag, string Notes);
         public bool BlockCaseInfo(int RequestId, string Notes);
-        
+        public viewDocument ViewUploadsInfo(int requestid);
+        public bool ViewUploadPost(viewDocument v, int userid, IFormFile UploadFile);
+        public void DeleteFile(int id);
     }
 }

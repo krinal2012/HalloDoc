@@ -81,6 +81,24 @@ namespace HalloDoc.Controllers
             var res= _IAdminDash.BlockCaseInfo(RequestId, Notes);
             return RedirectToAction("Index", "Admin");
         }
+        public IActionResult ViewUploads(int requestid)
+        {
+            var v = _IAdminDash.ViewUploadsInfo( requestid);
+            return View("../Admin/ViewUploads", v);
+          
+        }
+        [HttpPost]
+        public IActionResult ViewUploads(viewDocument vp, int userid,IFormFile UploadFile)
+        {
+            var v = _IAdminDash.ViewUploadPost(vp, userid, UploadFile);
+            return ViewUploads(vp.RequestId);
+        }
+        public IActionResult DeleteFile(int id, int requestid)
+        {
+            _IAdminDash.DeleteFile(id);
+            return RedirectToAction("ViewUploads", new { requestid = requestid });
+        }
+
 
 
     }

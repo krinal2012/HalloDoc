@@ -6,6 +6,8 @@ using static HalloDoc.Entity.Models.Constant;
 using System.Globalization;
 using System.Web.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Collections;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -67,6 +69,7 @@ namespace HalloDoc.Repository.Repository
                                 PatientPhoneNumber = rc.PhoneNumber,
                                 Address = rc.Address,
                                 Notes = rc.Notes,
+                                RequestClientId= rc.RequestClientId,
                                 // ProviderID = req.Physicianid,
                                 RequestorPhoneNumber = req.PhoneNumber
                             }).ToList();
@@ -100,6 +103,7 @@ namespace HalloDoc.Repository.Repository
                                 PatientPhoneNumber = rc.PhoneNumber,
                                 Address = rc.Address,
                                 Notes = rc.Notes,
+                                RequestClientId = rc.RequestClientId,
                                 // ProviderID = req.Physicianid,
                                 RequestorPhoneNumber = req.PhoneNumber
                             }).ToList();
@@ -223,7 +227,6 @@ namespace HalloDoc.Repository.Repository
                 return false;
             }
         }
-
         public bool BlockCaseInfo(int RequestId, string Notes)
         {
             try
@@ -256,6 +259,71 @@ namespace HalloDoc.Repository.Repository
             {
                 return false;
             }
-}              
+}
+        public viewDocument ViewUploadsInfo(int requestid)
+        {
+            viewDocument items = _context.RequestClients.Include( rc => rc.Request)
+                                   .Where( rc => rc.RequestId == requestid)
+                                     .Select(rc => new viewDocument()
+                                      {                                         
+                                          FirstName = rc.FirstName,
+                                          LastName = rc.LastName,
+                                          ConfirmationNumber = rc.Request.ConfirmationNumber
+                                          
+
+                                      }).FirstOrDefault();
+            List<RequestWiseFile> list = _context.RequestWiseFiles
+                      .Where(r => r.RequestId == requestid && r.IsDeleted == new BitArray(1) )
+                      .OrderByDescending(x => x.CreatedDate)
+                      .Select(r => new RequestWiseFile
+                      {
+                          CreatedDate = r.CreatedDate,
+                          FileName = r.FileName,
+                          RequestWiseFileId =r.RequestWiseFileId,
+                          RequestId = r.RequestId
+
+                      }).ToList();
+            items.Files = list;
+            return items;
+        }      
+
+        public bool ViewUploadPost(viewDocument v, int userid, IFormFile UploadFile)
+        {
+            if (UploadFile != null)
+            {
+                string FilePath = "wwwroot\\Upload";
+                string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                string fileNameWithPath = Path.Combine(path, UploadFile.FileName);
+                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    UploadFile.CopyTo(stream);
+                }
+                var requestwisefile = new RequestWiseFile
+                {
+                    RequestId = v.RequestId,
+                    FileName = UploadFile.FileName,
+                    CreatedDate = DateTime.Now,
+                    IsDeleted = new BitArray(1),
+                   
+                };
+                _context.RequestWiseFiles.Add(requestwisefile);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public void DeleteFile(int id)
+        {
+            var userToUpdate = _context.RequestWiseFiles.FirstOrDefault(x => x.RequestWiseFileId == id);
+            if (userToUpdate != null)
+            {
+                userToUpdate.IsDeleted[0] = true;
+                _context.Update(userToUpdate);
+                _context.SaveChanges();
+            }
+
+        }
     }
 }

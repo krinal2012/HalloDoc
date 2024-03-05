@@ -66,6 +66,8 @@ namespace HalloDoc.Repository.Repository
             Request.PhoneNumber = viewPatientReq.Mobile;
             Request.CreatedDate = DateTime.Now;
             Request.IsUrgentEmailSent = new BitArray(1);
+            Request.ConfirmationNumber = viewPatientReq.City.Substring(0, 2) + DateTime.Now.ToString("yyyyMM") + viewPatientReq.LastName.Substring(0, 2) + viewPatientReq.FirstName.Substring(0, 2) + "002";
+
             _context.Requests.Add(Request);
              _context.SaveChanges();
             Requestclient.RequestId = Request.RequestId;
@@ -102,6 +104,7 @@ namespace HalloDoc.Repository.Repository
                     RequestId = Request.RequestId,
                     FileName = viewPatientReq.file.FileName,
                     CreatedDate = DateTime.Now,
+                    IsDeleted = new BitArray(1),
                 };
                 _context.RequestWiseFiles.Add(requestwisefile);
                 _context.SaveChanges();
@@ -160,6 +163,7 @@ namespace HalloDoc.Repository.Repository
             Request.RelationName = viewFamilyReq.Relation;
             Request.CreatedDate = DateTime.Now;
             Request.IsUrgentEmailSent = new BitArray(1);
+            Request.ConfirmationNumber = viewFamilyReq.City.Substring(0, 2) + DateTime.Now.ToString("dMM") + viewFamilyReq.LastName.Substring(0, 2) + viewFamilyReq.FirstName.Substring(0, 2) + "002";
             _context.Requests.Add(Request);
             _context.SaveChanges();
 
@@ -193,6 +197,7 @@ namespace HalloDoc.Repository.Repository
                     RequestId = Request.RequestId,
                     FileName = viewFamilyReq.file.FileName,
                     CreatedDate = DateTime.Now,
+                    IsDeleted = new BitArray(1),
                 };
                 _context.RequestWiseFiles.Add(requestwisefile);
                 _context.SaveChanges();
@@ -252,6 +257,7 @@ namespace HalloDoc.Repository.Repository
             Request.PhoneNumber = viewBusinessReq.Mobileno;
             Request.CreatedDate = DateTime.Now;
             Request.IsUrgentEmailSent = new BitArray(1);
+            Request.ConfirmationNumber = viewBusinessReq.City.Substring(0, 2) + DateTime.Now.ToString("dMM") + viewBusinessReq.LastName.Substring(0, 2) + viewBusinessReq.FirstName.Substring(0, 2) + "002";
             _context.Requests.Add(Request);
             _context.SaveChanges();
 
@@ -336,6 +342,7 @@ namespace HalloDoc.Repository.Repository
             Request.PhoneNumber = viewConciergeReq.Mobileno;
             Request.CreatedDate = DateTime.Now;
             Request.IsUrgentEmailSent = new BitArray(1);
+            Request.ConfirmationNumber = viewConciergeReq.City.Substring(0, 2) + DateTime.Now.ToString("dMM") + viewConciergeReq.LastName.Substring(0, 2) + viewConciergeReq.FirstName.Substring(0, 2) + "002";
             _context.Requests.Add(Request);
             _context.SaveChanges();
 

@@ -2,10 +2,10 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @using HalloDoc.Entity.Models.ViewModel;
-@model List<viewDocument>;
+@model viewDocument;
 @{
     ViewData["Title"] = "Upload Document";
-    Layout = "_PatientDashboardLayout";
+    Layout = "_AdminDashboardLayout";
 }
 
 <div class="container tabcontent defaulttab" id="Tab1">
@@ -18,8 +18,9 @@
     <div class="reqform p-3 text-secondary">
         <h5>Patient name</h5>
         <span class="d-flex align-items-center">
-            <h4 class="Patient-name text-info"> @ViewData["UserName"]</h4>
-            @*<div class="doc-text-card mx-2 ">(@item.Confirmationnumber)</div> *@
+
+            <h4 class="Patient-name text-info"> @Model.FirstName @Model.LastName </h4>
+            <span class="mx-2 ">(@Model.ConfirmationNumber)</span> 
         </span>
         <p>
             Check here to review and add files that you or the client has attached to the request.
@@ -43,10 +44,20 @@
         <div class="container-fluid">
             <div class="m-4 d-flex justify-content-between align-items-center">
                 <h5 class="text-black"><b>Documents </b> </h5>
-                <a class="btn btn-outline-info dNone" onclick="DownloadAll()">Download all</a>
-                <a class="btn btn-outline-info dBlock" onclick="DownloadAll()"> + </a>
-                <a class="btn btn-outline-info dNone" onclick="DeleteAll()">Delete all</a>
-                <a class="btn btn-outline-info dNone" onclick="SendMail()">Send Mail</a>
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-outline-info dNone" onclick="DownloadAll()">Download all</a>
+                    <a class="btn btn-outline-info dBlock" onclick="DownloadAll()"> + </a>
+                    <form id="deleted" asp-action="AllFilesDelete" asp-controller="ViewAction">
+                        <input type="hidden" id="deleteids" name="deleteids" />
+                        <input type="hidden" value=" " name="Requestid" />
+                        <a id="delete" class="btn btn-outline-info text-end mx-1">
+                              Delete All
+                        </a>
+                    </form>
+                    <div id="sendmail" class="btn btn-outline-info text-end mx-1">
+                        <i class="fa-solid fa-mail"></i>  Send Mail
+                    </div>
+                </div>
             </div>
             <table class="table m-0">
                 <thead>
@@ -57,13 +68,13 @@
                             </div>
                         </th>
                         <th scope="col" class="table-text-header">Document Name</th>
-                        <th scope="col" class="table-text-header ">Uploader</th>
+                       
                         <th scope="col" class="table-text-header">Upload date</th>
                         <th scope="col" class="table-text-header">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item2 in Model)
+                    @foreach (var item2 in Model.Files)
                     {
                         <tr>
                             <td class="table-text px-3">
@@ -71,15 +82,16 @@
                                     <input class="form-check-input doc-checkbox" type="checkbox" onclick="SelectBox()">
                                 </div>
                             </td>
-                            <td class="table-text ">@item2.Filename</td>
+                            <td class="table-text ">@item2.FileName</td>                      
 
-                            <td class="table-text "> @item2.FirstName </td>
-
-                            <td class="table-text ">@item2.uploaddate</td>
+                            <td class="table-text ">@item2.CreatedDate</td>
                             <td class="table-text">
-                                <a class="btn btn-sm btn-outline-info px-3 p-1 mx-2 download-link document-button" download href="/Upload/@item2.Filename">
+                                <a class="btn btn-sm btn-outline-info mx-2 download-link document-button" download href="/Upload/@item2.FileName">
                                     <i class="fa fa-cloud-download"></i>
                                 </a>
+                                <a class="btn btn-sm  btn-outline-info" asp-action="DeleteFile" asp-controller="Admin" asp-route-id="@item2.RequestWiseFileId" asp-route-requestid="@item2.RequestId">
+                                            <i class="fa fa-trash" aria-hidden="true">  </i>
+                                 </a>
                             </td>
                         </tr>
                     }

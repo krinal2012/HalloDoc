@@ -16,6 +16,8 @@
         public string Region { get; set; }
         public string Notes { get; set; }
         public string Email { get; set; }
+        public int RequestClientId { get; set; }
+        
     }
 
     public class CountStatusWiseRequestModel
