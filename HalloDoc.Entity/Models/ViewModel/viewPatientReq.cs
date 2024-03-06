@@ -15,6 +15,7 @@ namespace Hallodoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
         public required string Email { get; set; }
+        public string Password { get; set; }
         public string Pass { get; set; }
         [Compare("Pass", ErrorMessage = "Password doesn't match.")]
         public string ConformPass { get; set; }

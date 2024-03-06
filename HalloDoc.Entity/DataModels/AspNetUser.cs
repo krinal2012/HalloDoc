@@ -29,9 +29,6 @@ public partial class AspNetUser
     [StringLength(20)]
     public string? Ip { get; set; }
 
-    [Column("CorePasswordHash ", TypeName = "character varying")]
-    public string? CorePasswordHash { get; set; }
-
     [Column(TypeName = "timestamp without time zone")]
     public DateTime? CreatedDate { get; set; }
 
@@ -46,9 +43,6 @@ public partial class AspNetUser
 
     [InverseProperty("ModifiedByNavigation")]
     public virtual ICollection<Admin> AdminModifiedByNavigations { get; set; } = new List<Admin>();
-
-    [InverseProperty("User")]
-    public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; } = new List<AspNetUserRole>();
 
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<Business> BusinessCreatedByNavigations { get; set; } = new List<Business>();
@@ -73,4 +67,8 @@ public partial class AspNetUser
 
     [InverseProperty("AspNetUser")]
     public virtual ICollection<User> Users { get; set; } = new List<User>();
+
+    [ForeignKey("UserId")]
+    [InverseProperty("Users")]
+    public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }

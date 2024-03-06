@@ -268,8 +268,7 @@ namespace HalloDoc.Repository.Repository
                                       {                                         
                                           FirstName = rc.FirstName,
                                           LastName = rc.LastName,
-                                          ConfirmationNumber = rc.Request.ConfirmationNumber
-                                          
+                                          ConfirmationNumber = rc.Request.ConfirmationNumber                                         
 
                                       }).FirstOrDefault();
             List<RequestWiseFile> list = _context.RequestWiseFiles

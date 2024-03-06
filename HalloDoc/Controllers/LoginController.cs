@@ -25,10 +25,9 @@ namespace HellodocMVC.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string Email, string PasswordHash)
+        public async Task<IActionResult> Login(string Email, string Password)
         {
-            var user = await _context.AspNetUsers.FirstOrDefaultAsync(u => u.Email == Email && u.PasswordHash == PasswordHash);
-
+            var user = await _context.AspNetUsers.FirstOrDefaultAsync(u => u.Email == Email && u.PasswordHash == Password);
             if (user == null)
             {
                 ViewData["Error"] = " Your Username or password is incorrect. ";
@@ -36,14 +35,12 @@ namespace HellodocMVC.Controllers
             }
             else
             {
-                int id = _context.Users.FirstOrDefault(u => u.AspNetUserId == user.Id).UserId;
-            string userName = _context.Users.Where(x => x.AspNetUserId == user.Id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault();
-
-            _httpContextAccessor.HttpContext.Session.SetInt32("id", id);
-            _httpContextAccessor.HttpContext.Session.SetString("Name", userName);
-
-            return RedirectToAction("Index", "Dashboard");
-        }
+                int id =  _context.Users.FirstOrDefault( u => u.AspNetUserId == user.Id).UserId;
+                string userName = _context.Users.Where(x => x.AspNetUserId == user.Id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault();
+                _httpContextAccessor.HttpContext.Session.SetInt32("id", id);
+                _httpContextAccessor.HttpContext.Session.SetString("Name", userName);
+                return RedirectToAction("Index", "Dashboard");
+            }
         //NpgsqlConnection connection = new NpgsqlConnection("Server=localhost;Database=HelloDoc;User Id=postgres;Password=krinalshah2012;Include Error Detail=True");
         //string Query = "SELECT * FROM \"AspNetUser\" where \"Email\"=@Email and \"PasswordHash \"=@PasswordHash";
         //connection.Open();
@@ -68,7 +65,7 @@ namespace HellodocMVC.Controllers
         //    ViewData["Error"] = " Your Username or password is incorrect. ";
         //    return View("../Home/Login");
         //}
-    }
+        }
 
         public IActionResult Logout()
         {

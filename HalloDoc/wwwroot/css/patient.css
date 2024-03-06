@@ -9,6 +9,9 @@ body {
     height: 100%;
     padding-top: 150px;
 }
+.right{
+    padding: 200px;
+}
 
 .bg-img {
     background: linear-gradient(rgba(255, 255, 255, .75), rgba(255, 255, 255, .75)), url('../Images/11116016_415.png');

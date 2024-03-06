@@ -2,6 +2,7 @@
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hallodoc.Controllers
@@ -18,11 +19,19 @@ namespace Hallodoc.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
         public IActionResult Index()
-        {
-           int id= (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
-           var result = _PatientDash.PatientList(id);
-           return View(result);              
+        {       
+            if (_httpContextAccessor.HttpContext.Session.GetInt32("id") == null)
+            {
+                return View("../Home/Login");
+            }
+            else
+            {
+                int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
+                var result = _PatientDash.PatientList(id);
+                return View(result);
+            }
         }
+           
         public IActionResult UploadDocument(int RequestId)
         {
             var result = _PatientDash.viewDocuments(RequestId);

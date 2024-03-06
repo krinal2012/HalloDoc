@@ -20,6 +20,7 @@ namespace HalloDoc.Controllers
             _IAdminDash = IAdminDash;
             _context = context;
         }
+        [CheckAdminAccess]
         public IActionResult Index()
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
