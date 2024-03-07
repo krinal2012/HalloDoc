@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Collections;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -208,14 +209,14 @@ namespace HalloDoc.Repository.Repository
                 if (requestData != null)
                 {
                     requestData.CaseTag = caseTag;
-                    requestData.Status = 8;
+                    requestData.Status = 3;
                     _context.Requests.Update(requestData);
                     _context.SaveChanges();
                     RequestStatusLog rsl = new RequestStatusLog();
                     rsl.RequestId = (int)RequestId;                   
                     rsl.Notes = Notes;
                     rsl.CreatedDate = DateTime.Now;
-                    rsl.Status = 8;
+                    rsl.Status = 3;
                     _context.RequestStatusLogs.Add(rsl);
                     _context.SaveChanges();
                     return true;
@@ -259,7 +260,7 @@ namespace HalloDoc.Repository.Repository
             {
                 return false;
             }
-}
+        }
         public viewDocument ViewUploadsInfo(int requestid)
         {
             viewDocument items = _context.RequestClients.Include( rc => rc.Request)
@@ -285,7 +286,6 @@ namespace HalloDoc.Repository.Repository
             items.Files = list;
             return items;
         }      
-
         public bool ViewUploadPost(viewDocument v, int userid, IFormFile UploadFile)
         {
             if (UploadFile != null)
@@ -322,7 +322,53 @@ namespace HalloDoc.Repository.Repository
                 _context.Update(userToUpdate);
                 _context.SaveChanges();
             }
+        }
+        public List<HealthProfessionalType> Professions(int RequestId)
+        {
+            var data = _context.HealthProfessionalTypes.ToList();
+            return (data);
+        }
+        public List<HealthProfessional> VendorByProfession(int Professionid)
+        {
+            var result = _context.HealthProfessionals
+                        .Where(req => req.Profession == Professionid)
+                        .ToList();
+            return result;
+        }
+        public HealthProfessional SendOrdersInfo(int selectedValue)
+        {
+            var result = _context.HealthProfessionals
+                        .FirstOrDefault(req => req.VendorId == selectedValue);                        
+            return result;
+        }
+        public bool SendOrders(int Requestid, OrderDetail data, string Notes)
+        {
+            //try
+            //{
+                OrderDetail od = new OrderDetail
+                {
+                    RequestId = Requestid,
+                    VendorId = data.VendorId,
+                    FaxNumber = data.FaxNumber,
+                    Email = data.Email,
+                    BusinessContact = data.BusinessContact,
+                    Prescription = Notes,
+                    NoOfRefill = data.NoOfRefill,
+                    CreatedDate = DateTime.Now,                    
+                };
+                _context.OrderDetails.Add(od);
+                _context.SaveChanges();
+                return true;
+            //}           
+
+            //catch (Exception)
+            //{
+            //    return false;
+            //}
 
         }
     }
+  
+
+   
 }

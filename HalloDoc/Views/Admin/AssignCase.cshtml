@@ -15,16 +15,16 @@
                 <input type="hidden" name="requestid" id="RequestID_ModelAssignCase" />
             <div class="modal-body">
                     <p><small>To assign this request, search and select another physician.</small> </p>
-                <div>
-                        <select class="form-select mb-3" id="region" onchange="AssignPhysician()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
-                        <option value="">Search by Region</option>
-                       @* @foreach( var items in Model)
-                        {
-                            <option value="@items.RegionId"> @items.Name </option>
-                        }*@
+            <div>
+                    <select class="form-select mb-3" id="region" onchange="AssignPhysician()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
+                    <option value="">Search by Region</option>
+                    @* @foreach( var items in Model)
+                    {
+                        <option value="@items.RegionId"> @items.Name </option>
+                    }*@
                     </select>
-                        <select class="form-select mb-3" id="provider" name="PhysicianId">
-                           <option value="">Please Select</option>
+                    <select class="form-select mb-3" id="provider" name="PhysicianId">
+                        <option value="">Please Select</option>
                        
                     </select>
                 </div>

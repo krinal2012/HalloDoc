@@ -19,5 +19,9 @@ namespace HalloDoc.Repository.Repository.Interface
         public viewDocument ViewUploadsInfo(int requestid);
         public bool ViewUploadPost(viewDocument v, int userid, IFormFile UploadFile);
         public void DeleteFile(int id);
+        public List<HealthProfessionalType> Professions(int RequestId );
+        public List<HealthProfessional> VendorByProfession(int Professionid);
+        public HealthProfessional SendOrdersInfo(int selectedValue);
+        public bool SendOrders(int Requestid, OrderDetail data, string Notes);
     }
 }

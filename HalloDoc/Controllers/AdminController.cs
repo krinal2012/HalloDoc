@@ -20,7 +20,7 @@ namespace HalloDoc.Controllers
             _IAdminDash = IAdminDash;
             _context = context;
         }
-        [CheckAdminAccess]
+        //[CheckAdminAccess]
         public IActionResult Index()
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
@@ -57,8 +57,7 @@ namespace HalloDoc.Controllers
         public IActionResult viewNotes()
         {
             return View();
-        }
-       
+        }    
         public IActionResult PhysicianbyRegion(int Regionid)
         {
             var v = _IAdminDash.ProviderbyRegion(Regionid);
@@ -99,8 +98,27 @@ namespace HalloDoc.Controllers
             _IAdminDash.DeleteFile(id);
             return RedirectToAction("ViewUploads", new { requestid = requestid });
         }
-
-
+        public IActionResult SendOrders(int RequestId)
+        {
+            ViewBag.Professions = _IAdminDash.Professions(RequestId);
+            return View(); 
+        }
+        public IActionResult VendorByProfession(int Professionid)
+        {
+            var v = _IAdminDash.VendorByProfession(Professionid);
+            return Json(v);
+        }
+        public IActionResult SendOrdersData(int selectedValue)
+        {            
+            var result = _IAdminDash.SendOrdersInfo(selectedValue);
+            return Json(result);
+        }
+        [HttpPost]
+        public IActionResult SendOrders(int Requestid, OrderDetail o, string Notes)
+        {
+            var v = _IAdminDash.SendOrders(Requestid, o, Notes);
+            return RedirectToAction("Index", "Admin");
+        }
 
     }
 
