@@ -8,14 +8,18 @@
 @using HalloDoc.Entity.Models.ViewModel;
 @using static HalloDoc.Entity.Models.Constant;
 @model ViewCaseModel;
-@Html.Partial("AssignCase.cshtml")
-<div class="d-flex justify-content-between align-items-center container pb-1">
+@Html.Partial("_AssignCase.cshtml")
+<div class="d-flex justify-content-between align-items-center container pb-1 mt-5">
     <div class="d-flex align-self-center">
     <h3 class="">New Request</h3>
         <btn class=" @Enum.GetName(typeof(RequestTypes),Model.RequestTypeId) mx-3 align-self-center p-2 rounded-pill text-white">@Enum.GetName(typeof(RequestTypes),Model.RequestTypeId)</btn>
     </div>
     <div class=" btn d-flex justify-content-end">
-        <a asp-action="Index" asp-controller="Admin" class=" border border-info rounded p-1 m-1 "><i class="fa fa-angle-left p-2 fa-sm text-info"> Back</i> </a>
+        <a asp-action="Index" asp-controller="Admin" class="btn border border-info shadow-none">
+            <strong class="text-info">
+                <i class="fa fa-angle-left pe-1 text-info"> </i> Back
+            </strong>
+        </a>
     </div>
 </div>
 <div class="bg-white reqform p-3 container ">

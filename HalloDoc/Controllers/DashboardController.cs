@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hallodoc.Controllers
 {
+    //[CustomAuthorize("1")]
     public class DashboardController : Controller
     {
         private readonly HelloDocContext _context;

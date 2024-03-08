@@ -1,5 +1,7 @@
 ﻿using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
+using HalloDoc.Repository.Repository;
+using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +14,12 @@ namespace HellodocMVC.Controllers
     {
         private readonly HelloDocContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        //private readonly IJWTInterface _jWTInterface;
         public LoginController(HelloDocContext context, IHttpContextAccessor httpContextAccessor)
-
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            //_jWTInterface = jWTInterface;
         }
         
         public IActionResult Index()
@@ -25,22 +28,24 @@ namespace HellodocMVC.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string Email, string Password)
-        {
-            var user = await _context.AspNetUsers.FirstOrDefaultAsync(u => u.Email == Email && u.PasswordHash == Password);
-            if (user == null)
-            {
-                ViewData["Error"] = " Your Username or password is incorrect. ";
-                return View("../Home/Login");
-            }
-            else
-            {
-                int id =  _context.Users.FirstOrDefault( u => u.AspNetUserId == user.Id).UserId;
-                string userName = _context.Users.Where(x => x.AspNetUserId == user.Id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault();
-                _httpContextAccessor.HttpContext.Session.SetInt32("id", id);
-                _httpContextAccessor.HttpContext.Session.SetString("Name", userName);
-                return RedirectToAction("Index", "Dashboard");
-            }
+        //public async Task<IActionResult> Login(string Email, string Password)
+        //{
+            //var user = await _context.AspNetUsers.Include(x=>x.AspNetUserRoles).FirstOrDefaultAsync(u => u.Email == Email && u.PasswordHash == Password);
+            //if (user == null)
+            //{
+            //    ViewData["Error"] = " Your Username or password is incorrect. ";
+            //    return View("../Home/Login");
+            //}
+            //else
+            //{
+            //    var jwtToken = _jWTInterface.GenerateToken(user);
+            //    Response.Cookies.Append("jwt", jwtToken);
+            //    int id =  _context.Users.FirstOrDefault( u => u.AspNetUserId == user.Id).UserId;
+            //    string userName = _context.Users.Where(x => x.AspNetUserId == user.Id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault();
+            //    _httpContextAccessor.HttpContext.Session.SetInt32("id", id);
+            //    _httpContextAccessor.HttpContext.Session.SetString("Name", userName);
+            //    return RedirectToAction("Index", "Dashboard");
+            //}
         //NpgsqlConnection connection = new NpgsqlConnection("Server=localhost;Database=HelloDoc;User Id=postgres;Password=krinalshah2012;Include Error Detail=True");
         //string Query = "SELECT * FROM \"AspNetUser\" where \"Email\"=@Email and \"PasswordHash \"=@PasswordHash";
         //connection.Open();
@@ -65,7 +70,7 @@ namespace HellodocMVC.Controllers
         //    ViewData["Error"] = " Your Username or password is incorrect. ";
         //    return View("../Home/Login");
         //}
-        }
+        //}
 
         public IActionResult Logout()
         {

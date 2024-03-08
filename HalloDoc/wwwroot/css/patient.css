@@ -4,7 +4,6 @@ body {
 .bg-body{
     background-color: white !important;
 }
-
 .maindiv {
     height: 100%;
     padding-top: 150px;
@@ -12,7 +11,6 @@ body {
 .right{
     padding: 200px;
 }
-
 .bg-img {
     background: linear-gradient(rgba(255, 255, 255, .75), rgba(255, 255, 255, .75)), url('../Images/11116016_415.png');
     background-repeat: no-repeat;
@@ -23,22 +21,20 @@ body {
     backdrop-filter: blur(5px);
     height: 70vh;
 }
-
+/*Forms*/
 .form-floating label {
     margin-left: 15px;
     color: gray;
 }
-
 .form-floating .form-control:focus ~ label {
     color: #0dcaf0;
 }
-
 .form-floating input:focus,
 .form-group textarea:focus {
     border: 1px solid #0dcaf0;
     box-shadow: none;
 }
-
+/*password*/
 .password button,
 .email button {
     position: absolute;
@@ -49,20 +45,24 @@ body {
     padding-right: 3px;
     border: 0;
 }
-
 .fa-eye {
     display: block;
 }
-
 .fa-eye-slash {
     display: none;
 }
-
-/* patient-site */
+/* header */
+.head img {
+    height: 90px;
+}
+/* footer */
 .foot span {
     background-color: #e4e4e4;
 }
-
+.head, .reqform {
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.25);
+}
+/*submit form buttons & status buttons */
 .btn-r,
 .btn-r:active,
 .btn-r:visited,
@@ -76,16 +76,6 @@ body {
         border-color: #4e5fe4;
         color: #e4e4e4;
     }
-
-/* header */
-.head img {
-    height: 90px;
-}
-
-.head, .reqform {
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.25);
-}
-
 .btn-p,
 .btn-p:visited,
 .btn-p:focus {
@@ -93,24 +83,20 @@ body {
     border-color: #8064A2;
     color: #8064A2;
 }
-
-    .btn-p:hover, .btn-p:active {
-        background-color: #8064A2;
-        border-color: #8064A2;
-        color: #e4e4e4;
-    }
-    .btn-info{
-        color:white;
-    }
-
+.btn-p:hover, .btn-p:active {
+    background-color: #8064A2;
+    border-color: #8064A2;
+    color: #e4e4e4;
+}
+.btn-info{
+    color:white;
+}
 .btn-i {
     background-color: #dcf6ff;
 }
-
 .btn-outline-success {
     background-color: #cffee0;
 }
-
 .btn-b,
 .btn-b:visited,
 .btn-b:focus {
@@ -118,20 +104,17 @@ body {
     border-color: #962b64;
     color: #962b64;
 }
-
     .btn-b:active, .btn-b:hover {
         background-color: #962b64;
         border-color: #962b64;
         color: #e4e4e4;
     }
-
 .btn-c
  {
     background-color: #a4d6f0;
     border-color: #2b6ba2;
     color: #2b6ba2;
 }
-
     .btn-c:active, .btn-c:hover, .btn-c:focus{
         background-color: #2b6ba2;
         border-color: #2b6ba2;
@@ -144,71 +127,61 @@ body {
     border-color: #8a76a0;
     color: #8a76a0;
 }
-
-    .btn-u:active, .btn-u:hover {
-        background-color: #8a76a0;
-        border-color: #8a76a0;
-        color: #e4e4e4;
-    }
-
+.btn-u:active, .btn-u:hover {
+    background-color: #8a76a0;
+    border-color: #8a76a0;
+    color: #e4e4e4;
+}
 .backBtn {
     position: absolute;
     right: 10vw;
     top: 14vh;
 }
-
-    .backBtn:hover {
-        background-color: #dcf6ff;
-    }
+.backBtn:hover {
+    background-color: #dcf6ff;
+}
 
 /* country code */
 .iti {
     display: block;
     width: 100%;
 }
-/*tab */
+/*tabs */
 .activeNav {
     color: #8dcaf0 !important;
     font-weight: 600;
     border-bottom: 2px solid #8dcaf0;
 }
-
 .phone .form-control {
     line-height: 2.6;
 }
 
-/*dashboard*/
+/*admin dashboard*/
 .search {
     position: relative;
     box-shadow: 0 0 40px rgba(51, 51, 51, .1);
 }
-
-    .search input, .search select {
-        height: 50px;
-        text-indent: 25px;
-        border: 2px solid #d6d4d4;
-    }
-
-    .search select {
-        min-width: 230px;
-    }
-
-        .search input:focus, .search select:focus {
-            box-shadow: none;
-            border: 2px solid #0dcaf0;
-        }
-
-    .search .fa-search {
-        position: absolute;
-        top: 20px;
-        left: 16px;
-    }
-
+.search input, .search select {
+    height: 50px;
+    text-indent: 25px;
+    border: 2px solid #d6d4d4;
+}
+.search select {
+    min-width: 230px;
+}
+.search input:focus, .search select:focus {
+    box-shadow: none;
+    border: 2px solid #0dcaf0;
+}
+.search .fa-search {
+    position: absolute;
+    top: 20px;
+    left: 16px;
+}
 .searchBar {
     display: flex;
     justify-content: space-between;
 }
-
 .searchPatientRegion {
     display: inline-flex;
 }
@@ -216,22 +189,32 @@ body {
     display: inline-flex;
     align-items: center;
 }
+/*Buttons */
 .Patient {
     background-color: #5fbc61;
 }
-
 .Business {
     background-color: #0a7cb9;
 }
-
 .Family {
     background-color: #ed9124;
 }
-
 .Concierge {
     background-color: #cd697b ;
 }
-
+.txt-Patient {
+    color: #5fbc61;
+}
+.txt-Business {
+    color: #0a7cb9;
+}
+.txt-Family {
+    color: #ed9124;
+}
+.txt-Concierge {
+    color: #cd697b;
+}
+/*media query*/
 @media only screen and (max-width: 600px) {
     .maindiv {
         padding-top: 120px;
@@ -270,19 +253,4 @@ body {
     .adminIcon {
         display: none;
     }
-}
-.txt-Patient {
-    color: #5fbc61;
-}
-
-.txt-Business {
-    color: #0a7cb9;
-}
-
-.txt-Family {
-    color: #ed9124;
-}
-
-.txt-Concierge {
-    color: #cd697b;
 }

@@ -14,7 +14,7 @@ namespace HalloDoc.Controllers
     {
         private readonly IAdminDash _IAdminDash;
         private readonly HelloDocContext _context;
-      
+
         public AdminController(IAdminDash IAdminDash, HelloDocContext context)
         {
             _IAdminDash = IAdminDash;
@@ -24,9 +24,10 @@ namespace HalloDoc.Controllers
         public IActionResult Index()
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
+            //TempData["AssignCase"] = new SelectList (ViewBag.AssignCase = _IAdminDash.AssignCase(), "RegionId","Name");
             ViewBag.CaseReason = _IAdminDash.CaseReason();
             CountStatusWiseRequestModel count = _IAdminDash.CountRequestData();
-            return View(count);            
+            return View(count);
         }
 
         public IActionResult GetPartialView(string btnName, int statusid, string searchValue)
@@ -39,13 +40,13 @@ namespace HalloDoc.Controllers
         {
             var result = _IAdminDash.NewRequestData(1, null);
             return PartialView(result);
-          
+
         }
         public IActionResult viewCase(int RequestId, int RequestTypeId)
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             var result = _IAdminDash.ViewCaseData(RequestId, RequestTypeId);
-            return View(result);    
+            return View(result);
         }
         [HttpPost]
         public IActionResult viewCase(int RequestId, int RequestTypeId, ViewCaseModel vp)
@@ -57,7 +58,7 @@ namespace HalloDoc.Controllers
         public IActionResult viewNotes()
         {
             return View();
-        }    
+        }
         public IActionResult PhysicianbyRegion(int Regionid)
         {
             var v = _IAdminDash.ProviderbyRegion(Regionid);
@@ -70,6 +71,12 @@ namespace HalloDoc.Controllers
             return RedirectToAction("Index", "Admin");
         }
         [HttpPost]
+        public IActionResult TransferCase(int RequestId, int PhysicianId, string Notes)
+        {
+            _IAdminDash.TransferCaseInfo(RequestId, PhysicianId, Notes);
+            return RedirectToAction("Index", "Admin");
+        }
+        [HttpPost]
         public IActionResult CancleCase(int? RequestId, string Notes, string CaseTag)
         {
             var result = _IAdminDash.CancleCaseInfo(RequestId, Notes, CaseTag);
@@ -78,17 +85,17 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult BlockCase(int RequestId, string Notes)
         {
-            var res= _IAdminDash.BlockCaseInfo(RequestId, Notes);
+            var res = _IAdminDash.BlockCaseInfo(RequestId, Notes);
             return RedirectToAction("Index", "Admin");
         }
         public IActionResult ViewUploads(int requestid)
         {
-            var v = _IAdminDash.ViewUploadsInfo( requestid);
+            var v = _IAdminDash.ViewUploadsInfo(requestid);
             return View("../Admin/ViewUploads", v);
-          
+
         }
         [HttpPost]
-        public IActionResult ViewUploads(viewDocument vp, int userid,IFormFile UploadFile)
+        public IActionResult ViewUploads(viewDocument vp, int userid, IFormFile UploadFile)
         {
             var v = _IAdminDash.ViewUploadPost(vp, userid, UploadFile);
             return ViewUploads(vp.RequestId);
@@ -101,7 +108,7 @@ namespace HalloDoc.Controllers
         public IActionResult SendOrders(int RequestId)
         {
             ViewBag.Professions = _IAdminDash.Professions(RequestId);
-            return View(); 
+            return View();
         }
         public IActionResult VendorByProfession(int Professionid)
         {
@@ -109,7 +116,7 @@ namespace HalloDoc.Controllers
             return Json(v);
         }
         public IActionResult SendOrdersData(int selectedValue)
-        {            
+        {
             var result = _IAdminDash.SendOrdersInfo(selectedValue);
             return Json(result);
         }
@@ -119,9 +126,13 @@ namespace HalloDoc.Controllers
             var v = _IAdminDash.SendOrders(Requestid, o, Notes);
             return RedirectToAction("Index", "Admin");
         }
+        public IActionResult ClearCase(int RequestId)
+        {
+            var v = _IAdminDash.ClearCaseInfo(RequestId);
+            return RedirectToAction("Index", "Admin");
+        }
 
     }
-
 }
 
 

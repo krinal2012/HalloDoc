@@ -10,12 +10,11 @@
 }
 <div>
     @Html.Partial("_BlockCase.cshtml")
-    @Html.Partial("AssignCase.cshtml")
+    @Html.Partial("_AssignCase.cshtml")
     @Html.Partial("_CancleCase.cshtml")
-    
-
+    @Html.Partial("_TransferCase.cshtml")
 </div>
-<div class="row mb-5">
+<div class="row mb-5 px-3">
     <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6" data-btn="new" data-id="1">
         <i class="fa fa-solid fa-circle-plus me-2" aria-hidden="true"></i><b>New</b>
         <p class="h4">@Model.NewRequest</p>
@@ -233,5 +232,42 @@
     //});
 
     </script>
-
-
+<script>
+    function ClearSwal(RequestId) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-info m-2 shadow-none text-white px-3",
+                denyButton: "btn btn-outline-info m-2"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({      
+            icon: "warning",
+            title: "Confirmation for clear case",
+            text: "Are you sure you want to clear this request? Once clear this request then you are not able to see this request.",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Clear",
+            denyButtonText: "Cancel",
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ClearCase", "Admin")?RequestId=' + RequestId,
+                    cache: false,
+                    success: function (response) {
+                        console.log(response);
+                        location.reload();
+                    },
+                    error: function () {
+                        alert("Error");
+                    }
+                });                
+            }
+            else if (result.isDenied) {
+                Swal.fire("Denied", "", "");
+            }
+        });
+    }
+</script>

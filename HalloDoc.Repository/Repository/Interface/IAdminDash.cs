@@ -13,6 +13,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public List<Physician> ProviderbyRegion(int Regionid);
         public List<Region> AssignCase();
         public void AssignCaseInfo(int RequestId, int PhysicianId, string Notes);
+        public void TransferCaseInfo(int RequestId, int PhysicianId, string Notes);
         public List<CaseTag> CaseReason();
         public bool CancleCaseInfo(int? RequestId, string caseTag, string Notes);
         public bool BlockCaseInfo(int RequestId, string Notes);
@@ -23,5 +24,6 @@ namespace HalloDoc.Repository.Repository.Interface
         public List<HealthProfessional> VendorByProfession(int Professionid);
         public HealthProfessional SendOrdersInfo(int selectedValue);
         public bool SendOrders(int Requestid, OrderDetail data, string Notes);
+        public bool ClearCaseInfo(int? RequestId); 
     }
 }

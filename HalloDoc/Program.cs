@@ -12,6 +12,7 @@ builder.Services.AddSession();
 builder.Services.AddScoped<IPatientRequest, PatientRequest>();
 builder.Services.AddScoped<IPatientDash, PatientDash>();
 builder.Services.AddScoped<IAdminDash, AdminDash>();
+//builder.Services.AddScoped<IJWTInterface, JWTService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

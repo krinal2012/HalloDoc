@@ -28,13 +28,13 @@ namespace HalloDoc.Repository.Repository
                 ActiveRequest = _context.Requests.Where(r => (r.Status == 4 || r.Status == 5)).Count(),
                 ConcludeRequest = _context.Requests.Where(r => r.Status == 6).Count(),
                 ToCloseRequest = _context.Requests.Where(r => (r.Status == 3 || r.Status == 7 || r.Status == 8)).Count(),
-                UnpaidRequest = _context.Requests.Where(r => r.Status == 9).Count()                
+                UnpaidRequest = _context.Requests.Where(r => r.Status == 9).Count()
             };
         }
         public List<AdminList> NewRequestData(int statusid, string? searchValue)
         {
-            List<int> id=new List<int>();
-            if(statusid == 1) { id.Add(1); }
+            List<int> id = new List<int>();
+            if (statusid == 1) { id.Add(1); }
             if (statusid == 2) { id.Add(2); }
             if (statusid == 3)
                 id.AddRange(new int[] { 4, 5 });
@@ -70,7 +70,7 @@ namespace HalloDoc.Repository.Repository
                                 PatientPhoneNumber = rc.PhoneNumber,
                                 Address = rc.Address,
                                 Notes = rc.Notes,
-                                RequestClientId= rc.RequestClientId,
+                                RequestClientId = rc.RequestClientId,
                                 // ProviderID = req.Physicianid,
                                 RequestorPhoneNumber = req.PhoneNumber
                             }).ToList();
@@ -112,12 +112,12 @@ namespace HalloDoc.Repository.Repository
 
             }
         }
-        public ViewCaseModel ViewCaseData(int RequestID,int RequestTypeId)
+        public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId)
         {
-            ViewCaseModel? list = 
+            ViewCaseModel? list =
                         _context.RequestClients
-                       .Where(req => req.Request.RequestId== RequestID)
-                        .Select(req=> new ViewCaseModel()
+                       .Where(req => req.Request.RequestId == RequestID)
+                        .Select(req => new ViewCaseModel()
                         {
                             RequestId = RequestID,
                             RequestTypeId = RequestTypeId,
@@ -136,9 +136,9 @@ namespace HalloDoc.Repository.Repository
         {
             var userToUpdate = _context.RequestClients.FirstOrDefault(x => x.RequestId == RequestID);
             if (userToUpdate != null)
-            {                
+            {
                 userToUpdate.PhoneNumber = vp.Mobile;
-                userToUpdate.Email = vp.Email;              
+                userToUpdate.Email = vp.Email;
                 _context.Update(userToUpdate);
                 _context.SaveChanges();
             }
@@ -167,7 +167,7 @@ namespace HalloDoc.Repository.Repository
                         {
                             PhysicianId = req.PhysicianId,
                             FirstName = req.FirstName,
-                            LastName =req.LastName
+                            LastName = req.LastName
                         }).ToList();
             return result;
 
@@ -179,7 +179,7 @@ namespace HalloDoc.Repository.Repository
         }
         public void AssignCaseInfo(int RequestId, int PhysicianId, string Notes)
         {
-            var request =  _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
+            var request = _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
             request.PhysicianId = PhysicianId;
             request.Status = 2;
             _context.Requests.Update(request);
@@ -193,8 +193,25 @@ namespace HalloDoc.Repository.Repository
             rsl.Status = 2;
             _context.RequestStatusLogs.Add(rsl);
             _context.SaveChanges();
-            
 
+        }
+        public void TransferCaseInfo(int RequestId, int PhysicianId, string Notes)
+        {
+            var request = _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
+
+            RequestStatusLog rsl = new RequestStatusLog();
+            rsl.RequestId = RequestId;
+            rsl.PhysicianId = request.PhysicianId;
+            rsl.TransToPhysicianId = PhysicianId;
+            rsl.Notes = Notes;
+            rsl.CreatedDate = DateTime.Now;
+            rsl.Status = 2;
+            _context.RequestStatusLogs.Add(rsl);
+            _context.SaveChanges();
+
+            request.PhysicianId = PhysicianId;
+            _context.Requests.Update(request);
+            _context.SaveChanges();
         }
         public List<CaseTag> CaseReason()
         {
@@ -213,7 +230,7 @@ namespace HalloDoc.Repository.Repository
                     _context.Requests.Update(requestData);
                     _context.SaveChanges();
                     RequestStatusLog rsl = new RequestStatusLog();
-                    rsl.RequestId = (int)RequestId;                   
+                    rsl.RequestId = (int)RequestId;
                     rsl.Notes = Notes;
                     rsl.CreatedDate = DateTime.Now;
                     rsl.Status = 3;
@@ -255,7 +272,7 @@ namespace HalloDoc.Repository.Repository
                     return false;
                 }
             }
-             
+
             catch (Exception ex)
             {
                 return false;
@@ -263,29 +280,29 @@ namespace HalloDoc.Repository.Repository
         }
         public viewDocument ViewUploadsInfo(int requestid)
         {
-            viewDocument items = _context.RequestClients.Include( rc => rc.Request)
-                                   .Where( rc => rc.RequestId == requestid)
+            viewDocument items = _context.RequestClients.Include(rc => rc.Request)
+                                   .Where(rc => rc.RequestId == requestid)
                                      .Select(rc => new viewDocument()
-                                      {                                         
-                                          FirstName = rc.FirstName,
-                                          LastName = rc.LastName,
-                                          ConfirmationNumber = rc.Request.ConfirmationNumber                                         
+                                     {
+                                         FirstName = rc.FirstName,
+                                         LastName = rc.LastName,
+                                         ConfirmationNumber = rc.Request.ConfirmationNumber
 
-                                      }).FirstOrDefault();
+                                     }).FirstOrDefault();
             List<RequestWiseFile> list = _context.RequestWiseFiles
-                      .Where(r => r.RequestId == requestid && r.IsDeleted == new BitArray(1) )
+                      .Where(r => r.RequestId == requestid && r.IsDeleted == new BitArray(1))
                       .OrderByDescending(x => x.CreatedDate)
                       .Select(r => new RequestWiseFile
                       {
                           CreatedDate = r.CreatedDate,
                           FileName = r.FileName,
-                          RequestWiseFileId =r.RequestWiseFileId,
+                          RequestWiseFileId = r.RequestWiseFileId,
                           RequestId = r.RequestId
 
                       }).ToList();
             items.Files = list;
             return items;
-        }      
+        }
         public bool ViewUploadPost(viewDocument v, int userid, IFormFile UploadFile)
         {
             if (UploadFile != null)
@@ -305,7 +322,7 @@ namespace HalloDoc.Repository.Repository
                     FileName = UploadFile.FileName,
                     CreatedDate = DateTime.Now,
                     IsDeleted = new BitArray(1),
-                   
+
                 };
                 _context.RequestWiseFiles.Add(requestwisefile);
                 _context.SaveChanges();
@@ -338,27 +355,27 @@ namespace HalloDoc.Repository.Repository
         public HealthProfessional SendOrdersInfo(int selectedValue)
         {
             var result = _context.HealthProfessionals
-                        .FirstOrDefault(req => req.VendorId == selectedValue);                        
+                        .FirstOrDefault(req => req.VendorId == selectedValue);
             return result;
         }
         public bool SendOrders(int Requestid, OrderDetail data, string Notes)
         {
             //try
             //{
-                OrderDetail od = new OrderDetail
-                {
-                    RequestId = Requestid,
-                    VendorId = data.VendorId,
-                    FaxNumber = data.FaxNumber,
-                    Email = data.Email,
-                    BusinessContact = data.BusinessContact,
-                    Prescription = Notes,
-                    NoOfRefill = data.NoOfRefill,
-                    CreatedDate = DateTime.Now,                    
-                };
-                _context.OrderDetails.Add(od);
-                _context.SaveChanges();
-                return true;
+            OrderDetail od = new OrderDetail
+            {
+                RequestId = Requestid,
+                VendorId = data.VendorId,
+                FaxNumber = data.FaxNumber,
+                Email = data.Email,
+                BusinessContact = data.BusinessContact,
+                Prescription = Notes,
+                NoOfRefill = data.NoOfRefill,
+                CreatedDate = DateTime.Now,
+            };
+            _context.OrderDetails.Add(od);
+            _context.SaveChanges();
+            return true;
             //}           
 
             //catch (Exception)
@@ -367,8 +384,36 @@ namespace HalloDoc.Repository.Repository
             //}
 
         }
+        public bool ClearCaseInfo(int? RequestId)
+        {
+            try
+            {
+                var requestData = _context.Requests.FirstOrDefault(e => e.RequestId == RequestId);
+                if (requestData != null)
+                {
+                    requestData.Status = 10;
+                    _context.Requests.Update(requestData);
+                    _context.SaveChanges();
+                    RequestStatusLog rsl = new RequestStatusLog();
+                    rsl.RequestId = (int)RequestId;
+                    rsl.CreatedDate = DateTime.Now;
+                    rsl.Status = 10;
+                    _context.RequestStatusLogs.Add(rsl);
+                    _context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
-  
+}
 
    
-}
+
