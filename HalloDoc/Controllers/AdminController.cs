@@ -55,9 +55,35 @@ namespace HalloDoc.Controllers
             var result = _IAdminDash.EditViewCaseData(RequestId, RequestTypeId, vp);
             return View(result);
         }
-        public IActionResult viewNotes()
+        public IActionResult viewNotes(int RequestId)
         {
-            return View();
+            viewNotesData result = _IAdminDash.viewNotesData(RequestId);
+            return View("../Admin/viewNotes", result);
+           // return View();
+        }
+        [HttpPost]
+        public IActionResult viewNotes(int RequestID, string? adminnotes, string? physiciannotes)
+        {
+            //if (adminnotes != null || physiciannotes != null)
+            //{
+                bool result = _IAdminDash.ViewNotes(adminnotes, physiciannotes, RequestID);
+                //if (result)
+                //{
+                //    _notyf.Success("Notes Updated successfully...");
+                    return RedirectToAction("ViewNotes", new { id = RequestID });
+                //}
+                //else
+                //{
+                //    _notyf.Error("Notes Not Updated");
+                //    return View("../AdminActions/ViewNotes");
+                //}
+            //}
+            //else
+            //{
+            //    _notyf.Information("Please Select one of the note!!");
+            //    TempData["Errormassage"] = "Please Select one of the note!!";
+            //    return RedirectToAction("ViewNotes", new { id = RequestID });
+            //}
         }
         public IActionResult PhysicianbyRegion(int Regionid)
         {

@@ -70,12 +70,11 @@ body {
     background-color: #0d1556;
     border-color: #0d1556;
 }
-
-    .btn-r:hover {
-        background-color: #4e5fe4;
-        border-color: #4e5fe4;
-        color: #e4e4e4;
-    }
+.btn-r:hover {
+    background-color: #4e5fe4;
+    border-color: #4e5fe4;
+    color: #e4e4e4;
+}
 .btn-p,
 .btn-p:visited,
 .btn-p:focus {
@@ -104,22 +103,22 @@ body {
     border-color: #962b64;
     color: #962b64;
 }
-    .btn-b:active, .btn-b:hover {
-        background-color: #962b64;
-        border-color: #962b64;
-        color: #e4e4e4;
-    }
+.btn-b:active, .btn-b:hover {
+    background-color: #962b64;
+    border-color: #962b64;
+    color: #e4e4e4;
+}
 .btn-c
- {
+{
     background-color: #a4d6f0;
     border-color: #2b6ba2;
     color: #2b6ba2;
 }
-    .btn-c:active, .btn-c:hover, .btn-c:focus{
-        background-color: #2b6ba2;
-        border-color: #2b6ba2;
-        color: #e4e4e4;
-    }
+.btn-c:active, .btn-c:hover, .btn-c:focus{
+    background-color: #2b6ba2;
+    border-color: #2b6ba2;
+    color: #e4e4e4;
+}
 .btn-u,
 .btn-u:visited,
 .btn-u:focus {
@@ -140,7 +139,6 @@ body {
 .backBtn:hover {
     background-color: #dcf6ff;
 }
-
 /* country code */
 .iti {
     display: block;
@@ -155,7 +153,6 @@ body {
 .phone .form-control {
     line-height: 2.6;
 }
-
 /*admin dashboard*/
 .search {
     position: relative;
@@ -238,18 +235,15 @@ body {
         flex-direction: column;
     }
 }
-
 @media (max-width : 925px) {
     .searchBar {
         display: flex;
         flex-direction: column;
     }
-
     .requestType {
         display: flex;
         justify-content: start;
     }
-
     .adminIcon {
         display: none;
     }

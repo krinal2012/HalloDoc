@@ -56,7 +56,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'"><i class="bi bi-journal-text"></i> View Case</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-x-circle"></i> View Uploads</a></li>
-                            <li><a class="dropdown-item" ><i class="bi bi-journal-text"></i> View Notes</a></li>
+                            <li><a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId"><i class="bi bi-journal-text"></i> View Notes</a></li>
                             <li><a class="dropdown-item"><i class="bi bi-journal-text"></i> Orders</a></li>
                             <li><a class="dropdown-item" ><i class="bi bi-journal-text"></i> Close case</a></li>
                             <li><a class="dropdown-item" ><i class="bi bi-journal-text"></i> Doctor's Note</a></li>

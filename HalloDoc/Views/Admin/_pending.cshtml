@@ -84,7 +84,8 @@
                                 <a class="dropdown-item" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId" >
                                 <i class="bi bi-x-circle"></i> View Uploads</a></li>
                             <li>
-                                <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin"><i class="bi bi-journal-text">
+                                <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
+                                    <i class="bi bi-journal-text">
                                 </i> View Notes</a></li>
                             <li>
                                 <a class="dropdown-item" data-bs-toggle="modal" onclick="Transfercaseid(@item.RequestId)" data-bs-target=" #Transfer">
@@ -146,7 +147,7 @@
                             </button>
                         </div>
                         <div class="col-6 mb-3">
-                            <a class="btn btn-success text-white rounded-pill 2px w-100" asp-action="viewNotes" asp-controller="Admin">
+                            <a class="btn btn-success text-white rounded-pill 2px w-100" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
                                 <small>View Notes</small>
                             </a>
                         </div>

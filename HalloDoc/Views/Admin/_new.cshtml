@@ -87,7 +87,7 @@
                                 <i class="bi bi-journal-text"></i> View Case</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin">
+                                <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
                                 <i class="bi bi-journals"></i> View Notes</a>
                             </li>
                             <li>
@@ -157,7 +157,7 @@
                         </div>
 
                         <div class="col-6 mb-3" >
-                            <a class="btn btn-success text-white rounded-pill 2px w-100" asp-action="viewNotes" asp-controller="Admin">
+                            <a class="btn btn-success text-white rounded-pill 2px w-100" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
                                 <small>View Notes</small>
                             </a>
                         </div>
