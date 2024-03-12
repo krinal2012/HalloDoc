@@ -14,8 +14,4 @@ public partial class AspNetRole
 
     [StringLength(256)]
     public string Name { get; set; } = null!;
-
-    [ForeignKey("RoleId")]
-    [InverseProperty("Roles")]
-    public virtual ICollection<AspNetUser> Users { get; set; } = new List<AspNetUser>();
 }

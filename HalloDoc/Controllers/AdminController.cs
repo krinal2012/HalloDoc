@@ -1,25 +1,29 @@
-﻿using HalloDoc.Entity.DataContext;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Xml.Linq;
 using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Controllers
 {
+    [CheckProviderAccess("Admin")]
     public class AdminController : Controller
     {
         private readonly IAdminDash _IAdminDash;
         private readonly HelloDocContext _context;
-
-        public AdminController(IAdminDash IAdminDash, HelloDocContext context)
+        private readonly INotyfService _notyf;
+        public AdminController(IAdminDash IAdminDash, HelloDocContext context, INotyfService notyf)
         {
             _IAdminDash = IAdminDash;
             _context = context;
-        }
+            _notyf = notyf;
+        }       
         //[CheckAdminAccess]
         public IActionResult Index()
         {
@@ -94,24 +98,35 @@ namespace HalloDoc.Controllers
         public IActionResult AssignCase(int RequestId, int PhysicianId, string Notes)
         {
             _IAdminDash.AssignCaseInfo(RequestId, PhysicianId, Notes);
+            _notyf.Success("Physician Assigned successfully...");
             return RedirectToAction("Index", "Admin");
         }
         [HttpPost]
         public IActionResult TransferCase(int RequestId, int PhysicianId, string Notes)
         {
             _IAdminDash.TransferCaseInfo(RequestId, PhysicianId, Notes);
+            _notyf.Success("Physician Transfered successfully...");
             return RedirectToAction("Index", "Admin");
         }
         [HttpPost]
         public IActionResult CancleCase(int? RequestId, string Notes, string CaseTag)
         {
-            var result = _IAdminDash.CancleCaseInfo(RequestId, Notes, CaseTag);
+            bool result = _IAdminDash.CancleCaseInfo(RequestId, Notes, CaseTag);
+            if (result)
+            {                
+                _notyf.Success("Case Canceled Successfully");
+            }
+            else
+            {
+                _notyf.Error("Case Not Canceled");
+            }
             return RedirectToAction("Index", "Admin");
         }
         [HttpPost]
         public IActionResult BlockCase(int RequestId, string Notes)
         {
             var res = _IAdminDash.BlockCaseInfo(RequestId, Notes);
+            _notyf.Success("Case Blocked Successfully");
             return RedirectToAction("Index", "Admin");
         }
         public IActionResult ViewUploads(int requestid)
@@ -155,6 +170,28 @@ namespace HalloDoc.Controllers
         public IActionResult ClearCase(int RequestId)
         {
             var v = _IAdminDash.ClearCaseInfo(RequestId);
+            return RedirectToAction("Index", "Admin");
+        }
+        public IActionResult SendAgreementModal(int requestid)
+        {
+            Entity.DataModels.Request obj = _context.Requests.FirstOrDefault(x => x.RequestId == requestid);
+            sendAgreement sendAgreement = new() { RequestId = requestid, PhoneNumber = obj.PhoneNumber, Email = obj.Email };
+            return View("_sendAgreement",sendAgreement);
+        }
+        [HttpPost]
+        public IActionResult SendAgreement(int Reqid, string PhoneNumber, string Email)
+        {
+            sendAgreement sendAgreement = new()
+            {
+                RequestId = Reqid,
+                PhoneNumber = PhoneNumber,
+                Email = Email
+            };
+            
+            if (_IAdminDash.SendAgreement(sendAgreement))
+            {
+                _notyf.Success("Mail Send  Successfully..!");
+            }
             return RedirectToAction("Index", "Admin");
         }
 

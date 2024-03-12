@@ -9,16 +9,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Collections;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Net.Mail;
+using System.Net;
+using Microsoft.Extensions.Configuration;
+using HalloDoc.Entity.Models;
+
 
 namespace HalloDoc.Repository.Repository
 {
     public class AdminDash : IAdminDash
     {
         private readonly HelloDocContext _context;
-        public AdminDash(HelloDocContext context)
+        private readonly EmailConfiguration _emailConfig;
+        public AdminDash(HelloDocContext context, EmailConfiguration emailConfig)
         {
             _context = context;
+            _emailConfig = emailConfig;
         }
+        
         public CountStatusWiseRequestModel CountRequestData()
         {
             return new CountStatusWiseRequestModel
@@ -117,7 +125,7 @@ namespace HalloDoc.Repository.Repository
             ViewCaseModel? list =
                         _context.RequestClients
                        .Where(req => req.Request.RequestId == RequestID)
-                        .Select(req => new ViewCaseModel()
+                       .Select(req => new ViewCaseModel()
                         {
                             RequestId = RequestID,
                             RequestTypeId = RequestTypeId,
@@ -405,6 +413,7 @@ namespace HalloDoc.Repository.Repository
             {
                 return false;
             }
+
         }
         public bool BlockCaseInfo(int RequestId, string Notes)
         {
@@ -573,6 +582,64 @@ namespace HalloDoc.Repository.Repository
                 return false;
             }
         }
+       
+         public bool SendAgreement(sendAgreement sendAgreement)
+        {
+            var agreementUrl = "https://localhost:7151/AgreementPage?RequestID=" + sendAgreement.RequestId;
+            _emailConfig.SendMail(sendAgreement.Email, "Agreement for your request", $"<a href='{agreementUrl}'>Agree/Disagree</a>");
+            return true;
+        }
+
+        #region SendAgreement_accept
+        public bool SendAgreement_accept(int RequestID)
+        {
+            var request = _context.Requests.Find(RequestID);
+            if (request != null)
+            {
+                request.Status = 4;
+                _context.Requests.Update(request);
+                _context.SaveChanges();
+
+                RequestStatusLog rsl = new RequestStatusLog();
+                rsl.RequestId = RequestID;
+
+                rsl.Status = 4;
+
+                rsl.CreatedDate = DateTime.Now;
+
+                _context.RequestStatusLogs.Add(rsl);
+                _context.SaveChanges();
+
+            }
+            return true;
+        }
+        #endregion
+
+        #region SendAgreement_Reject
+        public bool SendAgreement_Reject(int RequestID, string Notes)
+        {
+            var request = _context.Requests.Find(RequestID);
+            if (request != null)
+            {
+                request.Status = 7;
+                _context.Requests.Update(request);
+                _context.SaveChanges();
+
+                RequestStatusLog rsl = new RequestStatusLog();
+                rsl.RequestId = RequestID;
+
+                rsl.Status = 7;
+                rsl.Notes = Notes;
+
+                rsl.CreatedDate = DateTime.Now;
+
+                _context.RequestStatusLogs.Add(rsl);
+                _context.SaveChanges();
+
+            }
+            return true;
+        }
+        #endregion
     }
 }
 

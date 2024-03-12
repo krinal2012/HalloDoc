@@ -26,6 +26,9 @@ namespace HalloDoc.Repository.Repository.Interface
         public List<HealthProfessional> VendorByProfession(int Professionid);
         public HealthProfessional SendOrdersInfo(int selectedValue);
         public bool SendOrders(int Requestid, OrderDetail data, string Notes);
-        public bool ClearCaseInfo(int? RequestId); 
+        public bool ClearCaseInfo(int? RequestId);
+        public bool SendAgreement(sendAgreement sendAgreement);
+        public Boolean SendAgreement_accept(int RequestID);
+        public Boolean SendAgreement_Reject(int RequestID, string Notes);
     }
 }

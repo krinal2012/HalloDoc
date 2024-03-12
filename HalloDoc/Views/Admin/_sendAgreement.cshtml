@@ -1,29 +1,64 @@
-﻿<div class="modal fade" id="sendAgreement" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+﻿@model HalloDoc.Entity.Models.ViewModel.sendAgreement;
+
+<div class="modal fade" id="SendAgreement" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-info">
                 <h5 class="modal-title text-white bg-info" id="staticBackdropLabel"> Assign Request</h5>
                 <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="post" id="AssignForm">
-                <input type="hidden" name="requestid" id="RequestID_ModelAssignCase" />
+            <form >
+                <input type="hidden" asp-for="RequestId" id="RequestID_ModelAgreement" />
                 <div class="modal-body">
                     <p><small>To send this agreement please make sure you are updating current contact information below for the responsible party.</small> </p>
-                    <div class="mb-3 col-lg-6 form-floating">
-                        <input type="text" class="form-control" placeholder="Contact" id="Contact">
-                        <label for="Contact" class="form-label">Contact Number </label>
+                  
+                    <div class="col my-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" placeholder="Contact" id="SendAgreement_phone" asp-for="PhoneNumber">
+                            <label for="Contact" class="form-label">Contact Number </label>
+                        </div>
                     </div>
-                    <div class="mb-3 col-lg-6 form-floating">
-                        <input type="email" class="form-control" placeholder="abc@email.com" id="Email"
-                               aria-describedby="emailHelp">
-                        <label for="email" class="form-label">E-mail</label>                       
-                    </div>              
+                  
+                    <div class="col my-3">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" placeholder="abc@email.com" id="SendAgreement_email" asp-for="Email"
+                                   aria-describedby="emailHelp">
+                            <label for="email" class="form-label">E-mail</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-info">Send</button>
-                    <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
-                </div>
+                
             </form>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-info" id="send-agreement-submit-btn">Send</button>
+                <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
+            </div>
         </div>
     </div>
 </div>
+<script>
+    $('#send-agreement-submit-btn').click(function () {
+        var phoneNumber = $("#SendAgreement_phone").val();
+        var email = $("#SendAgreement_email").val();
+        var reqId = $("#RequestID_ModelAgreement").val();
+
+        $.ajax({
+            url: "/Admin/SendAgreement",
+            data: {
+                Reqid: reqId,
+                PhoneNumber: phoneNumber,
+                Email: email,
+            },
+            type: 'POST',
+            success: function (result) {
+                $('#display').html(result);
+                $('#SendAgreement').modal('show');
+                location.reload();
+            },
+            error: function (error) {
+                console.log(error);
+                alert('Error Fetching Request abcd  ')
+            },
+        });
+    });
+</script>

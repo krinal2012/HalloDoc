@@ -31,8 +31,7 @@ namespace Hallodoc.Controllers
                 var result = _PatientDash.PatientList(id);
                 return View(result);
             }
-        }
-           
+        }           
         public IActionResult UploadDocument(int RequestId)
         {
             var result = _PatientDash.viewDocuments(RequestId);

@@ -95,7 +95,7 @@
                                  <i class="bi bi-ban"></i> Clear Case</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" onclick="SendAgreement(@item.RequestId)">
                                 <i class=""></i> Send Agreement</a>
                             </li>
                         </ul>
@@ -142,7 +142,7 @@
 
                     <div class="row">
                         <div class="col-6 mb-3">
-                            <button class="btn btn-warning text-white rounded-pill 2px w-100 " data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase">
+                            <button class="btn btn-warning text-white rounded-pill 2px w-100 " data-bs-toggle="modal" data-bs-target=" #SendAgreement">
                                 <small>Send Agreement </small>
                             </button>
                         </div>
@@ -189,10 +189,29 @@
         </div>
     }
 </div>
+<div id="display"></div>
 <script>
     function Transfercaseid(id) {
         var RequestId = id;
         console.log(RequestId);
         document.getElementById('RequestID_ModelTransferCase').value = RequestId;
+    }
+</script>
+<script>
+    function SendAgreement(requestid) {
+        console.log(requestid);
+        $.ajax({
+            url: '@Url.Action("SendAgreementModal", "Admin")',
+            data: { requestid: requestid },
+            type: 'POST',
+            success: function (result) {
+                $('#display').html(result);
+                $('#SendAgreement').modal('show');
+            },
+            error: function (error) {
+                console.log(error);
+                alert('Error Fetching Request')
+            },
+        });
     }
 </script>

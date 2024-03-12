@@ -7,21 +7,20 @@
                 <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
        
-            <form method="post" asp-action="AssignCase" asp-controller="Admin" id="AssignForm">
+            <form method="post" asp-action="AssignCase" asp-controller="Admin" id="AssignForm" class="form-floating">
                 <input type="hidden" name="requestid" id="RequestID_ModelAssignCase" />
             <div class="modal-body">
                     <p><small>To assign this request, search and select another physician.</small> </p>
             <div>
-                    <select class="form-select mb-3" id="region" onchange="AssignPhysician()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
-                    <option value="">Search by Region</option>
-                    @* @foreach( var items in Model)
-                    {
-                        <option value="@items.RegionId"> @items.Name </option>
-                    }*@
-                    </select>
+                <div class="form-floating">
+                            <select class="form-select mb-3" id="region" onchange="AssignPhysician()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
+                                <option value="">Search by Region</option>
+                            </select>
+                            <label for="region">Region</label>
+                </div>
+                   
                     <select class="form-select mb-3" id="provider" name="PhysicianId">
-                        <option value="">Please Select</option>
-                       
+                        <option value="">Please Select</option>                       
                     </select>
                 </div>
                     <textarea name="Notes" class="form-control" id="exampleFormControlTextarea1" rows="4"

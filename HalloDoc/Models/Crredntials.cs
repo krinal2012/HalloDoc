@@ -1,4 +1,6 @@
-﻿namespace HalloDoc.Models
+﻿using System.IdentityModel.Tokens.Jwt;
+
+namespace HalloDoc.Models
 {
     public static class Crredntials
     {
@@ -10,37 +12,65 @@
             _httpContextAccessor = new HttpContextAccessor();
         }
 
+        public static string? role()
+        {
+            string cookieValue;
+            string role = null;
+
+            if (_httpContextAccessor.HttpContext.Request.Cookies["jwt"] != null)
+            {
+                cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
+
+                role = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "Role").Value;
+            }
+
+            return role;
+        }
+
+
         public static string? UserName()
         {
-            string? UserName = null;
-            if (_httpContextAccessor.HttpContext.Session.GetString("UserName") != null)
+            string cookieValue;
+            string UserName = null;
+
+            if (_httpContextAccessor.HttpContext.Request.Cookies["jwt"] != null)
             {
-                UserName = _httpContextAccessor.HttpContext.Session.GetString("UserName").ToString();
+                cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
+
+                UserName = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "Username").Value;
             }
+
             return UserName;
         }
 
         public static string? UserID()
         {
-            string? UserID = null;
+            string cookieValue;
+            string UserID = null;
 
-            if (_httpContextAccessor.HttpContext.Session.GetString("UserID") != null)
+            if (_httpContextAccessor.HttpContext.Request.Cookies["jwt"] != null)
             {
-                UserID = _httpContextAccessor.HttpContext.Session.GetString("UserID");
+                cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
 
+                UserID = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
             }
+
             return UserID;
         }
-        public static string? RoleID()
+
+        public static string? ID()
         {
-            string? RoleID = null;
+            string cookieValue;
+            string UserID = null;
 
-            if (_httpContextAccessor.HttpContext.Session.GetString("RoleId") != null)
+            if (_httpContextAccessor.HttpContext.Request.Cookies["jwt"] != null)
             {
-                RoleID = _httpContextAccessor.HttpContext.Session.GetString("RoleId");
+                cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
 
+                UserID = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
             }
-            return RoleID;
+
+            return UserID;
         }
 
 

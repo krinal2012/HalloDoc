@@ -15,11 +15,11 @@
     @Html.Partial("_TransferCase.cshtml")
 </div>
 <div class="row mb-5 px-3">
-    <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6" data-btn="new" data-id="1">
+    <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6 as" data-btn="new" data-id="1">
         <i class="fa fa-solid fa-circle-plus me-2" aria-hidden="true"></i><b>New</b>
         <p class="h4">@Model.NewRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-outline-info btn-i m-2 py-3 -5 rounded text-start btn6" data-btn="pending" data-id="2">
+    <button class="col-lg col-3 btn btn-i m-2 py-3 rounded text-start btn6" data-btn="pending" data-id="2">
         <i class="fa fa-user-md me-2" aria-hidden="true"></i><b>Pending</b>
         <p class="h4">@Model.PendingRequest</p>
     </button>
@@ -147,7 +147,14 @@
         });
     });
 </script>*@
-
+<script>
+    $(document).ready(function () {
+        $(".row > .btn").click(function () {
+            $(".row > .btn").removeClass("as");
+            $(this).addClass("as");
+        });
+    });
+</script>
 <script>
    
     var statusidglobal=1;

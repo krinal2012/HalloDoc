@@ -35,7 +35,7 @@
                 <span class="dNone"> Welcome 
                    
                     </span>
-                <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" asp-action="Logout" asp-controller="Login">
+                <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" asp-action="Logout" asp-controller="AdminHome">
                     Log Out
                 </a>
                 <a class=" text-info text-decoration-none dBlock" asp-action="Logout" asp-controller="Login">
@@ -61,8 +61,7 @@
                         <li class="nav-item">
                             <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">My Profile</a>
                         </li>
-                          @if (Crredntials.RoleID() == "Admin")
-                              {
+                         
                             <li class="nav-item">
                                 <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Provider Location</a>
                             </li>
@@ -78,7 +77,7 @@
                             <li class="nav-item">
                                 <a class="nav-link px-3 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Records</a>
                             </li>
-                        }
+                      
                     </ul>
                 </div>
             </div>
@@ -110,11 +109,12 @@
 
     <footer class="child fixed-bottom p-3 foot text-center">
     </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/patient.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    @await Component.InvokeAsync("Notyf")
+  
 </body>
 </html>
 
