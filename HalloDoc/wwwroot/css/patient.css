@@ -21,6 +21,11 @@ body {
     backdrop-filter: blur(5px);
     height: 70vh;
 }
+.logo {
+    position: relative;
+    height: 0px;
+    width: 352px;    
+}
 /*Forms*/
 .form-floating label {
     margin-left: 15px;
@@ -261,5 +266,20 @@ body {
     }
     .adminIcon {
         display: none;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .leftDiv {
+        display: none;
+    }
+
+    .rightDiv {
+        background: linear-gradient(rgba(255, 255, 255, .75), rgba(255, 255, 255, .75)), url('../Images/11116016_415.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        background-size: contain;
+        backdrop-filter: blur(5px);
     }
 }

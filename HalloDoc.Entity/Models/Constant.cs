@@ -27,7 +27,6 @@ namespace HalloDoc.Entity.Models
             Closed =8,
             Ubpaid =9,
             Clear=10
-
         }
     }
 }

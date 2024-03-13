@@ -26,5 +26,5 @@ namespace HalloDoc.Entity.Models.ViewModel
             public DateTime? Modifieddate { get; set; }
             public short? Status { get; set; }
             public string? Ip { get; set; }
-           }
+    }
 }
