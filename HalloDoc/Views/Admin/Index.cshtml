@@ -155,8 +155,7 @@
         });
     });
 </script>
-<script>
-   
+<script>   
     var statusidglobal=1;
     var btnnameglobal="new";
     $(document).ready(function () {
@@ -203,15 +202,14 @@
     });
 
     document.getElementById('searchButton').addEventListener('click', handleSearchClick);
-
-    //document.addEventListener('DOMContentLoaded', function(){
-    //document.getElementById('searchInput').addEventListener('keyup', handleSearchClick(evt){
-    //    if(evt.key === 'Enter')
-    //    {
-    //        evt.preventDefault();
-    //        handleSearchClick();
-    //    }   
-    //}); 
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('searchInput').addEventListener('keyup', function (evt) {
+            if (evt.key === 'Enter') {
+                evt.preventDefault();
+                handleSearchClick();
+            }
+        });
+    });
     function handleSearchClick() {
         // Get the value from the search input
         var searchValue = document.getElementById('searchInput').value;

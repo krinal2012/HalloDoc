@@ -49,76 +49,44 @@ namespace HalloDoc.Repository.Repository
             if (statusid == 4) { id.Add(6); }
             if (statusid == 5) id.AddRange(new int[] { 3, 7, 8 });
             if (statusid == 6) { id.Add(9); }
-
-            if (searchValue == null)
-            {
-                var list = (from req in _context.Requests
-                            join reqClient in _context.RequestClients
-                            on req.RequestId equals reqClient.RequestId into reqClientGroup
-                            from rc in reqClientGroup.DefaultIfEmpty()
-                            join phys in _context.Physicians
-                            on req.PhysicianId equals phys.PhysicianId into physGroup
-                            from p in physGroup.DefaultIfEmpty()
-                            join reg in _context.Regions
-                            on rc.RegionId equals reg.RegionId into RegGroup
-                            from rg in RegGroup.DefaultIfEmpty()
-                            where id.Contains(req.Status)
-                            orderby req.CreatedDate descending
-                            select new AdminList
-                            {
-                                RequestId = req.RequestId,
-                                RequestTypeId = req.RequestTypeId,
-                                Requestor = req.FirstName + " " + req.LastName,
-                                PatientName = rc.FirstName + " " + rc.LastName,
-                                DOB = new DateTime((int)rc.IntYear, int.Parse(rc.StrMonth), (int)rc.IntDate),
-                                RequestedDate = req.CreatedDate,
-                                Email = rc.Email,
-                                Region = rg.Name,
-                                ProviderName = p.FirstName + " " + p.LastName,
-                                PatientPhoneNumber = rc.PhoneNumber,
-                                Address = rc.Address,
-                                Notes = rc.Notes,
-                                RequestClientId = rc.RequestClientId,
-                                // ProviderID = req.Physicianid,
-                                RequestorPhoneNumber = req.PhoneNumber
-                            }).ToList();
-                return list;
-            }
-            else
-            {
-                var list = (from req in _context.Requests
-                            join reqClient in _context.RequestClients
-                            on req.RequestId equals reqClient.RequestId into reqClientGroup
-                            from rc in reqClientGroup.DefaultIfEmpty()
-                            join phys in _context.Physicians
-                            on req.PhysicianId equals phys.PhysicianId into physGroup
-                            from p in physGroup.DefaultIfEmpty()
-                            join reg in _context.Regions
-                            on rc.RegionId equals reg.RegionId into RegGroup
-                            from rg in RegGroup.DefaultIfEmpty()
-                            where id.Contains(req.Status) && rc.FirstName.Contains(searchValue)
-                            orderby req.CreatedDate descending
-                            select new AdminList
-                            {
-                                RequestId = req.RequestId,
-                                RequestTypeId = req.RequestTypeId,
-                                Requestor = req.FirstName + " " + req.LastName,
-                                PatientName = rc.FirstName + " " + rc.LastName,
-                                DOB = new DateTime((int)rc.IntYear, int.Parse(rc.StrMonth), (int)rc.IntDate),
-                                RequestedDate = req.CreatedDate,
-                                Email = rc.Email,
-                                Region = rg.Name,
-                                ProviderName = p.FirstName + " " + p.LastName,
-                                PatientPhoneNumber = rc.PhoneNumber,
-                                Address = rc.Address,
-                                Notes = rc.Notes,
-                                RequestClientId = rc.RequestClientId,
-                                // ProviderID = req.Physicianid,
-                                RequestorPhoneNumber = req.PhoneNumber
-                            }).ToList();
-                return list;
-
-            }
+            
+            var list = (from req in _context.Requests
+                        join reqClient in _context.RequestClients
+                        on req.RequestId equals reqClient.RequestId into reqClientGroup
+                        from rc in reqClientGroup.DefaultIfEmpty()
+                        join phys in _context.Physicians
+                        on req.PhysicianId equals phys.PhysicianId into physGroup
+                        from p in physGroup.DefaultIfEmpty()
+                        join reg in _context.Regions
+                        on rc.RegionId equals reg.RegionId into RegGroup
+                        from rg in RegGroup.DefaultIfEmpty()
+                        where id.Contains(req.Status) && (searchValue == null ||
+                               rc.FirstName.Contains(searchValue) || rc.LastName.Contains(searchValue) ||
+                               req.FirstName.Contains(searchValue) || req.LastName.Contains(searchValue) ||
+                               rc.Email.Contains(searchValue) || rc.PhoneNumber.Contains(searchValue) ||
+                               rc.Address.Contains(searchValue) || rc.Notes.Contains(searchValue) ||
+                               p.FirstName.Contains(searchValue) || p.LastName.Contains(searchValue) ||
+                               rg.Name.Contains(searchValue))
+                        orderby req.CreatedDate descending
+                        select new AdminList
+                        {
+                            RequestId = req.RequestId,
+                            RequestTypeId = req.RequestTypeId,
+                            Requestor = req.FirstName + " " + req.LastName,
+                            PatientName = rc.FirstName + " " + rc.LastName,
+                            DOB = new DateTime((int)rc.IntYear, int.Parse(rc.StrMonth), (int)rc.IntDate),
+                            RequestedDate = req.CreatedDate,
+                            Email = rc.Email,
+                            Region = rg.Name,
+                            ProviderName = p.FirstName + " " + p.LastName,
+                            PatientPhoneNumber = rc.PhoneNumber,
+                            Address = rc.Address,
+                            Notes = rc.Notes,
+                            RequestClientId = rc.RequestClientId,
+                            // ProviderID = req.Physicianid,
+                            RequestorPhoneNumber = req.PhoneNumber
+                        }).ToList();
+            return list;
         }
         public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId)
         {
