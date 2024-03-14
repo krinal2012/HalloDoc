@@ -13,6 +13,8 @@ using System.Net.Mail;
 using System.Net;
 using Microsoft.Extensions.Configuration;
 using HalloDoc.Entity.Models;
+using Org.BouncyCastle.Ocsp;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 
 namespace HalloDoc.Repository.Repository
@@ -39,7 +41,7 @@ namespace HalloDoc.Repository.Repository
                 UnpaidRequest = _context.Requests.Where(r => r.Status == 9).Count()
             };
         }
-        public List<AdminList> NewRequestData(int statusid, string? searchValue)
+        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize)
         {
             List<int> id = new List<int>();
             if (statusid == 1) { id.Add(1); }
@@ -49,7 +51,7 @@ namespace HalloDoc.Repository.Repository
             if (statusid == 4) { id.Add(6); }
             if (statusid == 5) id.AddRange(new int[] { 3, 7, 8 });
             if (statusid == 6) { id.Add(9); }
-            
+        
             var list = (from req in _context.Requests
                         join reqClient in _context.RequestClients
                         on req.RequestId equals reqClient.RequestId into reqClientGroup
@@ -86,7 +88,17 @@ namespace HalloDoc.Repository.Repository
                             // ProviderID = req.Physicianid,
                             RequestorPhoneNumber = req.PhoneNumber
                         }).ToList();
-            return list;
+            int totalItemCount = list.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
+            List<AdminList> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();
+           
+            PaginatedViewModel<AdminList> viewModel = new PaginatedViewModel<AdminList>()
+            {
+                AdminList = list1,
+                CurrentPage = page,
+                TotalPages = totalPages,
+            };
+            return viewModel;
         }
         public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId)
         {
@@ -550,15 +562,12 @@ namespace HalloDoc.Repository.Repository
                 return false;
             }
         }
-       
-         public bool SendAgreement(sendAgreement sendAgreement)
+        public bool SendAgreement(sendAgreement sendAgreement)
         {
             var agreementUrl = "https://localhost:7151/AgreementPage?RequestID=" + sendAgreement.RequestId;
             _emailConfig.SendMail(sendAgreement.Email, "Agreement for your request", $"<a href='{agreementUrl}'>Agree/Disagree</a>");
             return true;
         }
-
-        #region SendAgreement_accept
         public bool SendAgreement_accept(int RequestID)
         {
             var request = _context.Requests.Find(RequestID);
@@ -581,9 +590,6 @@ namespace HalloDoc.Repository.Repository
             }
             return true;
         }
-        #endregion
-
-        #region SendAgreement_Reject
         public bool SendAgreement_Reject(int RequestID, string Notes)
         {
             var request = _context.Requests.Find(RequestID);
@@ -607,7 +613,80 @@ namespace HalloDoc.Repository.Repository
             }
             return true;
         }
-        #endregion
+        public ViewCaseModel CloseCaseData(int RequestID)
+        {
+            ViewCaseModel? list =
+                       _context.RequestClients
+                      .Where(req => req.Request.RequestId == RequestID)
+                      .Select(req => new ViewCaseModel()
+                      {
+                          RequestId = RequestID,
+                          ConfNo = req.Address.Substring(0, 2) + req.IntDate.ToString() + req.StrMonth + req.IntYear.ToString() + req.LastName.Substring(0, 2) + req.FirstName.Substring(0, 2) + "002",
+                          FirstName = req.FirstName,
+                          LastName = req.LastName,
+                          DOB = new DateTime((int)req.IntYear, Convert.ToInt32(req.StrMonth.Trim()), (int)req.IntDate),
+                          Mobile = req.PhoneNumber,
+                          Email = req.Email,
+                      }).FirstOrDefault();
+
+            List<RequestWiseFile> list1 = _context.RequestWiseFiles
+                     .Where(r => r.RequestId == RequestID && r.IsDeleted == new BitArray(1))
+                     .OrderByDescending(x => x.CreatedDate)
+                     .Select(r => new RequestWiseFile
+                     {
+                         CreatedDate = r.CreatedDate,
+                         FileName = r.FileName,
+                         RequestWiseFileId = r.RequestWiseFileId,
+                         RequestId = r.RequestId
+
+                     }).ToList();
+            list.documents = list1;
+            return list;
+        }
+        public bool EditCloseCase( ViewCaseModel vp, int RequestID)
+        {
+            var userToUpdate = _context.RequestClients.FirstOrDefault(x => x.RequestId == RequestID); ;
+            if (userToUpdate != null)
+            {
+                userToUpdate.PhoneNumber = vp.Mobile;
+                userToUpdate.Email = vp.Email;
+                _context.Update(userToUpdate);
+                _context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool CloseCase(int RequestID)
+        {
+            try
+            {
+                var requestData = _context.Requests.FirstOrDefault(e => e.RequestId == RequestID);
+                if (requestData != null)
+                {
+                    requestData.Status = 9;
+                    _context.Requests.Update(requestData);
+                    _context.SaveChanges();
+                    RequestStatusLog rsl = new RequestStatusLog();
+                    rsl.RequestId = RequestID;
+                    rsl.CreatedDate = DateTime.Now;
+                    rsl.Status = 9;
+                    _context.RequestStatusLogs.Add(rsl);
+                    _context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
 

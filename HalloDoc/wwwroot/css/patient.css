@@ -85,16 +85,16 @@ body {
 }
 .btn-p,
 .btn-p:visited,
-.btn-p:focus{
-    background-color: #dcdcef;
-    border-color: #8064A2;
-    color: #8064A2;
+.btn-p:focus {
+    background-color: #d3dbff;
+    border-color: #5d6fff;
+    color: #5d6fff;
 }
-.btn-p:hover, .btn-p:active, .btn-p.as {
-    background-color: #8064A2;
-    border-color: #8064A2;
-    color: #e4e4e4;
-}
+    .btn-p:hover, .btn-p:active, .btn-p.as {
+        background-color: #0c1c7c;
+        border-color: #0c1c7c;
+        color: #e4e4e4;
+    }
 .btn-info, .btn-info:hover{
     color:white;
 }
@@ -178,6 +178,11 @@ body {
     position: relative;
     box-shadow: 0 0 40px rgba(51, 51, 51, .1);
 }
+.search .fa-search {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}
 .search input, .search select {
     height: 50px;
     text-indent: 25px;
@@ -189,11 +194,6 @@ body {
 .search input:focus, .search select:focus {
     box-shadow: none;
     border: 2px solid #0dcaf0;
-}
-.search .fa-search {
-    position: absolute;
-    top: 20px;
-    left: 16px;
 }
 .searchBar {
     display: flex;
@@ -208,16 +208,16 @@ body {
 }
 /*Buttons */
 .Patient {
-    background-color: #5fbc61;
+    background-color: #218524;
 }
 .Business {
     background-color: #0a7cb9;
 }
 .Family {
-    background-color: #ed9124;
+    background-color: #f78d14;
 }
 .Concierge {
-    background-color: #cd697b ;
+    background-color: #c92140;
 }
 .txt-Patient {
     color: #5fbc61;

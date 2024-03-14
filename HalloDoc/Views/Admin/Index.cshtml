@@ -108,45 +108,6 @@
 </div>
 <div id="btnContent">  </div>
 
-@*<script>
-    $(document).ready(function () {
-        console.log("Document ready");        
-        var defaultPartial = '/Admin/_new';
-        // Make an AJAX request to get the default partial view content and set up click event handling
-        $.ajax({
-            url: defaultPartial,
-            method: 'GET',
-            success: function (data) {
-                // Replace the content of the btnContent div with the retrieved partial view
-                $("#btnContent").html(data);
-                // Handle click events on buttons
-                $(document).on("click", ".btn6", function () {
-                    $(this).addClass("active");
-                    var btnName = $(this).data("btn");
-                    console.log("Button clicked: " + btnName);
-                    var statusid = $(this).data("id");
-                    // Make an AJAX request to get the partial view content
-                    $.ajax({
-                        url: '@Url.Action("GetPartialView", "Admin")',                      
-                        method: 'GET',
-                        data: { btnName: btnName, statusid: statusid },
-                        success: function (data) {
-                            console.log("AJAX success");                       
-                            $("#btnContent").html(data);
-                            console.log("data added");
-                        },
-                        error: function () {
-                            console.error('Error fetching partial view.');
-                        }
-                    });
-                });
-            },
-            error: function () {
-                console.error('Error fetching default partial view.');
-            }
-        });
-    });
-</script>*@
 <script>
     $(document).ready(function () {
         $(".row > .btn").click(function () {
@@ -161,6 +122,7 @@
     $(document).ready(function () {
         console.log("Document ready");
         var defaultPartial = '/Admin/_new';
+        var searchValue = document.getElementById('searchInput').value;
         // Make an AJAX request to get the default partial view content and set up click event handling
         $.ajax({
             url: defaultPartial,
@@ -168,22 +130,19 @@
             success: function (data) {
                 // Replace the content of the btnContent div with the retrieved partial view
                 $("#btnContent").html(data);
-                // Handle click events on buttons
                 $(document).on("click", ".btn6", function () {
-                    //$(".bt6").removeClass("active");
-                    //$(this).addClass("active");
                     var btnName = $(this).data("btn");
                     btnnameglobal = btnName;                
-
                     var statusid = $(this).data("id");
                     statusidglobal = statusid;
                     console.log("Button clicked: " + btnName);
                     var statusid = $(this).data("id");
+                    var page = $(this).data('page');
                     // Make an AJAX request to get the partial view content
                     $.ajax({
                         url: '@Url.Action("GetPartialView", "Admin")',
                         method: 'GET',
-                        data: { btnName: btnName, statusid: statusid },
+                        data: { searchValue: searchValue, btnName: btnName, statusid: statusid },
                         success: function (data) {
                             console.log("AJAX success");
                             $("#btnContent").html(data);
@@ -216,25 +175,19 @@
         console.log(searchValue);
         console.log(statusidglobal);
         console.log(btnnameglobal);
-        // Perform the AJAX request
         $.ajax({
             type: "GET",
-            // url: "/Admin/GetPartialView?searchValue=" + searchValue,
             url: '@Url.Action("GetPartialView", "Admin")',
             data: { searchValue: searchValue, statusid: statusidglobal, btnName: btnnameglobal },
             success: function (data) {
-                console.log("AJAX success");
-                // Update the table body with the filtered data
-                $("#btnContent").html(data);
-                //location.reload();
+                console.log("AJAX success");               
+                $("#btnContent").html(data);                
             },
             error: function (error) {
                 console.log("Error:", error);
             }
         });
-
     }
-    //});
 
     </script>
 <script>

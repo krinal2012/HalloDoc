@@ -5,7 +5,7 @@
 }
 @using static HalloDoc.Entity.Models.Constant;
 @using HalloDoc.Entity.Models.ViewModel;
-@model List<AdminList>
+@model PaginatedViewModel<AdminList>
 <div class="table-responsive dNone ">
     <table class="table table-responsive p-3">
         <thead class="bg-light">
@@ -24,7 +24,7 @@
             </tr>
         </thead>
         <tbody class="table-group-divider mx-5 bg-white">
-            @foreach (var item in Model)
+            @foreach (var item in Model.AdminList)
             {
                 <tr class="@Enum.GetName(typeof(RequestTypes),item.RequestTypeId) text-white border-bottom border-white">
                     <td><small>@item.PatientName</small></td>
@@ -106,7 +106,7 @@
     </table>
 </div>
 <div class="dBlock">
-    @foreach (var item in Model)
+    @foreach (var item in Model.AdminList)
     {
         <div class="accordion-item btn-i text-secondary">
             <h2 class="accordion-header" id="flush-heading-@item.RequestId">
@@ -190,6 +190,42 @@
     }
 </div>
 <div id="display"></div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination pagination-container d-flex justify-content-center">
+        @{
+            int i;
+            //<li class="page-item"><a class="page-link">&lt;</a></li>
+            @for (i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item"><a href="#" data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+            }
+            // <li class="page-item"><a class="page-link">&gt;</a></li>
+        }
+    </ul>
+</nav>
+<script>
+    $(".pagination-container a").on("click", function (e) {
+        //e.preventDefault();
+        console.log("etfh");
+        var page = $(this).data('page');
+        $.ajax({
+            url: "@Url.Action("GetPartialView", "Admin")",
+            type: "GET",
+            data: {
+                page: page,
+                //status: 1,
+                btnName: "pending",
+                statusid: 2
+            },
+            success: function (data) {
+                $("#btnContent").html(data);
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+</script>
 <script>
     function Transfercaseid(id) {
         var RequestId = id;

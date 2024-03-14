@@ -34,17 +34,16 @@ namespace HalloDoc.Controllers
             return View(count);
         }
 
-        public IActionResult GetPartialView(string btnName, int statusid, string searchValue)
+        public IActionResult GetPartialView(string btnName, int statusid, string searchValue, int page = 1, int pagesize = 3)
         {
             var partialview = "_" + btnName;
-            var result = _IAdminDash.NewRequestData(statusid, searchValue);
+            var result = _IAdminDash.NewRequestData(statusid, searchValue, page, pagesize);
             return PartialView(partialview, result);
         }
         public IActionResult _new()
         {
-            var result = _IAdminDash.NewRequestData(1, null);
+            var result = _IAdminDash.NewRequestData(1, null, 1, 3);
             return PartialView(result);
-
         }
         public IActionResult viewCase(int RequestId, int RequestTypeId)
         {
@@ -191,6 +190,39 @@ namespace HalloDoc.Controllers
             if (_IAdminDash.SendAgreement(sendAgreement))
             {
                 _notyf.Success("Mail Send  Successfully..!");
+            }
+            return RedirectToAction("Index", "Admin");
+        }
+        public async Task<IActionResult> CloseCase(int RequestId)
+        {
+            ViewCaseModel vc = _IAdminDash.CloseCaseData(RequestId);
+            return View("../Admin/CloseCase", vc);
+        }
+        public IActionResult EditCloseCase(ViewCaseModel vc, int RequestID)
+        {
+            bool result = _IAdminDash.EditCloseCase(vc, RequestID);
+            if (result)
+            {
+                _notyf.Success("Case Edited Successfully..");
+                return RedirectToAction("CloseCase", new { RequestID });
+            }
+            else
+            {
+                _notyf.Error("Case Not Edited...");
+                return RedirectToAction("CloseCase", new { RequestID });
+            }
+        }
+        public IActionResult CloseCaseUnpaid(int RequestID)
+        {
+            bool result = _IAdminDash.CloseCase(RequestID);
+            if (result)
+            {
+                _notyf.Success("Case Closed...");
+                _notyf.Information("You can see Closed case in unpaid State...");
+            }
+            else
+            {
+                _notyf.Error("there is some error in CloseCase...");
             }
             return RedirectToAction("Index", "Admin");
         }

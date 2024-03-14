@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HalloDoc.Entity.DataModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Region { get; set; }
         public string Address { get; set; }
         public string? Room { get; set; }
+        public List<RequestWiseFile> documents { get; set; }
 
     }
 }

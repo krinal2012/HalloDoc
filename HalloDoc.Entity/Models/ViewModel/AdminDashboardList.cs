@@ -17,7 +17,13 @@
         public string Notes { get; set; }
         public string Email { get; set; }
         public int RequestClientId { get; set; }
-        
+       
+    }
+    public class PaginatedViewModel<T>
+    {
+        public List<T> AdminList { get; set; }
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
     }
 
     public class CountStatusWiseRequestModel

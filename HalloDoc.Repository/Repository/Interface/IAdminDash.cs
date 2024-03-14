@@ -7,7 +7,7 @@ namespace HalloDoc.Repository.Repository.Interface
     public interface IAdminDash
     {
         public CountStatusWiseRequestModel CountRequestData();
-        public List<AdminList> NewRequestData(int statusid, string? searchValue);
+        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize);
         public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId);
         public ViewCaseModel EditViewCaseData(int RequestID, int RequestTypeId, ViewCaseModel vp);
         public List<Physician> ProviderbyRegion(int Regionid);
@@ -30,5 +30,8 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool SendAgreement(sendAgreement sendAgreement);
         public Boolean SendAgreement_accept(int RequestID);
         public Boolean SendAgreement_Reject(int RequestID, string Notes);
+        public ViewCaseModel CloseCaseData(int RequestID);
+        public bool EditCloseCase(ViewCaseModel vp, int RequestID);
+        public bool CloseCase(int RequestID);
     }
 }
