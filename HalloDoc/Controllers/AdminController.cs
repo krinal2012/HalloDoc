@@ -5,10 +5,6 @@ using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System.Xml.Linq;
-using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Controllers
 {

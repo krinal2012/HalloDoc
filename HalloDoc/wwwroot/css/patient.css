@@ -231,6 +231,20 @@ body {
 .txt-Concierge {
     color: #cd697b;
 }
+/*pagination*/
+.pagination a {
+    margin: 5px;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+  
+}
+.pagination a:hover,
+.pagination a:active {
+    background-color: #0dcaf0;
+    color: #ffffff;
+}
+
 /*media query*/
 @media only screen and (max-width: 600px) {
     .maindiv {
