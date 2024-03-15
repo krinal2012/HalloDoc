@@ -41,7 +41,7 @@ namespace HalloDoc.Repository.Repository
                 UnpaidRequest = _context.Requests.Where(r => r.Status == 9).Count()
             };
         }
-        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize)
+        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize,int? Region, string sortColumn, string sortOrder)
         {
             List<int> id = new List<int>();
             if (statusid == 1) { id.Add(1); }
@@ -68,7 +68,8 @@ namespace HalloDoc.Repository.Repository
                                rc.Email.Contains(searchValue) || rc.PhoneNumber.Contains(searchValue) ||
                                rc.Address.Contains(searchValue) || rc.Notes.Contains(searchValue) ||
                                p.FirstName.Contains(searchValue) || p.LastName.Contains(searchValue) ||
-                               rg.Name.Contains(searchValue))
+                               rg.Name.Contains(searchValue)) && (Region == -1 ||
+                               rc.RegionId == Region)
                         orderby req.CreatedDate descending
                         select new AdminList
                         {
@@ -88,6 +89,21 @@ namespace HalloDoc.Repository.Repository
                             // ProviderID = req.Physicianid,
                             RequestorPhoneNumber = req.PhoneNumber
                         }).ToList();
+            switch (sortColumn)
+            {
+                case "Name":
+                    list = sortOrder == "desc" ? list.OrderByDescending(x => x.PatientName).ToList() : list.OrderBy(x => x.PatientName).ToList();
+                    break;
+                //case "Date":
+                //    students = students.OrderBy(s => s.EnrollmentDate);
+                //    break;
+                //case "date_desc":
+                //    students = students.OrderByDescending(s => s.EnrollmentDate);
+                //    break;
+                //default:
+                //    students = students.OrderBy(s => s.LastName);
+                //    break;
+            }
             int totalItemCount = list.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
             List<AdminList> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();

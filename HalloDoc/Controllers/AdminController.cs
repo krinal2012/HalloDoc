@@ -30,15 +30,15 @@ namespace HalloDoc.Controllers
             return View(count);
         }
 
-        public IActionResult GetPartialView(string btnName, int statusid, string searchValue, int page = 1, int pagesize = 3)
+        public IActionResult GetPartialView(string btnName, int statusid, string searchValue, string sortColumn,  string sortOrder, int Region = -1, int page = 1, int pagesize = 3)
         {
             var partialview = "_" + btnName;
-            var result = _IAdminDash.NewRequestData(statusid, searchValue, page, pagesize);
+            var result = _IAdminDash.NewRequestData(statusid, searchValue, page, pagesize, Region, sortColumn, sortOrder);
             return PartialView(partialview, result);
         }
         public IActionResult _new()
         {
-            var result = _IAdminDash.NewRequestData(1, null, 1, 3);
+            var result = _IAdminDash.NewRequestData(1, null, 1, 3, -1,null,null );
             return PartialView(result);
         }
         public IActionResult viewCase(int RequestId, int RequestTypeId)

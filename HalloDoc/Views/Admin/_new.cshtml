@@ -5,7 +5,7 @@
     <table class="table table-responsive p-3">
         <thead class="bg-light">
             <tr>
-                <th scope="col">Name </th>
+                <th scope="col"><a >Name</a> </th>
                 <th></th>
                 <th scope="col">Date Of Birth</th>
                 <th scope="col">Requester</th>
@@ -17,7 +17,7 @@
                 <th scope="col">Actions</th>
             </tr>
         </thead>
-        <tbody class="table-group-divider mx-5  ">
+        <tbody class="table-group-divider mx-5">
             @foreach (var item in Model.AdminList)
             {
                 <tr class="@Enum.GetName(typeof(RequestTypes),item.RequestTypeId) text-white border-bottom border-white">
@@ -242,9 +242,10 @@
 </script>
 <script>
     $(".pagination-container a").on("click", function (e) {
-        //e.preventDefault();
+        e.preventDefault();
         console.log("etfh");
         var page = $(this).data('page');
+        
         var searchValue = document.getElementById('searchInput').value;
         $.ajax({
             url: "@Url.Action("GetPartialView", "Admin")",
@@ -252,7 +253,6 @@
             data: {
                 page: page,
                 searchValue: searchValue,
-                //status: 1,
                 btnName: "new", 
                 statusid: 1
             },
@@ -265,3 +265,31 @@
         });
     });
 </script>
+@*<script>
+    $(".sortcol").on("click", function (e) {
+    
+        var page = $(this).data('page');
+        var searchValue = document.getElementById('searchInput').value;
+        var sortOrder = 'desc';
+        var columnName = 'Name';
+        $.ajax({
+            url: "@Url.Action("GetPartialView", "Admin")",
+            type: "GET",
+            data: {
+                page: page,
+                searchValue: searchValue,
+               sortColumn= "Name",
+                sortOrder= sortOrder,
+                btnName: "new",
+                statusid: 1
+            },
+            success: function (data) {
+                $("#btnContent").html(data);
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+</script>
+*@
