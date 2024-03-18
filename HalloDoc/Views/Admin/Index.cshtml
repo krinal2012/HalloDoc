@@ -9,10 +9,12 @@
     ViewData["Title"] = "Dashboard";
 }
 <div>
+    
     @Html.Partial("_CancleCase.cshtml")
     @Html.Partial("_TransferCase.cshtml")
     @Html.Partial("_BlockCase.cshtml")
     @Html.Partial("_AssignCase.cshtml")
+    
 </div>
 <div class="row mb-5 px-3">
     <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6 as" data-btn="new" data-id="1">
@@ -45,7 +47,7 @@
 <div class=" d-flex justify-content-between m-2 searchBar">
     <h4><b>Patients </b></h4>
     <div>
-        <button type="button" class="btn btn-info">
+        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#sendLink">
             <i class="fa fa-send"></i>
             <span class="dNone">Send Link</span>
         </button>
@@ -61,16 +63,16 @@
             <i class="fa-solid fa-share-from-square"></i>
             <span class="dNone">Export All</span>
         </button>
-        <button type="button" class="btn btn-info">
+        <a type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#RequestSupport">
             <i class="fa-solid fa-user-nurse"></i>
             <span class="dNone">Request DIY Support</span>
-        </button>
+        </a>
     </div>
 </div>
 <div class="  align-items-center m-2 bg-white p-2">
     <div class="mt-2 mx-2 bg-white">
         <div class="searchBar px-2">
-            <div class="searchPatientRegion py-2">
+            <div class="searchPatientRegion">
                 <div class="search m-1">
                     <i class="fa fa-search bg-white " id="searchButton"></i>
                     <input type="text" class="form-control" placeholder="Search Patients" id="searchInput">
@@ -84,19 +86,19 @@
             </div>
 
             <div class="text-secondary requestType">
-                <button class="me-2 bg-white border-0">
+                <button class="me-2 bg-white border-0 reqtype" data-id="-1">
                     <i class="fa fa-circle" aria-hidden="true"></i> All
                 </button>
-                <button class="me-2 bg-white border-0" class="reqbtn" onclick="handleSearchClick()">
+                <button class="me-2 bg-white border-0 reqtype" data-id="2">
                     <i class="fa fa-circle text-success" aria-hidden="true"></i> Patient
                 </button>
-                <button class="me-2 bg-white border-0">     
+                <button class="me-2 bg-white border-0 reqtype" data-id="3">
                     <i class="fa fa-circle text-warning" aria-hidden="true"></i> Family/Friend
                 </button>
-                <button class="me-2 bg-white border-0">
+                <button class="me-2 bg-white border-0 reqtype" data-id="1">
                     <i class="fa fa-circle text-primary" aria-hidden="true"></i> Business
                 </button>
-                <button class="me-2 bg-white border-0">
+                <button class="me-2 bg-white border-0 reqtype" data-id="4">
                     <i class="fa fa-circle text-danger" aria-hidden="true"></i> Concierge
                 </button>
             </div>
@@ -104,6 +106,8 @@
     </div>
 </div>
 <div id="btnContent"></div>
+@Html.Partial("_RequestSupport.cshtml")
+@Html.Partial("_sendLink.cshtml")
 
 <script>
     $(document).ready(function () {
@@ -121,8 +125,7 @@
         var defaultPartial = '/Admin/_new';
         var searchValue = document.getElementById('searchInput').value;
         var region = -1;
-        console.log(searchValue);
-        console.log(region);
+        var requesttype = -1;
         console.log(statusidglobal +  btnnameglobal);
         
         $.ajax({
@@ -141,9 +144,8 @@
                     $.ajax({
                         url: '@Url.Action("GetPartialView", "Admin")',
                         method: 'GET',
-                        data: { searchValue: searchValue, btnName: btnName, statusid: statusid, Region: region },
+                        data: { searchValue: searchValue, btnName: btnName, statusid: statusid, Region: region, requesttype: requesttype },
                         success: function (data) {
-                            console.log("AJAX success");
                             $("#btnContent").html(data);
                             console.log("data added");
                         },
@@ -160,6 +162,10 @@
     });
 
     document.getElementById('searchButton').addEventListener('click', handleSearchClick);
+    var reqtypeElements = document.getElementsByClassName('reqtype');
+    for (var i = 0; i < reqtypeElements.length; i++) {
+        reqtypeElements[i].addEventListener('click', handleSearchClick);
+    }
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('searchInput').addEventListener('keyup', function (evt) {
             if (evt.key === 'Enter') {
@@ -171,13 +177,15 @@
     function handleSearchClick() {
         var searchValue = document.getElementById('searchInput').value;
         var region = $("#SelectedRegion").val();
-        console.log(searchValue);
-        console.log(region);
-        console.log(statusidglobal + btnnameglobal);
+        var requesttype = $(this).data("id");
+        console.log("Button: " + statusidglobal +" " + btnnameglobal);
+        console.log("Search value: " + searchValue);
+        console.log("Region id: " + region);
+        console.log("Request type id: " +requesttype);
         $.ajax({
             type: "GET",
             url: '@Url.Action("GetPartialView", "Admin")',
-            data: { searchValue: searchValue, statusid: statusidglobal, btnName: btnnameglobal, Region: region },
+            data: { searchValue: searchValue, statusid: statusidglobal, btnName: btnnameglobal, Region: region, requesttype: requesttype },
             success: function (data) {
                 console.log("AJAX success");               
                 $("#btnContent").html(data);                

@@ -1,0 +1,38 @@
+﻿<div class="modal fade" id="sendLink" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header  bg-info text-white">
+                <h5 class="modal-title text-white bg-info" id="staticBackdropLabel">
+                    Send mail to patient for submitting request.
+                </h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post" asp-controller="Admin" class="form-floating form-control" required>
+                @*<input type="hidden" name="requestid" id="RequestID_ModelAssignCase" />*@
+                <div class="modal-body">
+                    <div class="mb-3 form-floating">
+                        <input type="text" class="form-control" placeholder="First Name" >
+                        <label for="FirstName" class="form-label">First Name</label>
+                    </div>
+                    <div class="mb-3 form-floating">
+                        <input type="text" class="form-control" placeholder="last Name" >
+                        <label for="LastName" class="form-label">Last Name</label>
+                    </div>
+                    <div class="mb-3 form-floating phone">
+                        <input type="tel" class="form-control shadow-none" id="phone" >
+                    </div>
+                    <div class="mb-3 form-floating">
+                        <input type="email" class="form-control" id="email" placeholder="abc@email.com"
+                               aria-describedby="emailHelp" >
+                        <label for="email" class="form-label">E-mail</label>
+                        @*<span asp-validation-for="Email" class="text-danger"></span>*@
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Send</button>
+                        <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>

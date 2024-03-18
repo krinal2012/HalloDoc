@@ -40,7 +40,7 @@ namespace HalloDoc.Repository.Repository
                 UnpaidRequest = _context.Requests.Where(r => r.Status == 9).Count()
             };
         }
-        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize,int? Region, string sortColumn, string sortOrder)
+        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize,int? Region, string sortColumn, string sortOrder, int? requesttype)
         {
             List<int> id = new List<int>();
             if (statusid == 1) { id.Add(1); }
@@ -66,8 +66,9 @@ namespace HalloDoc.Repository.Repository
                                rc.Email.Contains(searchValue) || rc.PhoneNumber.Contains(searchValue) ||
                                rc.Address.Contains(searchValue) || rc.Notes.Contains(searchValue) ||
                                p.FirstName.Contains(searchValue) || p.LastName.Contains(searchValue) ||
-                               rg.Name.Contains(searchValue)) && (Region == -1 ||
-                               rc.RegionId == Region)
+                               rg.Name.Contains(searchValue)) 
+                               && (Region == -1 || rc.RegionId == Region) 
+                               && (requesttype == -1 || req.RequestTypeId ==requesttype)
                         orderby req.CreatedDate descending
                         select new AdminList
                         {

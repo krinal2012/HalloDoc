@@ -239,11 +239,10 @@ body {
     color: black;
     text-decoration: none;
     border-radius: 5px;
-  
 }
-.pagination a:hover,
-.pagination a:active {
-    background-color: #0dcaf0;
+.pagination a:hover
+ {
+    background-color: #0dcaf0 !important;
     color: #ffffff;
 }
 
@@ -298,4 +297,8 @@ body {
         background-size: contain;
         backdrop-filter: blur(5px);
     }
+}
+
+.reqtype:focus {
+    border: 1.5px solid #d6d4d4 !important;
 }
