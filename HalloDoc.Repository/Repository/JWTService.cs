@@ -1,8 +1,11 @@
-﻿
-using HalloDoc.Entity.Models.ViewModel;
+﻿using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,73 +15,129 @@ namespace HalloDoc.Repository.Repository
 {
     public class JWTService : IJWTInterface
     {      
-           
-            private readonly IHttpContextAccessor httpContextAccessor;
-            private readonly IConfiguration Configuration;
-            public JWTService(IConfiguration Configuration, IHttpContextAccessor httpContextAccessor)
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IConfiguration Configuration;
+        public JWTService(IConfiguration Configuration, IHttpContextAccessor httpContextAccessor)
+        {
+            this.httpContextAccessor = httpContextAccessor;
+            this.Configuration = Configuration;
+        }           
+        public string GenerateJWTAuthetication(UserInfo userinfo)
+        {
+            var claims = new List<Claim>
             {
-                this.httpContextAccessor = httpContextAccessor;
-                this.Configuration = Configuration;
-            }           
-            public string GenerateJWTAuthetication(UserInfo userinfo)
+                new Claim(ClaimTypes.Email, userinfo.Username),
+                new Claim(ClaimTypes.Role, userinfo.Role),
+                new Claim("FirstName", userinfo.FirstName),
+                new Claim("UserId", userinfo.UserId.ToString()),
+                new Claim("Username", userinfo.Username.ToString())
+                };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.UtcNow.AddMinutes(60);
+            var token = new JwtSecurityToken(
+                Configuration["Jwt:Issuer"],
+                Configuration["Jwt:Audience"],
+                claims,
+                expires: expires,
+                signingCredentials: creds
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        public bool ValidateToken(string token, out JwtSecurityToken jwtSecurityTokenHandler)
+        {
+            jwtSecurityTokenHandler = null;
+            if (token == null)
+                return false;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(Configuration["Jwt:Key"]);
+            try
             {
-                var claims = new List<Claim>
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
-                    new Claim(ClaimTypes.Email, userinfo.Username),
-                    new Claim(ClaimTypes.Role, userinfo.Role),
-                    new Claim("FirstName", userinfo.FirstName),
-                    new Claim("UserId", userinfo.UserId.ToString()),
-                    new Claim("Username", userinfo.Username.ToString())
-                 };
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                var expires = DateTime.UtcNow.AddMinutes(60);
-                var token = new JwtSecurityToken(
-                    Configuration["Jwt:Issuer"],
-                    Configuration["Jwt:Audience"],
-                    claims,
-                    expires: expires,
-                    signingCredentials: creds
-                );
-                return new JwtSecurityTokenHandler().WriteToken(token);
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+
+                }, out SecurityToken validatedToken);
+
+                jwtSecurityTokenHandler = (JwtSecurityToken)validatedToken;
+
+                if (jwtSecurityTokenHandler != null)
+                {
+                    return true;
+                }
+
+                return false;
             }
-            public bool ValidateToken(string token, out JwtSecurityToken jwtSecurityTokenHandler)
+            catch
             {
-                jwtSecurityTokenHandler = null;
+                return false;
+            }
+        }
+        public class CustomAuthorize : Attribute, IAuthorizationFilter
+        {
+            private readonly string _role;
+            public CustomAuthorize(string role = "")
+            {
+                _role = role;
+            }
+            public void OnAuthorization(AuthorizationFilterContext context)
+            {
+                var jwtService = context.HttpContext.RequestServices.GetService<IJWTInterface>();
 
-                if (token == null)
-                    return false;
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-
-                var key = Encoding.ASCII.GetBytes(Configuration["Jwt:Key"]);
-
-                try
+                if (jwtService == null)
                 {
-                    tokenHandler.ValidateToken(token, new TokenValidationParameters
+                    if (_role == "Admin")
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ClockSkew = TimeSpan.Zero
-
-                    }, out SecurityToken validatedToken);
-
-                    jwtSecurityTokenHandler = (JwtSecurityToken)validatedToken;
-
-                    if (jwtSecurityTokenHandler != null)
-                    {
-                        return true;
+                        context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "AdminHome", action = "Login" }));
                     }
+                    else if (_role == "Patient")
+                    {
+                       context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Login" }));
+                    }
+                    return;
+                }
 
-                    return false;
-                }
-                catch
+                var request = context.HttpContext.Request;
+                var token = request.Cookies["jwt"];
+
+                if (token == null || !jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
                 {
-                    return false;
+                    if (_role == "Patient")
+                    {
+                        context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Login" }));
+                    }
+                    else if (_role == "Admin")
+                    {
+                        context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "AdminHome", action = "Login" }));
+                    }
+                    return;
                 }
-            }        
+
+                var roleClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
+
+                if (roleClaim == null)
+                {
+                    if (_role == "Patient")
+                    {
+                        context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Login" }));
+                    }
+                    else if (_role == "Admin")
+                    {
+                        context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "AdminHome", action = "Login" }));
+                    }
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(_role) || roleClaim.Value != _role)
+                {
+                    context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "AccessDenied" }));
+                }
+            }
+        }
     }
 }
 //            private readonly IConfiguration _configuration;

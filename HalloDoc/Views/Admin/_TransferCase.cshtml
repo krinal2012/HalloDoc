@@ -10,16 +10,20 @@
                 <input type="hidden" name="requestid" id="RequestID_ModelTransferCase" />
                 <div class="modal-body">
                     <p><small>To assign this request, search and select another physician.</small> </p>
-                    <div>
-                        <select class="form-select mb-3" id="region2" onchange="AssignPhysician1()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
-                            <option value="">Search by Region</option>                            
+                    <div class="form-floating">
+                        <select class="form-select mb-3" id="region2" onchange="AssignPhysician1()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))" required>
+                            <option value="">Search by Region</option>
                         </select>
-                        <select class="form-select mb-3" id="provider1" name="PhysicianId">
+                        <label for="region">Region</label>
+                    </div>
+                    <div class="form-floating">
+                        <select class="form-select mb-3" id="provider1" name="PhysicianId" required>
                             <option value="">Please Select</option>
                         </select>
+                        <label for="provider">Physician Name</label>
                     </div>
                     <textarea name="Notes" class="form-control" id="exampleFormControlTextarea1" rows="4"
-                              placeholder="Description"></textarea>
+                              placeholder="Description" required></textarea>
 
                 </div>
                 <div class="modal-footer">

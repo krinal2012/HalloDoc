@@ -1,4 +1,4 @@
-﻿﻿﻿<div class="modal fade" id="Cancelcase" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+﻿<div class="modal fade" id="Cancelcase" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header  bg-info text-white">
@@ -12,8 +12,8 @@
                     <h3 class="modal-title fs-5" id="exampleModalLabel">Patient Name : <span class="text-info" id="PatientName_ModelCancelCase"> </span></h3>
                     <div class="col mb-3">
                         <div class="form-floating">
-                            <select class="form-select input-outline input-outline-select w-100" required name="CaseTag" data-allow-clear="true" tabindex="-1" id="Region" asp-items="@(new SelectList(ViewBag.CaseReason,"CaseTagId","Name"))" data-control="select2" data-placeholder="Cancel Reason">
-                                <option>Cancel Reason</option>
+                            <select class="form-select input-outline input-outline-select w-100" name="CaseTag" data-allow-clear="true" tabindex="-1" id="Region" asp-items="@(new SelectList(ViewBag.CaseReason,"CaseTagId","Name"))" data-control="select2" data-placeholder="Cancel Reason" required>
+                                <option value="">Cancel Reason</option>
                             </select>
                             <label for="region2">Reason For Cancelation</label>
                         </div>

@@ -9,10 +9,10 @@
     ViewData["Title"] = "Dashboard";
 }
 <div>
-    @Html.Partial("_BlockCase.cshtml")
-    @Html.Partial("_AssignCase.cshtml")
     @Html.Partial("_CancleCase.cshtml")
     @Html.Partial("_TransferCase.cshtml")
+    @Html.Partial("_BlockCase.cshtml")
+    @Html.Partial("_AssignCase.cshtml")
 </div>
 <div class="row mb-5 px-3">
     <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6 as" data-btn="new" data-id="1">
@@ -84,26 +84,26 @@
             </div>
 
             <div class="text-secondary requestType">
-                <div class="me-2">
+                <button class="me-2 bg-white border-0">
                     <i class="fa fa-circle" aria-hidden="true"></i> All
-                </div>
-                <div class="me-2">
+                </button>
+                <button class="me-2 bg-white border-0" class="reqbtn" onclick="handleSearchClick()">
                     <i class="fa fa-circle text-success" aria-hidden="true"></i> Patient
-                </div>
-                <div class="me-2">
+                </button>
+                <button class="me-2 bg-white border-0">     
                     <i class="fa fa-circle text-warning" aria-hidden="true"></i> Family/Friend
-                </div>
-                <div class="me-2">
+                </button>
+                <button class="me-2 bg-white border-0">
                     <i class="fa fa-circle text-primary" aria-hidden="true"></i> Business
-                </div>
-                <div class="me-2">
+                </button>
+                <button class="me-2 bg-white border-0">
                     <i class="fa fa-circle text-danger" aria-hidden="true"></i> Concierge
-                </div>
+                </button>
             </div>
         </div>
     </div>
 </div>
-<div id="btnContent">  </div>
+<div id="btnContent"></div>
 
 <script>
     $(document).ready(function () {
@@ -125,12 +125,10 @@
         console.log(region);
         console.log(statusidglobal +  btnnameglobal);
         
-        // Make an AJAX request to get the default partial view content and set up click event handling
         $.ajax({
             url: defaultPartial,
             method: 'GET',
             success: function (data) {
-                // Replace the content of the btnContent div with the retrieved partial view
                 $("#btnContent").html(data);
                 $(document).on("click", ".btn6", function () {
                     var btnName = $(this).data("btn");
@@ -140,7 +138,6 @@
                     console.log("Button clicked: " + btnName);
                     var statusid = $(this).data("id");
                     var page = $(this).data('page');
-                    // Make an AJAX request to get the partial view content
                     $.ajax({
                         url: '@Url.Action("GetPartialView", "Admin")',
                         method: 'GET',
@@ -172,7 +169,6 @@
         });
     });
     function handleSearchClick() {
-        // Get the value from the search input
         var searchValue = document.getElementById('searchInput').value;
         var region = $("#SelectedRegion").val();
         console.log(searchValue);
@@ -191,29 +187,9 @@
             }
         });
     }
-    //function Region() {
-    //    // Get the value from the search input
-    //    var region = $("#SelectedRegion").val();
-    //    var searchValue = document.getElementById('searchInput').value;
-    //    console.log(region);
-    //    console.log(statusidglobal);
-    //    console.log(btnnameglobal);
-    //    $.ajax({
-    //        type: "GET",
-    //        url: '@Url.Action("GetPartialView", "Admin")',
-    //        data: { searchValue: searchValue, statusid: statusidglobal, btnName: btnnameglobal, Region: region },
-    //        success: function (data) {
-    //            console.log("AJAX success");
-    //            $("#btnContent").html(data);
-    //        },
-    //        error: function (error) {
-    //            console.log("Error:", error);
-    //        }
-    //    });
-    //}
-
-    </script>
+</script>
 <script>
+    //swal for clear case
     function ClearSwal(RequestId) {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
@@ -231,7 +207,6 @@
             confirmButtonText: "Clear",
             denyButtonText: "Cancel",
         }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",

@@ -15,7 +15,6 @@ namespace HalloDoc.Entity.Models
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        #region SendMail
         public async Task<bool> SendMail(String To, String Subject, String Body)
         {
             try
@@ -43,9 +42,6 @@ namespace HalloDoc.Entity.Models
             }
             return false;
         }
-        #endregion
-
-        #region SendMail
         public async Task<bool> SendMailAsync(string To, string Subject, string Body, List<string> Attachments)
         {
             MimeMessage message = new MimeMessage();
@@ -77,7 +73,6 @@ namespace HalloDoc.Entity.Models
                             ContentTransferEncoding = ContentEncoding.Base64,
                             FileName = Path.GetFileName(attachmentPath)
                         };
-
                         // Add attachment to multipart container
                         multipart.Add(attachment);
                     }
@@ -96,9 +91,6 @@ namespace HalloDoc.Entity.Models
             }
             return true;
         }
-        #endregion
-
-        #region Encode_Decode
         public string Encode(string encodeMe)
         {
             byte[] encoded = System.Text.Encoding.UTF8.GetBytes(encodeMe);
@@ -109,6 +101,5 @@ namespace HalloDoc.Entity.Models
             byte[] encoded = Convert.FromBase64String(decodeMe);
             return System.Text.Encoding.UTF8.GetString(encoded);
         }
-        #endregion
     }
 }

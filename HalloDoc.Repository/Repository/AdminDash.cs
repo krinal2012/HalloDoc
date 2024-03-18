@@ -28,7 +28,6 @@ namespace HalloDoc.Repository.Repository
             _context = context;
             _emailConfig = emailConfig;
         }
-        
         public CountStatusWiseRequestModel CountRequestData()
         {
             return new CountStatusWiseRequestModel
@@ -46,8 +45,7 @@ namespace HalloDoc.Repository.Repository
             List<int> id = new List<int>();
             if (statusid == 1) { id.Add(1); }
             if (statusid == 2) { id.Add(2); }
-            if (statusid == 3)
-                id.AddRange(new int[] { 4, 5 });
+            if (statusid == 3) id.AddRange(new int[] { 4, 5 });
             if (statusid == 4) { id.Add(6); }
             if (statusid == 5) id.AddRange(new int[] { 3, 7, 8 });
             if (statusid == 6) { id.Add(9); }
@@ -187,7 +185,7 @@ namespace HalloDoc.Repository.Repository
             request.PhysicianId = PhysicianId;
             request.Status = 2;
             _context.Requests.Update(request);
-            _context.SaveChanges();
+        _context.SaveChanges();
 
             RequestStatusLog rsl = new RequestStatusLog();
             rsl.RequestId = RequestId;
@@ -197,7 +195,6 @@ namespace HalloDoc.Repository.Repository
             rsl.Status = 2;
             _context.RequestStatusLogs.Add(rsl);
             _context.SaveChanges();
-
         }
         public void TransferCaseInfo(int RequestId, int PhysicianId, string Notes)
         {
@@ -592,17 +589,12 @@ namespace HalloDoc.Repository.Repository
                 request.Status = 4;
                 _context.Requests.Update(request);
                 _context.SaveChanges();
-
                 RequestStatusLog rsl = new RequestStatusLog();
                 rsl.RequestId = RequestID;
-
                 rsl.Status = 4;
-
                 rsl.CreatedDate = DateTime.Now;
-
                 _context.RequestStatusLogs.Add(rsl);
                 _context.SaveChanges();
-
             }
             return true;
         }
@@ -614,18 +606,13 @@ namespace HalloDoc.Repository.Repository
                 request.Status = 7;
                 _context.Requests.Update(request);
                 _context.SaveChanges();
-
                 RequestStatusLog rsl = new RequestStatusLog();
                 rsl.RequestId = RequestID;
-
                 rsl.Status = 7;
                 rsl.Notes = Notes;
-
                 rsl.CreatedDate = DateTime.Now;
-
                 _context.RequestStatusLogs.Add(rsl);
                 _context.SaveChanges();
-
             }
             return true;
         }

@@ -31,6 +31,9 @@ body {
     margin-left: 15px;
     color: gray;
 }
+.modal-body .form-floating label {
+    margin-left: 0px;
+}
 .form-floating .form-control:focus ~ label {
     color: #0dcaf0;
 }
@@ -176,7 +179,6 @@ body {
 /*admin dashboard*/
 .search {
     position: relative;
-    box-shadow: 0 0 40px rgba(51, 51, 51, .1);
 }
 .search .fa-search {
     position: absolute;

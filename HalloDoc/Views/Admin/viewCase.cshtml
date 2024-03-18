@@ -8,7 +8,7 @@
 @using HalloDoc.Entity.Models.ViewModel;
 @using static HalloDoc.Entity.Models.Constant;
 @model ViewCaseModel;
-@Html.Partial("_AssignCase.cshtml")
+
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-5">
     <div class="d-flex align-self-center">
     <h3 class="">New Request</h3>
@@ -92,11 +92,11 @@
         <div class="row px-3 d-flex justify-content-end">
                 <a class="col-1 btn btn-info text-white rounded p-2 me-2" onclick="Assigncaseid(@Model.RequestId)" data-bs-toggle="modal" data-bs-target=" #assigncase"> Assign</a>
             <a class="col-1 btn btn-info text-white rounded p-2 me-2" asp-action="viewNotes" asp-controller="Admin"> View Notes </a>
-            <a class="col-1 btn btn-danger text-white rounded p-2 me-2"> Cancel </a>
+                <a class="col-1 btn btn-danger text-white rounded p-2 me-2" asp-action="Index" asp-controller="Admin"> Cancel </a>
         </div>
     </form>
 </div>
-
+@Html.Partial("_AssignCase.cshtml")
 <script>   
     function enable_disable() {
         $("#email").removeAttr('disabled');

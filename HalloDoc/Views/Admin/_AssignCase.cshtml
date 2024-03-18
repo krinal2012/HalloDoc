@@ -7,32 +7,30 @@
                 <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
        
-            <form method="post" asp-action="AssignCase" asp-controller="Admin" id="AssignForm" class="form-floating">
+            <form method="post" asp-action="AssignCase" asp-controller="Admin" id="AssignForm" class="form-floating" required>
                 <input type="hidden" name="requestid" id="RequestID_ModelAssignCase" />
             <div class="modal-body">
                     <p><small>To assign this request, search and select another physician.</small> </p>
             <div>
                 <div class="form-floating">
-                            <select class="form-select mb-3" id="region" onchange="AssignPhysician()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
+                            <select class="form-select mb-3" id="region" onchange="AssignPhysician()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))" required>
                                 <option value="">Search by Region</option>
                             </select>
                             <label for="region">Region</label>
                 </div>
-                   
-                    <select class="form-select mb-3" id="provider" name="PhysicianId">
-                        <option value="">Please Select</option>                       
+                <div class="form-floating">
+                     <select class="form-select mb-3" id="provider" name="PhysicianId" required>
+                        <option value="">Please Select</option>
                     </select>
+                            <label for="provider">Physician Name</label>
                 </div>
-                    <textarea name="Notes" class="form-control" id="exampleFormControlTextarea1" rows="4"
-                              placeholder="Description"></textarea>
-                   
-               
+                <textarea name="Notes" class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="Description"></textarea>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-outline-info">Submit</button>
                 <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
             </div>
-             </form>
+            </form>
         </div>
     </div>
 </div>

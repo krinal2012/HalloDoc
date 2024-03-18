@@ -14,8 +14,6 @@ namespace HalloDoc.Controllers
     {
         private readonly ILogin _Login;
         private readonly IJWTInterface _jwtinterface;
-
-
         public AdminHomeController(ILogin loginRepository,IJWTInterface jwtService)
         {
             _Login = loginRepository;

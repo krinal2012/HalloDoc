@@ -10,7 +10,6 @@ var emailConfig = builder.Configuration
         .GetSection("EmailConfiguration")
         .Get<EmailConfiguration>();
 builder.Services.AddSingleton(emailConfig);
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<HelloDocContext>();
 builder.Services.AddHttpContextAccessor();
@@ -37,7 +36,6 @@ app.UseSession();
 app.UseRouting();
 app.UseNotyf();
 app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=AdminHome}/{action=Login}/{id?}");

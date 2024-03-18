@@ -5,10 +5,12 @@ using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
+using static HalloDoc.Repository.Repository.JWTService;
 
 namespace HalloDoc.Controllers
 {
-    [CheckProviderAccess("Admin")]
+    //  [CheckProviderAccess("Admin")]
+    [CustomAuthorize("Admin")]
     public class AdminController : Controller
     {
         private readonly IAdminDash _IAdminDash;
@@ -24,7 +26,6 @@ namespace HalloDoc.Controllers
         public IActionResult Index()
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            //TempData["AssignCase"] = new SelectList (ViewBag.AssignCase = _IAdminDash.AssignCase(), "RegionId","Name");
             ViewBag.CaseReason = _IAdminDash.CaseReason();
             CountStatusWiseRequestModel count = _IAdminDash.CountRequestData();
             return View(count);
