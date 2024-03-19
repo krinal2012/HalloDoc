@@ -11,7 +11,7 @@ namespace HalloDoc.Controllers
 {
     //  [CheckProviderAccess("Admin")]
     [CustomAuthorize("Admin")]
-    public class AdminController : Controller
+    public class AdminController :Controller
     {
         private readonly IAdminDash _IAdminDash;
         private readonly HelloDocContext _context;
@@ -223,7 +223,8 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("Index", "Admin");
         }
-
+        public IActionResult EncounterForm()
+        { return View(); }
     }
 }
 
