@@ -82,21 +82,20 @@
                                 <i class="bi bi-journal-text"></i> View Case</a></li>
                             <li>
                                 <a class="dropdown-item" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId" >
-                                <i class="bi bi-x-circle"></i> View Uploads</a></li>
+                                <i class="fa-solid fa-upload"></i> View Uploads</a></li>
                             <li>
                                 <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
-                                    <i class="bi bi-journal-text">
-                                </i> View Notes</a></li>
+                                    <i class="fa fa-list"></i> View Notes</a></li>
                             <li>
                                 <a class="dropdown-item" data-bs-toggle="modal" onclick="Transfercaseid(@item.RequestId)" data-bs-target=" #Transfer">
-                                <i class="bi bi-journals"></i> Transfer</a></li>
+                                <i class="bi bi-journals"></i> Transfer </a></li>
                             <li>
                                 <a class="dropdown-item" onclick="ClearSwal(@item.RequestId)">
                                  <i class="bi bi-ban"></i> Clear Case</a>
                             </li>
                             <li>
                                 <a class="dropdown-item" onclick="SendAgreement(@item.RequestId)">
-                                <i class=""></i> Send Agreement</a>
+                                <i class="fa fa-paper-plane"></i> Send Agreement</a>
                             </li>
                         </ul>
                     </td>
@@ -108,7 +107,7 @@
 <div class="dBlock">
     @foreach (var item in Model.AdminList)
     {
-        <div class="accordion-item btn-i text-secondary">
+        <div class="accordion-item mobile-table text-secondary">
             <h2 class="accordion-header" id="flush-heading-@item.RequestId">
                 <div class="h5 p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-@item.RequestId" aria-expanded="false" aria-controls="collapse_@item.RequestId">
                     <div class="row w-100">
@@ -138,6 +137,7 @@
                     <p> <i class="fa fa-phone border  border-info rounded-pill p-1 me-2"></i> Patient : @item.PatientPhoneNumber</p>
                     <p><i class="fa fa-sticky-note border border-info rounded-pill p-1 me-2"></i> Transfer Notes : @item.Notes</p>
                     <p><i class="fa fa-calendar border border-info rounded-pill p-1 me-2"></i>Date of service : @item.RequestedDate</p>
+                    <p><i class="fa fa-user border border-info rounded-pill p-1 me-2"></i>Physician : @item.ProviderName</p>
                     <p><i class="fa fa-user border border-info rounded-pill p-1 me-2"></i>Requestor : @item.Requestor</p>
 
                     <div class="row">
@@ -241,15 +241,11 @@
             }
         });
     });
-</script>
-<script>
     function Transfercaseid(id) {
         var RequestId = id;
         console.log(RequestId);
         document.getElementById('RequestID_ModelTransferCase').value = RequestId;
     }
-</script>
-<script>
     function SendAgreement(requestid) {
         console.log(requestid);
         $.ajax({

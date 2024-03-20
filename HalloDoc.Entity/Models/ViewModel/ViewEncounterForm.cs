@@ -39,6 +39,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? RR { get; set; }
 
         public string? Bp { get; set; }
+        public string? Bpd { get; set; }
 
         public string? O2 { get; set; }
 

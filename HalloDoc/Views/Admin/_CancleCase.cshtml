@@ -5,7 +5,7 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Concellation</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method=post asp-action="CancleCase" asp-controller="Admin">
+            <form method=post asp-action="CancleCase" asp-controller="Admin" class="needs-validation" novalidate>
                 <input type="hidden" value=" " id="RequestID_ModelCancelCase" name="RequestId" />
 
                 <div class="modal-body">
@@ -15,6 +15,9 @@
                             <select class="form-select input-outline input-outline-select w-100" name="CaseTag" data-allow-clear="true" tabindex="-1" id="Region" asp-items="@(new SelectList(ViewBag.CaseReason,"CaseTagId","Name"))" data-control="select2" data-placeholder="Cancel Reason" required>
                                 <option value="">Cancel Reason</option>
                             </select>
+                            <span class="invalid-feedback">
+                                Please choose a Region.
+                            </span>
                             <label for="region2">Reason For Cancelation</label>
                         </div>
                     </div>

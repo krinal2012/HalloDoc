@@ -6,24 +6,30 @@
                 <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form method="post" asp-action="TransferCase" asp-controller="Admin" id="AssignForm">
+            <form method="post" asp-action="TransferCase" asp-controller="Admin" id="AssignForm" class="needs-validation" novalidate>
                 <input type="hidden" name="requestid" id="RequestID_ModelTransferCase" />
                 <div class="modal-body">
                     <p><small>To assign this request, search and select another physician.</small> </p>
-                    <div class="form-floating">
-                        <select class="form-select mb-3" id="region2" onchange="AssignPhysician1()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))" required>
+                    <div class="form-floating mb-3">
+                        <select class="form-select " id="region2" onchange="AssignPhysician1()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))" required>
                             <option value="">Search by Region</option>
                         </select>
+                        <span class="invalid-feedback">
+                            Please choose a Region.
+                        </span>
                         <label for="region">Region</label>
                     </div>
-                    <div class="form-floating">
-                        <select class="form-select mb-3" id="provider1" name="PhysicianId" required>
+                    <div class="form-floating mb-3">
+                        <select class="form-select " id="provider1" name="PhysicianId" required>
                             <option value="">Please Select</option>
                         </select>
+                        <span class="invalid-feedback">
+                            Please choose a Physician.
+                        </span>
                         <label for="provider">Physician Name</label>
                     </div>
                     <textarea name="Notes" class="form-control" id="exampleFormControlTextarea1" rows="4"
-                              placeholder="Description" required></textarea>
+                              placeholder="Description" ></textarea>
 
                 </div>
                 <div class="modal-footer">

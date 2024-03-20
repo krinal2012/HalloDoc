@@ -69,6 +69,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         [RegularExpression(@"([0-9]{6})", ErrorMessage = "It must be of 6 numerics")]
         public string ZipCode { get; set; }
         public List<Region> RegionIds { get; set; }
+        public string? RegionIdList { get; set; }
         public int AdminId { get; set; }
     }
 }

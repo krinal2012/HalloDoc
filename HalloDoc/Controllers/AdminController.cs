@@ -5,6 +5,7 @@ using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
 using static HalloDoc.Repository.Repository.JWTService;
 
 namespace HalloDoc.Controllers
@@ -223,8 +224,22 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("Index", "Admin");
         }
-        public IActionResult EncounterForm()
-        { return View(); }
+        public IActionResult EncounterForm(int RequestId)
+        {
+            ViewEncounterForm ei = _IAdminDash.EncounterInfo(RequestId);
+            return View(ei);
+        }
+        [HttpPost]
+        public IActionResult EncounterForm(ViewEncounterForm ve)
+        {
+            _IAdminDash.EditEncounterinfo(ve);
+            return View();
+        }
+        public IActionResult EncounterFinalize(ViewEncounterForm ve)
+        {
+            bool result= _IAdminDash.Finalizeform(ve);
+            return RedirectToAction("Index", "Admin");
+        }
     }
 }
 

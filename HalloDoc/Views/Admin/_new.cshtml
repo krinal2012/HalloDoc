@@ -71,8 +71,10 @@
                         </button>
                        
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase">
-                                <i class="bi bi-journal-text"></i> Assign Case</a>
+                            <li>
+                                <a class="dropdown-item" data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase">
+                                    <i class="bi bi-journals"></i> Assign Case
+                                </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" data-bs-toggle="modal" onclick="Canclecaseid('@item.RequestId','@item.PatientName')" data-bs-target=" #Cancelcase">
@@ -84,7 +86,7 @@
                             </li>
                             <li>
                                 <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
-                                <i class="bi bi-journals"></i> View Notes</a>
+                                <i class="fa fa-list"></i> View Notes</a>
                             </li>
                             <li>
                                 <a class="dropdown-item" onclick="Blockcaseid('@item.RequestId','@item.PatientName')" data-bs-toggle="modal" data-bs-target="#Blockcase">
@@ -101,7 +103,7 @@
 <div class="dBlock">
     @foreach (var item in Model.AdminList)
     {
-        <div class="accordion-item btn-i text-secondary">
+        <div class="accordion-item mobile-table text-secondary">
             <h2 class="accordion-header" id="flush-heading-@item.RequestId">
                 <div class="h5 p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-@item.RequestId" aria-expanded="false" aria-controls="collapse_@item.RequestId">
                     <div class="row w-100">
@@ -136,8 +138,6 @@
                     <p> <i class="fa fa-calendar border border-info rounded-pill p-1 me-2" aria-hidden="true"></i>Date of Birth: @item.DOB</p>
                     <p> <i class="fa fa-envelope border border-info rounded-pill p-1 me-2"></i> Email : @item.Email</p>
                     <p> <i class="fa fa-phone border  border-info rounded-pill p-1 me-2"></i> Patient : @item.PatientPhoneNumber</p>
-                    <p><i class="fa fa-sticky-note border border-info rounded-pill p-1 me-2"></i> Transfer Notes : @item.Notes</p>
-                    <p><i class="fa fa-calendar border border-info rounded-pill p-1 me-2"></i>Date of service : @item.RequestedDate</p>
                     <p><i class="fa fa-user border border-info rounded-pill p-1 me-2"></i>Requestor : @item.Requestor</p>
 
                     <div class="row">
@@ -218,10 +218,7 @@
     var RequestId = id ;
         console.log(RequestId);
         document.getElementById('RequestID_ModelAssignCase').value = RequestId;    
-}
-    
-</script>
-<script>
+    }
     function Canclecaseid(id, patientname) {
         var RequestId = id;
         var patientname = patientname;
@@ -230,8 +227,6 @@
         document.getElementById('RequestID_ModelCancelCase').value = RequestId;
         document.getElementById('PatientName_ModelCancelCase').innerText = patientname;
     }
-</script>
-<script>
     function Blockcaseid(id, patientname) {
     var RequestId = id ;
     var patientname = patientname;
@@ -240,8 +235,6 @@
         document.getElementById('RequestID_ModelBlockCase').value = RequestId;
         document.getElementById('PatientName_ModelBlockCase').innerText = patientname;  
     }
-</script>
-<script>
     $(".pagination-container a").on("click", function (e) {
         e.preventDefault();
         console.log("etfh");

@@ -33,8 +33,6 @@
 
     </div>
 
-
-    ﻿
     <div class="modal fade" id="Reject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -42,7 +40,7 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Concellation</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form asp-action="Reject" asp-controller="AgreementPage">
+                <form asp-action="Reject" asp-controller="AgreementPage" class="needs-validation" novalidate>
                     <input type="hidden" value="@TempData["RequestID"]" name="RequestId" />
 
                     <div class="modal-body">
@@ -50,8 +48,10 @@
 
 
                         <div class="inputs-control w-100 mt-2">
-                            <textarea id="changenote" placeholder=" " name="Notes" rows="5" class="input-outline w-100  " type="text"></textarea>
-
+                            <textarea id="changenote" placeholder=" " name="Notes" rows="5" class="input-outline w-100  " type="text" required></textarea>
+                            <span class="invalid-feedback">
+                                Please provide valid reason.
+                            </span>
                             <label class="inputs-lable inputs-lable-textarea " id="notedata">Provide Brif Information why you want to Cancel</label>
                         </div>
                     </div>
@@ -64,7 +64,29 @@
         </div>
     </div>
 
+    <script>
 
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+
+    </script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/custom.js" asp-append-version="true"></script>

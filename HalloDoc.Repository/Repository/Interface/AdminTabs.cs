@@ -36,7 +36,7 @@ namespace HalloDoc.Repository.Repository.Interface
                                                  Address2 = a.Address2,
                                                  Mobile = a.Mobile,
                                                  City = a.City,
-                                                 ZipCode = a.Zip
+                                                 ZipCode = a.Zip,
                                              }).FirstOrDefault();
                 List<Region> regions = new List<Region>();
                 regions =  _context.AdminRegions
@@ -78,25 +78,8 @@ namespace HalloDoc.Repository.Repository.Interface
                     _context.Admins.Update(Data);
                     _context.SaveChanges();
                     List<int> regions = _context.AdminRegions.Where(r => r.AdminId == AdminProfile.AdminId).Select(req => req.RegionId).ToList();
-                    List<Region> Regionsid = AdminProfile.RegionIds.ToList();
-                    foreach (var item in Regionsid)
-                    {
-                        //if (regions.Contains(item))
-                        //{
-                        //    regions.Remove(item);
-                        //}
-                        //else
-                        {
-                            AdminRegion ar = new()
-                            {
-                                RegionId = item.RegionId,
-                                AdminId = AdminProfile.AdminId
-                            };
-                            _context.AdminRegions.Update(ar);
-                            _context.SaveChanges();
-                            //regions.Remove(item);
-                        }
-                    }
+                    List<int> Regionsid = AdminProfile.RegionIdList.Split(',').Select(int.Parse).ToList();
+                    
                     if (regions.Count > 0)
                     {
                         foreach (var item in regions)
@@ -106,8 +89,20 @@ namespace HalloDoc.Repository.Repository.Interface
                             _context.SaveChanges();
                         }
                     }
+                    foreach (var item in Regionsid)
+                    {
+                        AdminRegion ar = new()
+                        {
+                            RegionId = item,
+                            AdminId = AdminProfile.AdminId
+                        };
+                        _context.AdminRegions.Update(ar);
+                        _context.SaveChanges();
+                        regions.Remove(item);
+                    }
+                   
                     return true;
-               }
+                }
                 else
                     return false;
             }

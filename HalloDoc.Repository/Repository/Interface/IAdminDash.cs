@@ -33,5 +33,8 @@ namespace HalloDoc.Repository.Repository.Interface
         public ViewCaseModel CloseCaseData(int RequestID);
         public bool EditCloseCase(ViewCaseModel vp, int RequestID);
         public bool CloseCase(int RequestID);
+        public ViewEncounterForm EncounterInfo(int RequestId);
+        public void EditEncounterinfo(ViewEncounterForm ve);
+        public bool Finalizeform(ViewEncounterForm ve);
     }
 }

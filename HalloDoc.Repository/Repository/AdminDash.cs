@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using HalloDoc.Entity.Models;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Asn1.Ocsp;
+using System.Security.Cryptography;
+using System.Diagnostics.Metrics;
 
 
 namespace HalloDoc.Repository.Repository
@@ -186,7 +188,7 @@ namespace HalloDoc.Repository.Repository
             request.PhysicianId = PhysicianId;
             request.Status = 2;
             _context.Requests.Update(request);
-        _context.SaveChanges();
+            _context.SaveChanges();
 
             RequestStatusLog rsl = new RequestStatusLog();
             rsl.RequestId = RequestId;
@@ -578,8 +580,8 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SendAgreement(sendAgreement sendAgreement)
         {
-            var agreementUrl = "https://localhost:7151/AgreementPage?RequestID=" + sendAgreement.RequestId;
-            _emailConfig.SendMail(sendAgreement.Email, "Agreement for your request", $"<a href='{agreementUrl}'>Agree/Disagree</a>");
+            var agreementUrl = "https://localhost:7151/AgreementPage/Index?RequestID=" + sendAgreement.RequestId;
+            _emailConfig.SendMail(sendAgreement.Email, "Agreement for your request", $"Agreement for your request <a href='{agreementUrl}'>Agree/Disagree</a>");
             return true;
         }
         public bool SendAgreement_accept(int RequestID)
@@ -691,6 +693,103 @@ namespace HalloDoc.Repository.Repository
                 return false;
             }
         }
+        public ViewEncounterForm EncounterInfo(int RequestId)
+        {
+            var encounter = (from rc in _context.RequestClients
+                             join en in _context.EncounterForms on rc.RequestId equals en.RequestId into renGroup
+                             from subEn in renGroup.DefaultIfEmpty()
+                             where rc.RequestId == RequestId
+                             select new ViewEncounterForm
+                             {
+                                 RequestId = rc.RequestId,
+                                 FirstName = rc.FirstName,
+                                 LastName = rc.LastName,
+                                 Location = rc.Address,
+                                 DOB = new DateTime((int)rc.IntYear, Convert.ToInt32(rc.StrMonth.Trim()), (int)rc.IntDate),
+                                 //DOS = (DateTime)subEn.DateOfService,
+                                 Mobile = rc.PhoneNumber,
+                                 Email = rc.Email,
+                                 Injury = subEn.HistoryOfPresentIllnessOrInjury,
+                                 History = subEn.MedicalHistory,
+                                 Medications = subEn.Medications,
+                                 Allergies = subEn.Allergies,
+                                 Temp = subEn.Temp,
+                                 HR = subEn.Hr,
+                                 RR = subEn.Rr,
+                                 Bp = subEn.BloodPressureSystolic,
+                                 Bpd= subEn.BloodPressureDiastolic,
+                                 O2 = subEn.O2,
+                                 Pain = subEn.Pain,
+                                 Heent = subEn.Heent,
+                                 CV = subEn.Cv,
+                                 Chest = subEn.Chest,
+                                 ABD = subEn.Abd,
+                                 Extr = subEn.Extremeties,
+                                 Skin = subEn.Skin,
+                                 Neuro = subEn.Neuro,
+                                 Other = subEn.Other,
+                                 Diagnosis = subEn.Diagnosis,
+                                 Treatment = subEn.TreatmentPlan,
+                                 MDispensed = subEn.MedicationsDispensed,
+                                 Procedures = subEn.Procedures,
+                                 Followup = subEn.FollowUp
+                             }).FirstOrDefault();
+            return encounter;
+        }
+        public void EditEncounterinfo(ViewEncounterForm ve)
+        {
+            var RC = _context.RequestClients.FirstOrDefault(rc => rc.RequestId == ve.RequestId);
+            RC.FirstName = ve.FirstName;
+            RC.LastName = ve.LastName;
+            RC.Address = ve.Location;
+            RC.StrMonth = ve.DOB.Month.ToString();
+            RC.IntDate = ve.DOB.Day;
+            RC.IntYear = ve.DOB.Year;
+            RC.PhoneNumber = ve.Mobile;
+            RC.Email = ve.Email;
+            _context.Update(RC);
+
+            var E = _context.EncounterForms.FirstOrDefault(e => e.RequestId == ve.RequestId);
+            if (E == null)
+            {
+                E = new EncounterForm { RequestId = (int)ve.RequestId };
+                _context.EncounterForms.Add(E);
+            }
+            E.MedicalHistory = ve.History;
+            E.HistoryOfPresentIllnessOrInjury = ve.Injury;
+            E.Medications = ve.Medications;
+            E.Allergies = ve.Allergies;
+            E.Temp = ve.Temp;
+            E.Hr = ve.HR;
+            E.Rr = ve.RR;
+            E.BloodPressureSystolic = ve.Bp;
+            E.BloodPressureDiastolic = ve.Bpd;
+            E.O2 = ve.O2;
+            E.Pain = ve.Pain;
+            E.Heent = ve.Heent;
+            E.Cv = ve.CV;
+            E.Chest = ve.Chest;
+            E.Abd = ve.ABD;
+            E.Extremeties = ve.Extr;
+            E.Skin = ve.Skin;
+            E.Neuro = ve.Neuro;
+            E.Other = ve.Other;
+            E.Diagnosis = ve.Diagnosis;
+            E.TreatmentPlan = ve.Treatment;
+            E.MedicationsDispensed = ve.MDispensed;
+            E.Procedures = ve.Procedures;
+            E.FollowUp = ve.Followup;
+            E.IsFinalize = false;
+            _context.SaveChanges();
+        }
+        public bool Finalizeform(ViewEncounterForm ve)
+        {
+            var E = _context.EncounterForms.FirstOrDefault(e => e.RequestId == ve.RequestId);
+            E.IsFinalize = true;
+            _context.SaveChanges();
+            return true;
+        }
+
     }
 }
 

@@ -7,22 +7,28 @@
                 <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
        
-            <form method="post" asp-action="AssignCase" asp-controller="Admin" id="AssignForm" class="form-floating" required>
+            <form method="post" asp-action="AssignCase" asp-controller="Admin" id="AssignForm" class="form-floating needs-validation" novalidate>
                 <input type="hidden" name="requestid" id="RequestID_ModelAssignCase" />
             <div class="modal-body">
                     <p><small>To assign this request, search and select another physician.</small> </p>
             <div>
-                <div class="form-floating">
-                            <select class="form-select mb-3" id="region" onchange="AssignPhysician()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))" required>
-                                <option value="">Search by Region</option>
-                            </select>
-                            <label for="region">Region</label>
+                <div class="form-floating mb-3">
+                    <select class="form-select " id="region" onchange="AssignPhysician()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))" required>
+                        <option value="">Search by Region</option>
+                    </select>
+                    <span class="invalid-feedback">
+                        Please choose a Region.
+                    </span>
+                    <label for="region">Region</label>
                 </div>
-                <div class="form-floating">
-                     <select class="form-select mb-3" id="provider" name="PhysicianId" required>
+                <div class="form-floating mb-3">
+                    <select class="form-select " id="provider" name="PhysicianId" required>
                         <option value="">Please Select</option>
                     </select>
-                            <label for="provider">Physician Name</label>
+                    <label for="provider">Physician Name</label>
+                    <span class="invalid-feedback">
+                        Please choose a Physician.
+                    </span>
                 </div>
                 <textarea name="Notes" class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="Description"></textarea>
             </div>
@@ -55,4 +61,5 @@
             }
         });
     }
+   
 </script>

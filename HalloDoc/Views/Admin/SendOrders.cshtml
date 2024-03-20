@@ -7,23 +7,32 @@
     <div class="d-flex align-self-center">
     <h3 class="">Send Order</h3>
     </div>
-    <div class=" btn d-flex justify-content-end">
-        <a asp-action="Index" asp-controller="Admin" class=" border border-info rounded p-1 m-1 "><i class="fa fa-angle-left p-2 fa-sm text-info"> Back</i> </a>
-    </div>
+    <a asp-action="Index" asp-controller="Admin" class="btn border border-info shadow-none">
+        <strong class="text-info">
+            <i class="fa fa-angle-left pe-1 text-info"> </i> Back
+        </strong>
+    </a>
 </div>
 <div class="bg-white reqform p-3 container ">   
-    <form class="bg-white sbox" method="post">
+    <form class="bg-white sbox needs-validation" method="post" novalidate>
         <div class="row">
             <div class="mb-3 col-lg-6 form-floating">
-                <select  class="form-select" id="Profession" onchange="AssignVendor()" asp-items="@(new SelectList(ViewBag.Professions,"HealthProfessionalId","ProfessionName"))">
+                <select class="form-select" id="Profession" asp-items="@(new SelectList(ViewBag.Professions,"HealthProfessionalId","ProfessionName"))" onchange="AssignVendor()" required>
                     <option selected>Select Profession</option>
                  </select>
+                <span class="invalid-feedback">
+                    Please choose a Profession.
+                </span>
                 <label class="fs-6" for="Refill">Profession</label>
+               
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <select asp-for="VendorId" class="form-select" id="provider" placeholder="Please Select" onchange="GetData()">
+                <select asp-for="VendorId" class="form-select" id="provider" placeholder="Please Select" onchange="GetData()" required>
                     <option value="">Please Select</option>
                 </select>
+                <span class="invalid-feedback">
+                    Please choose a provider.
+                </span>
                 <label class="fs-6" for="Refill">Vendor Name</label>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
@@ -42,8 +51,11 @@
             </div>
         </div>
         <div class="form-group mb-3 ">
-            <textarea asp-for="Prescription" name="Notes" class="form-control" rows="4" placeholder="Prescription of Order Details"></textarea>
+            <textarea asp-for="Prescription" name="Notes" class="form-control" rows="4" placeholder="Prescription of Order Details" required></textarea>
             @*<label class="fs-6" for="Notes">Prescription of Order Details</label>*@
+            <span class="invalid-feedback">
+                Please provide Prescription.
+            </span>
         </div>
         <div class="row">
             <div class="mb-3 col-lg-6 form-floating">

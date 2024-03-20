@@ -23,6 +23,7 @@
 <div class="bg-white reqform p-3 container ">
     <h1 class="text-info d-flex justify-content-center"><strong>Medical report- Confidential</strong></h1>
     <form class="bg-white sbox" method="post">
+        <input type="hidden" asp-for="RequestId" />
         <div class="row">
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 form-floating mb-4">
                 <input type="text" asp-for="FirstName" class="form-control shadow-none" id="fName" placeholder="FirstName">
@@ -93,8 +94,12 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 form-floating mb-4">
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12 form-floating mb-4">
                 <input type="text" asp-for="Bp" class="form-control shadow-none" id="bp" placeholder="Blood Pressure">
+                <label for="bp" class="form-label">Blood Pressure</label>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12 form-floating mb-4">
+                <input type="text" asp-for="Bpd" class="form-control shadow-none" id="bp" placeholder="Blood Pressure">
                 <label for="bp" class="form-label">Blood Pressure</label>
             </div>
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12 form-floating mb-4">
@@ -174,13 +179,12 @@
         </div>
         <div class="row px-3 d-flex justify-content-end">
             <button type="submit" class="col-1 btn btn-info text-white rounded mx-2 p-2">Save</button>
-            <input type="submit" class="col-1 btn btn-success text-white rounded mx-2 p-2" value="Finalize">
-            <a class="col-1 btn btn-outline-info text-info rounded mx-2 p-2">Cancel</a>
+            <button class="col-1 btn btn-success text-white rounded mx-2 p-2" asp-action="EncounterFinalize" asp-controller="Admin" >Finalize</button>
+            <button class="col-1 btn btn-outline-info rounded mx-2 p-2" asp-action="Index" asp-controller="Admin">Cancel</button>
         </div>
     </form>
 </div>
             
    
-</div>
 
 

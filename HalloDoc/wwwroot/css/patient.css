@@ -208,6 +208,10 @@ body {
     display: inline-flex;
     align-items: center;
 }
+.mobile-table {
+    background-color: #dcf6ff;
+    color: #0dcaf0;
+}
 /*Buttons */
 .Patient {
     background-color: #218524;
@@ -301,4 +305,12 @@ body {
 
 .reqtype:focus {
     border: 1.5px solid #d6d4d4 !important;
+}
+.was-validated .custom-select:valid {
+    background-image: none;
+}
+
+
+.was-validated .custom-select:invalid {
+    background-image: none;
 }

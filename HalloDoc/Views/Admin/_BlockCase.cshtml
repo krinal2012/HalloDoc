@@ -5,13 +5,16 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Block</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method=post asp-action="BlockCase" asp-controller="Admin">
+            <form method=post asp-action="BlockCase" asp-controller="Admin" class="needs-validation" novalidate>
                 <input type="hidden" value="" id="RequestID_ModelBlockCase" name="RequestId" />
                 <div class="modal-body">
                     <h3 class="modal-title fs-5" id="exampleModalLabel">Patient Name : <span class="text-info" id="PatientName_ModelBlockCase" name="patientname"> </span></h3>
                     <div class="form-floating mb-3">
                         <textarea id="changenote" rows="4" name="Notes" class="input-outline w-100 h-100 fs-6 form-control shadow-none" type="text" required></textarea>
                         <label class="inputs-lable fs-6" for="changenote">Reason For Block Request</label>
+                        <span class="invalid-feedback">
+                            Please choose a Reason.
+                        </span>
                     </div>
                 </div>
                 <div class="modal-footer">
