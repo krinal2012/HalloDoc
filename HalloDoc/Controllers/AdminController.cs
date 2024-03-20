@@ -32,7 +32,7 @@ namespace HalloDoc.Controllers
             return View(count);
         }
 
-        public IActionResult GetPartialView(string btnName, int statusid, string searchValue, string sortColumn,  string sortOrder, int requesttype= -1, int Region = -1, int page = 1, int pagesize = 3)
+        public IActionResult GetPartialView(string btnName, int statusid, string searchValue, string sortColumn,  string sortOrder, int pagesize=5 ,int requesttype= -1, int Region = -1, int page = 1)
         {
             var partialview = "_" + btnName;
             var result = _IAdminDash.NewRequestData(statusid, searchValue, page, pagesize, Region, sortColumn, sortOrder, requesttype);
@@ -40,13 +40,13 @@ namespace HalloDoc.Controllers
         }
         public IActionResult _new()
         {
-            var result = _IAdminDash.NewRequestData(1, null, 1, 3, -1,null,null, -1 );
+            var result = _IAdminDash.NewRequestData(1, null, 1, 5, -1,null,null, -1 );
             return PartialView(result);
         }
-        public IActionResult viewCase(int RequestId, int RequestTypeId)
+        public IActionResult viewCase(int RequestId, int RequestTypeId, int status)
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            var result = _IAdminDash.ViewCaseData(RequestId, RequestTypeId);
+            var result = _IAdminDash.ViewCaseData(RequestId, RequestTypeId, status);
             return View(result);
         }
         [HttpPost]
@@ -63,28 +63,28 @@ namespace HalloDoc.Controllers
            // return View();
         }
         [HttpPost]
-        public IActionResult viewNotes(int RequestID, string? adminnotes, string? physiciannotes)
+        public IActionResult EditNote(int RequestID, string? adminnotes, string? physiciannotes)
         {
-            //if (adminnotes != null || physiciannotes != null)
-            //{
+            if (adminnotes != null || physiciannotes != null)
+            {
                 bool result = _IAdminDash.ViewNotes(adminnotes, physiciannotes, RequestID);
-                //if (result)
-                //{
-                //    _notyf.Success("Notes Updated successfully...");
-                    return RedirectToAction("ViewNotes", new { id = RequestID });
-                //}
-                //else
-                //{
-                //    _notyf.Error("Notes Not Updated");
-                //    return View("../AdminActions/ViewNotes");
-                //}
-            //}
-            //else
-            //{
-            //    _notyf.Information("Please Select one of the note!!");
-            //    TempData["Errormassage"] = "Please Select one of the note!!";
-            //    return RedirectToAction("ViewNotes", new { id = RequestID });
-            //}
+                if (result)
+                {
+                    _notyf.Success("Notes Updated successfully...");
+                    return RedirectToAction("viewNotes", new { RequestId = RequestID });
+                }
+                else
+                {
+                    _notyf.Error("Notes Not Updated");
+                    return View("../Admin/viewNotes");
+                }
+            }
+            else
+            {
+                _notyf.Information("Please Select one of the note!!");
+                TempData["Errormassage"] = "Please Select one of the note!!";
+                return RedirectToAction("viewNotes", new { id = RequestID });
+            }
         }
         public IActionResult PhysicianbyRegion(int Regionid)
         {

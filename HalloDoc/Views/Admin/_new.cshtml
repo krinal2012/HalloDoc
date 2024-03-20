@@ -81,7 +81,7 @@
                                     <i class="bi bi-x-circle">
                                 </i> Cancel Case</a>
                             </li>
-                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'">
+                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId, status=1})'">
                                 <i class="bi bi-journal-text"></i> View Case</a>
                             </li>
                             <li>

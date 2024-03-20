@@ -16,7 +16,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public int? Intyear { get; set; }
         public int? Intdate { get; set; }
         public string? PhysicianNotes { get; set; }
-        public string? AdminNotes { get; set; }
+        public string? AdminNotes { get; set; } 
         public string? PatientNotes { get; set; }
         public string? Createdby { get; set; } = null!;
         public DateTime? Createddate { get; set; }

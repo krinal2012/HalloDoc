@@ -117,13 +117,14 @@ namespace HalloDoc.Repository.Repository
             };
             return viewModel;
         }
-        public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId)
+        public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId, int status)
         {
             ViewCaseModel? list =
                         _context.RequestClients
                        .Where(req => req.Request.RequestId == RequestID)
                        .Select(req => new ViewCaseModel()
                         {
+                           Status = status,
                             RequestId = RequestID,
                             RequestTypeId = RequestTypeId,
                             ConfNo = req.Address.Substring(0, 2) + req.IntDate.ToString() + req.StrMonth + req.IntYear.ToString() + req.LastName.Substring(0, 2) + req.FirstName.Substring(0, 2) + "002",
@@ -366,10 +367,11 @@ namespace HalloDoc.Repository.Repository
                         AdminNotes = adminnotes,
                         PhysicianNotes = physiciannotes,
                         CreatedDate = DateTime.Now,
+                        CreatedBy = "gg"
 
                     };
                     _context.RequestNotes.Add(rn);
-                    _context.SaveChangesAsync();
+                    _context.SaveChanges();
                     return true;
                 }
             }

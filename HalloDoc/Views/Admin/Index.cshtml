@@ -83,7 +83,17 @@
                         <option value="">Search Region</option>
                     </select>
                 </div>
+                <div class=" m-1">
+                    <select class="form-select pagesizeselect p-2 m-1 me-3" onchange="handleSearchClick()" name="PageSize" data-allow-clear="true" tabindex="-1" id="pagesizedropdown" data-control="select2" data-placeholder="Select Level">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+                <span class="pagesize m-2">Page Size</span>
             </div>
+           
 
             <div class="text-secondary requestType">
                 <button class="me-2 bg-white border-0 reqtype" data-id="-1">
@@ -177,15 +187,17 @@
     function handleSearchClick() {
         var searchValue = document.getElementById('searchInput').value;
         var region = $("#SelectedRegion").val();
+        var pagesize = $('#pagesizedropdown').val();
         var requesttype = $(this).data("id");
         console.log("Button: " + statusidglobal +" " + btnnameglobal);
         console.log("Search value: " + searchValue);
         console.log("Region id: " + region);
         console.log("Request type id: " +requesttype);
+        console.log(pagesize)
         $.ajax({
             type: "GET",
             url: '@Url.Action("GetPartialView", "Admin")',
-            data: { searchValue: searchValue, statusid: statusidglobal, btnName: btnnameglobal, Region: region, requesttype: requesttype },
+            data: { searchValue: searchValue, statusid: statusidglobal, btnName: btnnameglobal, Region: region, requesttype: requesttype, pagesize: pagesize },
             success: function (data) {
                 console.log("AJAX success");               
                 $("#btnContent").html(data);                

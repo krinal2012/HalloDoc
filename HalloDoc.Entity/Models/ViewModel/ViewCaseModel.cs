@@ -11,6 +11,7 @@ namespace HalloDoc.Entity.Models.ViewModel
     public class ViewCaseModel
     {
         public int RequestTypeId { get; set; }
+        public int Status { get; set; }
         public int RequestId { get; set; }
         public string ConfNo { get; set; }
         public string Symptoms { get; set; }

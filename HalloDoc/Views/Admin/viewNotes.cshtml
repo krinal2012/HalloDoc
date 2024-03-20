@@ -40,7 +40,7 @@
                 </div>
             </div>
             @* Physician Notes *@
-            <div class="col-sm-6 col-xs-12 mb-3" id="phynotes">
+                    <div class="col-sm-6 col-xs-12 mb-3" id="phynotes">
                 <div class="d-flex p-2 bg-white shadow">
                     <div class="p-2">
                         <i class="fa-solid fa-user-doctor"></i>
@@ -114,7 +114,7 @@
         <div class="row">
             <div class="col">
                 <div class="bg-white shadow p-2">
-                    <form method="post">
+                            <form method="post" asp-action="EditNote" asp-controller="Admin" asp-route-RequestID="@Model.Requestid">
                         <input type="hidden" name="RequestID" value="@Model.Requestid" />
                         <div class="col-12">
                             <div class="form-floating mb-3">
@@ -144,13 +144,13 @@
 <script>
     $(document).ready(function () {
         $("#phynotes").click(function () {
-            var text = $('#phynotetext').html().trim();
+            var text = $('#phynotetext').html();
             $("#changenote").val(text);
             $("#changenote").attr("name", "physiciannotes");
             $("#notedata").html("Physician Note");
         })
         $("#adminnotes").click(function () {
-            var text = $('#adminnotestext').html().trim();
+            var text = $('#adminnotestext').html();
             console.log(text);
             $("#changenote").val(text);
             $("#changenote").attr("name", "adminnotes");

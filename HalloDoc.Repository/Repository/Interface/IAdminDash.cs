@@ -1,6 +1,7 @@
 ﻿using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
 using Microsoft.AspNetCore.Http;
+using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Repository.Repository.Interface
 {
@@ -8,7 +9,7 @@ namespace HalloDoc.Repository.Repository.Interface
     {
         public CountStatusWiseRequestModel CountRequestData();
         public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize, int? Region, string sortColumn, string sortOrder, int? requesttype);
-        public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId);
+        public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId, int status);
         public ViewCaseModel EditViewCaseData(int RequestID, int RequestTypeId, ViewCaseModel vp);
         public List<Physician> ProviderbyRegion(int Regionid);
         public List<Region> AssignCase();
