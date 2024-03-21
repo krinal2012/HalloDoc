@@ -867,7 +867,41 @@ namespace HalloDoc.Repository.Repository
             _context.SaveChanges();
             return true;
         }
-
+        public List<AdminList> Export(string status)
+        {
+            List<int> statusdata = status.Split(',').Select(int.Parse).ToList();
+            List<AdminList> allData = (from req in _context.Requests
+                                       join reqClient in _context.RequestClients
+                                       on req.RequestId equals reqClient.RequestId into reqClientGroup
+                                       from rc in reqClientGroup.DefaultIfEmpty()
+                                       join phys in _context.Physicians
+                                       on req.PhysicianId equals phys.PhysicianId into physGroup
+                                       from p in physGroup.DefaultIfEmpty()
+                                       join reg in _context.Regions
+                                       on rc.RegionId equals reg.RegionId into RegGroup
+                                       from rg in RegGroup.DefaultIfEmpty()
+                                       where statusdata.Contains((int)req.Status)
+                                       orderby req.CreatedDate descending
+                                       select new AdminList
+                                       {
+                                           RequestId = req.RequestId,
+                                           RequestTypeId = req.RequestTypeId,
+                                           Requestor = req.FirstName + " " + req.LastName,
+                                           PatientName = rc.FirstName + " " + rc.LastName,
+                                           DOB = new DateTime((int)rc.IntYear, int.Parse(rc.StrMonth), (int)rc.IntDate),
+                                           RequestedDate = req.CreatedDate,
+                                           Email = rc.Email,
+                                           Region = rg.Name,
+                                           ProviderName = p.FirstName + " " + p.LastName,
+                                           PatientPhoneNumber = rc.PhoneNumber,
+                                           Address = rc.Address,
+                                           Notes = rc.Notes,
+                                           RequestClientId = rc.RequestClientId,
+                                           // ProviderID = req.Physicianid,
+                                           RequestorPhoneNumber = req.PhoneNumber
+                                       }).ToList();
+            return allData;
+        }
     }
 }
 
