@@ -11,13 +11,13 @@
             <h2 class="mb-2 text-body-secondary">Reset Your Password</h2>
             @TempData["emailCheck"]
             <form method="post" asp-action="SavePassword" asp-controller="Home">
-                <input type="hidden" name="email" value="@TempData["email"]"/>
-                <div class="form-floating mb-3 email">
-                    <input type="text" asp-for="Pass" class="form-control shadow-none" placeholder="Password" name="Password">
+                <input type="hidden" asp-for="Email" value="@TempData["email"]"/>
+                <div class="form-floating mb-3 ">
+                    <input type="text" asp-for="Pass" class="form-control shadow-none" placeholder="Password">
                     <label for="password" id="Password">Password</label>
                     <span asp-validation-for="Pass" class="text-danger"></span>
                 </div>
-                <div class="form-floating mb-3 email">
+                <div class="form-floating mb-3 ">
                     <input type="password" asp-for="ConformPass" class="form-control shadow-none" placeholder="Conform Password">
                     <label for="Conform Password" id="ConformPassword">Conform Password</label>
                     <span asp-validation-for="ConformPass" class="text-danger"></span>

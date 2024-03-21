@@ -11,5 +11,6 @@ namespace HalloDoc.Repository.Repository.Interface
     public interface ILogin
     {
         Task<UserInfo> CheckAccessLogin(AspNetUser aspNetUser);
+        public bool SendResetLink(String Email);
     }
 }

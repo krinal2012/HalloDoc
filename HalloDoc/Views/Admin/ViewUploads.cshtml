@@ -7,7 +7,7 @@
     ViewData["Title"] = "Upload Document";
     Layout = "_AdminDashboardLayout";
 }
-
+@Html.Partial("_SendMailModal.cshtml")
 <div class="container tabcontent defaulttab" id="Tab1">
     <div class="d-flex justify-content-between align-items-center py-4">
         <h4><b>Documents </b></h4>
@@ -30,7 +30,7 @@
             Check here to review and add files that you or the client has attached to the request.
         </p>
 
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" >
             <div class="d-flex justify-content-between bg-light border border-secondary rounded">
                 <button type="button" id="choosenfile" class="col btn text-start text-secondary" onclick="document.getElementById('files').click()">
                     Select File
@@ -50,17 +50,11 @@
                 <h5 class="text-black"><b>Documents </b> </h5>
                 <div class="d-flex justify-content-end">
                     <a class="btn btn-outline-info dNone" onclick="DownloadAll()">Download all</a>
-                    <a class="btn btn-outline-info dBlock" onclick="DownloadAll()"> + </a>
-                    <form id="deleted" asp-action="AllFilesDelete" asp-controller="ViewAction">
-                        <input type="hidden" id="deleteids" name="deleteids" />
-                        <input type="hidden" value=" " name="Requestid" />
-                        <a id="delete" class="btn btn-outline-info text-end mx-1">
-                              Delete All
-                        </a>
-                    </form>
-                    <div id="sendmail" class="btn btn-outline-info text-end mx-1">
+                    <a type="button" class="btn btn-outline-info dBlock" onclick="DownloadAll()"> + </a>
+                    <button id="delete" class="btn btn-outline-info text-end mx-1" onclick="DeleteAll(@Model.RequestId)">Delete All</button>
+                    <a id="sendmail" class="btn btn-outline-info text-end mx-1" data-bs-toggle="modal"  data-bs-target=" #SendMail" SendMail>
                         <i class="fa-solid fa-mail"></i>  Send Mail
-                    </div>
+                    </a>
                 </div>
             </div>
             <table class="table m-0">
@@ -83,10 +77,10 @@
                         <tr>
                             <td class="table-text px-3">
                                 <div class="form-check">
-                                    <input class="form-check-input doc-checkbox" type="checkbox" onclick="SelectBox()">
+                                    <input class="form-check-input doc-checkbox" type="checkbox" name="checkedfile" onclick="SelectBox()" value="@item2.RequestWiseFileId">
                                 </div>
                             </td>
-                            <td class="table-text ">@item2.FileName</td>                      
+                            <td class="table-text filename" id="">@item2.FileName</td>
 
                             <td class="table-text ">@item2.CreatedDate</td>
                             <td class="table-text">
@@ -103,7 +97,6 @@
             </table>
         </div>
     </div>
-
 </div>
 
 
@@ -112,6 +105,20 @@
         filename = this.files[0].name;
         console.log(filename);
         $("#choosenfile").text(filename);
+    });
+    $(function () {
+        $('.filename').each(function () {
+            var fileName = $(this).text();
+            if (fileName.endsWith('.pdf')) {
+                $(this).prepend('<i class="fa-solid fa-file-pdf" style="color: #be2323;font-size:1rem"></i> ');
+            } else if (fileName.endsWith('.doc') || fileName.endsWith('.txt')) {
+                $(this).prepend('<i class="fa-solid fa-file" style="color: #74C0FC;font-size:1rem"></i> ');
+            } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg') || fileName.endsWith('.png') || fileName.endsWith('.gif') || fileName.endsWith('.svg')) {
+                $(this).prepend('<i class="fa-solid fa-images" style="color: #B197FC;font-size:1rem"></i> ');
+            } else {
+                $(this).prepend(' <i class="fa-solid fa-file" > </i>');
+            }
+        });
     });
     function selectDeselectAll() {
         var selectAllCheckbox = document.getElementById('selectall');
@@ -136,7 +143,6 @@
             selectAllCheckbox.checked = true;
         }
     }
-
     function DownloadAll() {
         var allcheckbox = document.getElementsByClassName('doc-checkbox');
         var alllinks = document.getElementsByClassName('download-link');
@@ -148,5 +154,28 @@
             }
         }
     }
-
+    function DeleteAll(requestid) {
+        console.log(requestid);
+        var files = [];
+        $('input[name="checkedfile"]:checked').each(function () {
+            files.push(this.value);
+        });
+        console.log(files);
+        if (files.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteAllFile")",
+                data: {
+                    requestid: requestid,
+                    files: files,
+                },
+                success: function (data) {
+                    $('#DocumentTable').html(data);
+                }
+            });
+        }
+        else {
+            alert('No files selected');
+        }
+    }
 </script>

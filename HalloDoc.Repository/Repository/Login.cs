@@ -1,5 +1,6 @@
 ﻿using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
+using HalloDoc.Entity.Models;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
@@ -11,10 +12,12 @@ namespace HalloDoc.Repository.Repository
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly HelloDocContext _context;
-        public Login(HelloDocContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly EmailConfiguration _emailConfig;
+        public Login(HelloDocContext context, IHttpContextAccessor httpContextAccessor, EmailConfiguration emailConfig)
         {
             this.httpContextAccessor = httpContextAccessor;
             _context = context;
+            _emailConfig = emailConfig;
         }
         public async Task<UserInfo> CheckAccessLogin(AspNetUser aspNetUser)
         {
@@ -49,6 +52,12 @@ namespace HalloDoc.Repository.Repository
             {
                 return null;
             }
+        }
+        public bool SendResetLink(String Email)
+        {
+            var agreementUrl = "https://localhost:7151/Home/ResetPass?Email=" + Email;
+            _emailConfig.SendMail(Email, "Reset your password", $"To reset your password <a href='{agreementUrl}'>Click here..</a>");
+            return true;
         }
     }
 }

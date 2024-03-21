@@ -1,4 +1,5 @@
-﻿using HalloDoc.Entity.DataModels;
+﻿using Hallodoc.Entity.Models.ViewModel;
+using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
 using Microsoft.AspNetCore.Http;
 using static HalloDoc.Entity.Models.Constant;
@@ -23,6 +24,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public viewDocument ViewUploadsInfo(int requestid);
         public bool ViewUploadPost(viewDocument v, int userid, IFormFile UploadFile);
         public void DeleteFile(int id);
+        public bool Delete(int id, int[] requestfileid);
         public List<HealthProfessionalType> Professions(int RequestId );
         public List<HealthProfessional> VendorByProfession(int Professionid);
         public HealthProfessional SendOrdersInfo(int selectedValue);
@@ -37,5 +39,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public ViewEncounterForm EncounterInfo(int RequestId);
         public void EditEncounterinfo(ViewEncounterForm ve);
         public bool Finalizeform(ViewEncounterForm ve);
+        public bool SendLink(sendAgreement sendAgreement);
+        public bool CreateReq(viewPatientReq viewPatientReq, string UserId);
     }
 }

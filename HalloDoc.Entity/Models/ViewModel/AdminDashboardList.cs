@@ -42,6 +42,7 @@ namespace HalloDoc.Entity.Models.ViewModel
     public class sendAgreement
     {
         public int RequestId { get; set; }
+        public string FirstName { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
 

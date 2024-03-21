@@ -1,0 +1,50 @@
+﻿
+<div class="modal fade" id="SendMail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-white bg-info" id="staticBackdropLabel"> Send Mail</h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <input type="hidden" id="RequestID_Model" />
+                <div class="modal-body">
+                    <div class="col my-3">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" placeholder="abc@email.com" id="email"
+                                   aria-describedby="emailHelp">
+                            <label for="email" class="form-label">E-mail</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-info" id="submit-btn">Send</button>
+                <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#submit-btn').click(function () {
+       
+        var email = $("#email").val();
+        var reqId = $("#RequestID_Model").val();
+
+        $.ajax({
+            url: "/Admin/DocMail",
+            data: {
+                Reqid: reqId,
+                Email: email,
+            },
+            type: 'POST',
+            success: function (result) {
+                location.reload();
+            },
+            error: function (error) {
+                console.log(error);
+                alert('Error Fetching Request.')
+            },
+        });
+    });
+</script>

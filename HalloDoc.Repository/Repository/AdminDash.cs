@@ -17,7 +17,7 @@ using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Cryptography;
 using System.Diagnostics.Metrics;
-
+using Hallodoc.Entity.Models.ViewModel;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -455,8 +455,9 @@ namespace HalloDoc.Repository.Repository
                                          FirstName = rc.FirstName,
                                          LastName = rc.LastName,
                                          ConfirmationNumber = rc.Request.ConfirmationNumber
-
+                                        
                                      }).FirstOrDefault();
+            items.RequestId = requestid;
             List<RequestWiseFile> list = _context.RequestWiseFiles
                       .Where(r => r.RequestId == requestid && r.IsDeleted == new BitArray(1))
                       .OrderByDescending(x => x.CreatedDate)
@@ -508,6 +509,36 @@ namespace HalloDoc.Repository.Repository
                 _context.SaveChanges();
             }
         }
+        public bool Delete(int id, int[] requestfileid)
+        {
+            var filesForRequest = _context.RequestWiseFiles
+                    .Where(file => requestfileid.Contains(file.RequestWiseFileId))
+                    .ToList();
+            foreach (var file in filesForRequest)
+            {
+                file.RequestId = id;
+                file.IsDeleted[0] = true;
+
+                _context.Update(file);
+                _context.SaveChanges();
+            }
+            //var requestfiles = _context.RequestWiseFiles.Where(m => m.RequestId == id).ToList();
+            //var request = _context.Requests.Where(m => m.RequestId == id).FirstOrDefault();
+            //var dashboarddata = requestfiles.Select(x => new viewDocument
+            //{
+            //    RequestId = x.RequestId,
+            //    RequestFileId = x.RequestWiseFileId,
+            //    Createdat = x.CreatedDate,
+            //    Filename = x.FileName,
+
+            //});
+            //ViewDocumentViewModel viewDocumentViewModel = new ViewDocumentViewModel()
+            //{
+            //    Firstname = request.Firstname,
+            //    Documents = dashboarddata,
+            //};
+            return true;
+        }
         public List<HealthProfessionalType> Professions(int RequestId)
         {
             var data = _context.HealthProfessionalTypes.ToList();
@@ -528,29 +559,29 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SendOrders(int Requestid, OrderDetail data, string Notes)
         {
-            //try
-            //{
-            OrderDetail od = new OrderDetail
+            try
             {
-                RequestId = Requestid,
-                VendorId = data.VendorId,
-                FaxNumber = data.FaxNumber,
-                Email = data.Email,
-                BusinessContact = data.BusinessContact,
-                Prescription = Notes,
-                NoOfRefill = data.NoOfRefill,
-                CreatedDate = DateTime.Now,
-            };
-            _context.OrderDetails.Add(od);
-            _context.SaveChanges();
+                OrderDetail od = new OrderDetail
+                {
+                    RequestId = Requestid,
+                    VendorId = data.VendorId,
+                    FaxNumber = data.FaxNumber,
+                    Email = data.Email,
+                    BusinessContact = data.BusinessContact,
+                    Prescription = Notes,
+                    NoOfRefill = data.NoOfRefill,
+                    CreatedDate = DateTime.Now,
+                };
+                _context.OrderDetails.Add(od);
+                _context.SaveChanges();
+                _emailConfig.SendMail(od.Email, "Order details",
+                    "<h3>Hear is the details of order </h3> <p>" + Notes + "</p> ");
             return true;
-            //}           
-
-            //catch (Exception)
-            //{
-            //    return false;
-            //}
-
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         public bool ClearCaseInfo(int? RequestId)
         {
@@ -582,7 +613,7 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SendAgreement(sendAgreement sendAgreement)
         {
-            var agreementUrl = "https://localhost:7151/AgreementPage/Index?RequestID=" + sendAgreement.RequestId;
+            var agreementUrl = "https://localhost:7151/AgreementPage/Index?RequestID=" ;
             _emailConfig.SendMail(sendAgreement.Email, "Agreement for your request", $"Agreement for your request <a href='{agreementUrl}'>Agree/Disagree</a>");
             return true;
         }
@@ -788,6 +819,51 @@ namespace HalloDoc.Repository.Repository
         {
             var E = _context.EncounterForms.FirstOrDefault(e => e.RequestId == ve.RequestId);
             E.IsFinalize = true;
+            _context.SaveChanges();
+            return true;
+        }
+        public bool SendLink(sendAgreement sendAgreement)
+        {
+            var agreementUrl = "https://localhost:7151/PatientForm/Index?RequestID=" + sendAgreement.RequestId;
+            _emailConfig.SendMail(sendAgreement.Email, "Submit Request Page", $"Link for submitting a new request : <a href='{agreementUrl}'>click here..</a>");
+            return true;
+        }
+        public bool CreateReq(viewPatientReq viewPatientReq, string UserId)
+        {
+            var admin = _context.Admins.Where(x => x.AdminId.ToString() == UserId).FirstOrDefault();
+            
+            var Request = new Entity.DataModels.Request();
+            var Requestclient = new RequestClient();
+            var RequestNotes = new RequestNote();
+            Request.RequestTypeId = 1;
+            Request.Status = 1;
+            //Request.UserId = Int32.Parse(UserId);
+            Request.FirstName = admin.FirstName;
+            Request.LastName = admin.LastName;
+            Request.Email = admin.Email;
+            Request.PhoneNumber = admin.Mobile;
+            Request.CreatedDate = DateTime.Now;
+            Request.IsUrgentEmailSent = new BitArray(1);
+            Request.ConfirmationNumber = viewPatientReq.City.Substring(0, 2) + DateTime.Now.ToString("yyyyMM") + viewPatientReq.LastName.Substring(0, 2) + viewPatientReq.FirstName.Substring(0, 2) + "002";
+            _context.Requests.Add(Request);
+            _context.SaveChanges();
+            Requestclient.RequestId = Request.RequestId;
+            Requestclient.FirstName = viewPatientReq.FirstName;
+            Requestclient.LastName = viewPatientReq.LastName;
+            Requestclient.Address = viewPatientReq.Street + "," + viewPatientReq.City + "," + viewPatientReq.State + "," + viewPatientReq.ZipCode;
+            Requestclient.Email = viewPatientReq.Email;
+            Requestclient.PhoneNumber = viewPatientReq.Mobile;
+            Requestclient.Notes = viewPatientReq.Symptoms;
+            Requestclient.IntDate = viewPatientReq.DOB.Day;
+            Requestclient.IntYear = viewPatientReq.DOB.Year;
+            Requestclient.StrMonth = (viewPatientReq.DOB.Month).ToString();
+            _context.RequestClients.Add(Requestclient);
+            _context.SaveChanges();
+            RequestNotes.RequestId = Request.RequestId;
+            RequestNotes.AdminNotes = viewPatientReq.Symptoms;
+            RequestNotes.CreatedDate = DateTime.Now;
+            RequestNotes.CreatedBy = "gg";
+            _context.RequestNotes.Add(RequestNotes);
             _context.SaveChanges();
             return true;
         }

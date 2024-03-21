@@ -28,4 +28,16 @@
     <Folder Include="wwwroot\Upload\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Admin\CreateRequest.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Admin\CreateRequest.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Admin\CreateRequest.cshtml" />
+  </ItemGroup>
+
 </Project>

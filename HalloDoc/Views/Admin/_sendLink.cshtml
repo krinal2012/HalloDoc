@@ -8,25 +8,32 @@
                 <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form method="post" asp-controller="Admin" class="form-floating form-control" required>
-                @*<input type="hidden" name="requestid" id="RequestID_ModelAssignCase" />*@
+            <form method="post" asp-controller="Admin" asp-action="SendLink" class="needs-validation" novalidate>
                 <div class="modal-body">
                     <div class="mb-3 form-floating">
-                        <input type="text" class="form-control" placeholder="First Name" >
+                        <input type="text" class="form-control" placeholder="First Name" name="First Name" required>
                         <label for="FirstName" class="form-label">First Name</label>
+                        <span class="invalid-feedback">
+                            Please enter first name.
+                        </span>
                     </div>
                     <div class="mb-3 form-floating">
                         <input type="text" class="form-control" placeholder="last Name" >
                         <label for="LastName" class="form-label">Last Name</label>
                     </div>
                     <div class="mb-3 form-floating phone">
-                        <input type="tel" class="form-control shadow-none" id="phone" >
+                        <input type="tel" class="form-control shadow-none" id="phone" required>
+                        <span class="invalid-feedback">
+                            Please enter Mobile number.
+                        </span>
                     </div>
                     <div class="mb-3 form-floating">
                         <input type="email" class="form-control" id="email" placeholder="abc@email.com"
-                               aria-describedby="emailHelp" >
+                               aria-describedby="emailHelp" name="Email" required>
                         <label for="email" class="form-label">E-mail</label>
-                        @*<span asp-validation-for="Email" class="text-danger"></span>*@
+                        <span class="invalid-feedback">
+                            Please enter Email address.
+                        </span>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info">Send</button>

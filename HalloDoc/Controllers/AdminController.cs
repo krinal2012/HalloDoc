@@ -1,28 +1,33 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Hallodoc.Entity.Models.ViewModel;
 using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
+using HalloDoc.Models;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
+using System.Web.Helpers;
 using static HalloDoc.Repository.Repository.JWTService;
 
 namespace HalloDoc.Controllers
 {
     //  [CheckProviderAccess("Admin")]
     [CustomAuthorize("Admin")]
-    public class AdminController :Controller
+    public class AdminController : Controller
     {
         private readonly IAdminDash _IAdminDash;
         private readonly HelloDocContext _context;
         private readonly INotyfService _notyf;
-        public AdminController(IAdminDash IAdminDash, HelloDocContext context, INotyfService notyf)
+        private static IHttpContextAccessor _httpContextAccessor;
+        public AdminController(IAdminDash IAdminDash, HelloDocContext context, INotyfService notyf, IHttpContextAccessor httpContextAccessor)
         {
             _IAdminDash = IAdminDash;
             _context = context;
             _notyf = notyf;
-        }       
+            _httpContextAccessor = httpContextAccessor;
+        }
         //[CheckAdminAccess]
         public IActionResult Index()
         {
@@ -31,8 +36,7 @@ namespace HalloDoc.Controllers
             CountStatusWiseRequestModel count = _IAdminDash.CountRequestData();
             return View(count);
         }
-
-        public IActionResult GetPartialView(string btnName, int statusid, string searchValue, string sortColumn,  string sortOrder, int pagesize=5 ,int requesttype= -1, int Region = -1, int page = 1)
+        public IActionResult GetPartialView(string btnName, int statusid, string searchValue, string sortColumn, string sortOrder, int pagesize = 5, int requesttype = -1, int Region = -1, int page = 1)
         {
             var partialview = "_" + btnName;
             var result = _IAdminDash.NewRequestData(statusid, searchValue, page, pagesize, Region, sortColumn, sortOrder, requesttype);
@@ -40,7 +44,7 @@ namespace HalloDoc.Controllers
         }
         public IActionResult _new()
         {
-            var result = _IAdminDash.NewRequestData(1, null, 1, 5, -1,null,null, -1 );
+            var result = _IAdminDash.NewRequestData(1, null, 1, 5, -1, null, null, -1);
             return PartialView(result);
         }
         public IActionResult viewCase(int RequestId, int RequestTypeId, int status)
@@ -60,7 +64,7 @@ namespace HalloDoc.Controllers
         {
             viewNotesData result = _IAdminDash.viewNotesData(RequestId);
             return View("../Admin/viewNotes", result);
-           // return View();
+            // return View();
         }
         [HttpPost]
         public IActionResult EditNote(int RequestID, string? adminnotes, string? physiciannotes)
@@ -110,7 +114,7 @@ namespace HalloDoc.Controllers
         {
             bool result = _IAdminDash.CancleCaseInfo(RequestId, Notes, CaseTag);
             if (result)
-            {                
+            {
                 _notyf.Success("Case Canceled Successfully");
             }
             else
@@ -130,7 +134,6 @@ namespace HalloDoc.Controllers
         {
             var v = _IAdminDash.ViewUploadsInfo(requestid);
             return View("../Admin/ViewUploads", v);
-
         }
         [HttpPost]
         public IActionResult ViewUploads(viewDocument vp, int userid, IFormFile UploadFile)
@@ -141,7 +144,26 @@ namespace HalloDoc.Controllers
         public IActionResult DeleteFile(int id, int requestid)
         {
             _IAdminDash.DeleteFile(id);
-            return RedirectToAction("ViewUploads", new { requestid = requestid });
+            return RedirectToAction("ViewUploads", new { requestid });
+        }
+        public IActionResult DeleteAllFile(int requestid, int[] files)
+        {
+            _IAdminDash.Delete(requestid, files);
+            return RedirectToAction("ViewUploads", new { requestid });
+        }
+        public IActionResult DocMail(int Reqid, string Email)
+        {
+            sendAgreement sendAgreement = new()
+            {
+                RequestId = Reqid,
+                Email = Email
+            };
+
+            if (_IAdminDash.SendAgreement(sendAgreement))
+            {
+                _notyf.Success("Mail Send  Successfully..!");
+            }
+            return RedirectToAction("Index", "Admin");
         }
         public IActionResult SendOrders(int RequestId)
         {
@@ -171,9 +193,9 @@ namespace HalloDoc.Controllers
         }
         public IActionResult SendAgreementModal(int requestid)
         {
-            Entity.DataModels.Request obj = _context.Requests.FirstOrDefault(x => x.RequestId == requestid);
+            Request obj = _context.Requests.FirstOrDefault(x => x.RequestId == requestid);
             sendAgreement sendAgreement = new() { RequestId = requestid, PhoneNumber = obj.PhoneNumber, Email = obj.Email };
-            return View("_sendAgreement",sendAgreement);
+            return View("_sendAgreement", sendAgreement);
         }
         [HttpPost]
         public IActionResult SendAgreement(int Reqid, string PhoneNumber, string Email)
@@ -184,7 +206,7 @@ namespace HalloDoc.Controllers
                 PhoneNumber = PhoneNumber,
                 Email = Email
             };
-            
+
             if (_IAdminDash.SendAgreement(sendAgreement))
             {
                 _notyf.Success("Mail Send  Successfully..!");
@@ -237,7 +259,42 @@ namespace HalloDoc.Controllers
         }
         public IActionResult EncounterFinalize(ViewEncounterForm ve)
         {
-            bool result= _IAdminDash.Finalizeform(ve);
+            bool result = _IAdminDash.Finalizeform(ve);
+            return RedirectToAction("Index", "Admin");
+        }
+        public IActionResult SendLink(string FirstName, string Email)
+        {
+            sendAgreement sendAgreement = new()
+            {
+                FirstName = FirstName,
+                Email = Email
+            };
+
+            if (_IAdminDash.SendLink(sendAgreement))
+            {
+                _notyf.Success("Mail Send  Successfully..!");
+            }
+            return RedirectToAction("Index", "Admin");
+        }
+        public IActionResult CreateRequest()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult CreateRequest(viewPatientReq viewPatientReq)
+        {
+            var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
+            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
+
+            bool result = _IAdminDash.CreateReq(viewPatientReq, UserId);
+            if (result)
+            {
+                _notyf.Success("Request Created.");
+            }
+            else
+            {
+                _notyf.Error("there is some errors...");
+            }
             return RedirectToAction("Index", "Admin");
         }
     }
