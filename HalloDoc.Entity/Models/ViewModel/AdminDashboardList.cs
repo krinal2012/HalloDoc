@@ -27,6 +27,8 @@ namespace HalloDoc.Entity.Models.ViewModel
         public List<T> AdminList { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+        public string sortColumn { get; set; } = "RequestedDate";
+        public bool sortOrder { get; set; } = false;
     }
 
     public class CountStatusWiseRequestModel

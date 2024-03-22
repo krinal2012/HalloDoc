@@ -10,13 +10,16 @@
     <table class="table table-responsive p-3">
         <thead class="bg-light">
             <tr>
-                <th scope="col">Name </th>
+                <th scope="col" class="d-flex justify-content-between">
+                    Name
+                    <span class="sortbtn" data-value="Name"><i class="fa fa-sort"></i></span>
+                </th>
                 <th></th>
-                <th scope="col">Date Of Birth</th>
-                <th scope="col">Physician Name</th>
-                <th scope="col">Date of Service</th>
+                <th scope="col" class=" d-flex justify-content-between">Date Of Birth<span class="sortbtn" data-value="DOB"><i class="fa fa-sort"></i></span></th>
+                <th scope="col" class="">Physician Name<span class="sortbtn" data-value="Physician"><i class="fa fa-sort"></i></span></th>
+                <th scope="col" class="d-flex justify-content-between">Date of Service<span class="sortbtn" data-value="DOS"><i class="fa fa-sort"></i></span></th>
                 <th scope="col">Phone</th>
-                <th scope="col">Address</th>
+                <th scope="col" class="d-flex justify-content-between">Address<span class="sortbtn" data-value="Address"><i class="fa fa-sort"></i></span></th>
                 <th scope="col">Chat with</th>
                 <th scope="col">Actions</th>
             </tr>
@@ -206,18 +209,29 @@
     </ul>
 </nav>
 <script>
+    var reqtypeElements = document.getElementsByClassName('sortbtn');
+    for (var i = 0; i < reqtypeElements.length; i++) {
+        reqtypeElements[i].addEventListener('click', sort);
+    }
+
     $(".pagination-container a").on("click", function (e) {
-        //e.preventDefault();
-        console.log("etfh");
+        e.preventDefault();
+        console.log("hhhh");
         var page = $(this).data('page');
+        pageglobal = page;
+        console.log(sortOrderglobal);
+        console.log(sortColumnglobal);
+        var searchValue = document.getElementById('searchInput').value;
         $.ajax({
             url: "@Url.Action("GetPartialView", "Admin")",
             type: "GET",
             data: {
                 page: page,
-                //status: 1,
+                searchValue: searchValue,
                 btnName: "conclude",
-                statusid: 4
+                statusid: 4,
+                sortColumn: sortColumnglobal,
+                sortOrder: sortOrderglobal,
             },
             success: function (data) {
                 $("#btnContent").html(data);
@@ -227,4 +241,60 @@
             }
         });
     });
+
+    function sort() {
+        console.log("etfh");
+        var e = $(this).data("value");
+        var sortOrder = sortOrderglobal;
+        var sortColumn = e;
+        var page = pageglobal;
+        var searchValue = document.getElementById('searchInput').value;
+        debugger;
+        if (event.target.tagName == "I") {
+            var icon = event.target;
+            icon.classList.remove("fa", "fa-sort");
+            icon.classList.add("fa", "fa-sort-asc");
+        }
+
+        if (e == sortColumnglobal) {
+            if (sortOrder == true) {
+                sortOrderglobal = false;
+            }
+            else {
+                sortOrderglobal = true;
+            }
+        }
+        else {
+            sortColumnglobal = e;
+            if (sortOrder == true) {
+                sortOrderglobal = false;
+            }
+            else {
+                sortOrderglobal = true;
+            }
+        }
+        //localStorage.setItem('sortOrderglobal', sortOrderglobal);
+        //localStorage.setItem('sortColumnglobal', sortColumnglobal);
+        console.log(sortOrderglobal);
+        console.log(sortColumnglobal);
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetPartialView", "Admin")',
+            data: {
+                page: page,
+                statusid: 4,
+                btnName: "conclude",
+                sortColumn: sortColumnglobal,
+                sortOrder: sortOrderglobal,
+                searchValue: searchValue
+            },
+            success: function (data) {
+                $("#btnContent").html(data);
+                console.log("AJAX success");
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    }
 </script>

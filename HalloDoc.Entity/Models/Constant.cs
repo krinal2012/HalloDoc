@@ -25,8 +25,9 @@ namespace HalloDoc.Entity.Models
             Conclude = 6,
             CancelledByPatient = 7,
             Closed =8,
-            Ubpaid =9,
-            Clear=10
+            Unpaid =9,
+            Clear=10,
+            Block=11
         }
     }
 }

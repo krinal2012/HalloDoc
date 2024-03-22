@@ -1,4 +1,4 @@
-﻿using System;
+﻿                                                                                                                                                                                                                                                                                                        using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +14,5 @@ namespace HalloDoc.Entity.Models.ViewModel
             public status Status { get; set; }
             public int RequestId { get; set; }
             public int Fcount { get; set; }
-       
-        
     }
 }

@@ -197,6 +197,17 @@ body {
     box-shadow: none;
     border: 2px solid #0dcaf0;
 }
+    .search .pagesize {
+        position: absolute !important;
+        top: 9px !important;
+        left: 16px !important;
+    }
+    .search .pagesizeselect {
+        height: 50px !important;
+        min-width: 150px !important;
+        text-indent: 97px !important;
+        border: 2px solid #d6d4d4 !important;
+    }
 .searchBar {
     display: flex;
     justify-content: space-between;

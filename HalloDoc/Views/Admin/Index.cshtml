@@ -83,15 +83,16 @@
                         <option value="">Search Region</option>
                     </select>
                 </div>
-                <div class=" m-1">
-                    <select class="form-select pagesizeselect p-2 m-1 me-3" onchange="handleSearchClick()" name="PageSize" data-allow-clear="true" tabindex="-1" id="pagesizedropdown" data-control="select2" data-placeholder="Select Level">
+                <div class="search m-1">
+                    <span class="pagesize m-1">Page Size</span>
+                    <select class="form-select pagesizeselect p-2 me-3" onchange="handleSearchClick()" name="PageSize" data-allow-clear="true" tabindex="-1" id="pagesizedropdown" data-control="select2" data-placeholder="Select Level">
                         <option value="5" selected>5</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
                         <option value="50">50</option>
                     </select>
                 </div>
-                <span class="pagesize m-2">Page Size</span>
+                
             </div>
            
 
@@ -130,6 +131,9 @@
 <script>   
     var statusidglobal=1;
     var btnnameglobal="new";
+    var pageglobal = 1;
+    var sortOrderglobal = false;
+    var sortColumnglobal = "RequestedDate";
     $(document).ready(function () {
         console.log("Document ready");
         var defaultPartial = '/Admin/_new';

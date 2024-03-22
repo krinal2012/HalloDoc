@@ -93,17 +93,29 @@ namespace HalloDoc.Repository.Repository
             switch (sortColumn)
             {
                 case "Name":
-                    list = sortOrder == "desc" ? list.OrderByDescending(x => x.PatientName).ToList() : list.OrderBy(x => x.PatientName).ToList();
+                    list = sortOrder == "false" ? list.OrderByDescending(x => x.PatientName).ToList() : list.OrderBy(x => x.PatientName).ToList();
                     break;
-                //case "Date":
-                //    students = students.OrderBy(s => s.EnrollmentDate);
-                //    break;
-                //case "date_desc":
-                //    students = students.OrderByDescending(s => s.EnrollmentDate);
-                //    break;
-                //default:
-                //    students = students.OrderBy(s => s.LastName);
-                //    break;
+                case "DOB":
+                    list = sortOrder == "false" ? list.OrderByDescending(x => x.DOB).ToList() : list.OrderBy(x => x.DOB).ToList();
+                    break;
+                case "Requestor":
+                    list = sortOrder == "false" ? list.OrderByDescending(x => x.Requestor).ToList() : list.OrderBy(x => x.Requestor).ToList();
+                    break;
+                case "RequestedDate":
+                    list = sortOrder == "false" ? list.OrderByDescending(x => x.RequestedDate).ToList() : list.OrderBy(x => x.RequestedDate).ToList();
+                    break;
+                case "Address":
+                    list = sortOrder == "false" ? list.OrderByDescending(x => x.Address).ToList() : list.OrderBy(x => x.Address).ToList();
+                    break;
+                case "Physician":
+                    list = sortOrder == "false" ? list.OrderByDescending(x => x.ProviderName).ToList() : list.OrderBy(x => x.ProviderName).ToList();
+                    break;
+                case "Region":
+                    list = sortOrder == "false" ? list.OrderByDescending(x => x.Region).ToList() : list.OrderBy(x => x.Region).ToList();
+                    break;
+                default:
+                    list = list.OrderByDescending(x => x.RequestedDate).ToList();
+                    break;
             }
             int totalItemCount = list.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
