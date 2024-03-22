@@ -55,7 +55,7 @@
             <i class="fa fa-file-pen"></i>
             <span class="dNone">Create Request</span>
         </a>
-        <button type="button" class="btn btn-info">
+        <button type="button" class="btn btn-info" onclick="Export(null)">
             <i class="fa-solid fa-share"></i>
             <span class="dNone"> Export</span>
         </button>
@@ -212,6 +212,12 @@
         });
     }
     function Export(status) {
+        console.log(status);
+        console.log(statusidglobal);
+        if(status == null)
+        {
+            status= statusidglobal;
+        }
         console.log(status);
         $.ajax({
             method: "POST",
