@@ -5,14 +5,11 @@
 @using Microsoft.AspNetCore.Http
 @using static HalloDoc.Entity.Models.Constant;
 @using HalloDoc.Entity.Models.ViewModel;
-@model List<PatientDashList>;
+@model PaginatedViewModel<PatientDashList>;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-
 @{
     ViewData["Title"] = "Dashboard";   
 }
-
-
 <div  class="tabcontent defaulttab py-4 mx-5 ">
     <h2 class="py-4"><b>Medical History </b></h2>
    <div class="reqform">
@@ -43,7 +40,6 @@
                         <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
                     </div>
                   </div>    
-                
             </div>
         </div>
         </div>
@@ -51,15 +47,15 @@
           <table class="table table-responsive p-3">
                 <thead class="bg-light">
                     <tr >
-                        <th scope="col" width="25%">Created Date <i class="bi bi-arrow-down"></i></th>
-                        <th scope="col" width="55%">Current Status</th>
+                        <th scope="col" width="25%">Created Date <span class="sortbtn" data-value="CreatedDate"><i class="fa fa-sort"></i></span></th>
+                        <th scope="col" width="55%">Current Status <span class="sortbtn" data-value="Status"><i class="fa fa-sort"></i></span></th>
                         <th scope="col">Document</th>
                     </tr>
                 </thead>
                <tbody class="table-group-divider mx-5 bg-white">
                     @if (Model !=null)
                     {
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.AdminList)
                         {
                             <tr>
                                 <td scope="row"> @item.createdDate</td>                                
@@ -82,7 +78,7 @@
         </div>
         <div class="dBlock">
             <div class="accordion" id="accordionExample">
-             @foreach (var item in Model)
+            @foreach (var item in Model.AdminList)
             {               
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-heading-@item.RequestId">
@@ -119,11 +115,117 @@
                         </div>
                     </div>
                 </div>
-                
             }
             </div>
         </div>
-        
    </div>
-</div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination pagination-container d-flex justify-content-center">
+            @{
+                int i;
 
+                if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage - 1)">&lt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                }
+                @for (i = 1; i <= Model.TotalPages; i++)
+                {
+
+                    <li class="page-item"><a href="#" data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                }
+                if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage + 1)">&gt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                }
+            }
+        </ul>
+    </nav>
+</div>
+<script>
+    var pageglobal = 1;
+    var sortOrderglobal = false;
+    var sortColumnglobal = "createdDate";
+    var reqtypeElements = document.getElementsByClassName('sortbtn');
+    for (var i = 0; i < reqtypeElements.length; i++) {
+        reqtypeElements[i].addEventListener('click', sort);
+    }
+    $(".pagination-container a").on("click", function (e) {
+        e.preventDefault();
+        console.log("hhhh");
+        var page = $(this).data('page');
+        pageglobal = page;
+        console.log(sortOrderglobal);
+        console.log(sortColumnglobal);
+
+      
+        $.ajax({
+            url: "@Url.Action("Index", "Dashboard")",
+            type: "GET",
+            data: {
+                page: page,
+                sortColumn: sortColumnglobal,
+                sortOrder: sortOrderglobal,
+            },
+            success: function (data) {
+                $("#btnContent").html(data);
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+    function sort() {
+        console.log("etfh");
+        var e = $(this).data("value");
+        var sortOrder = sortOrderglobal;
+        var sortColumn = e;
+        var page = pageglobal;
+        
+        debugger;
+        if (e == sortColumnglobal) {
+            if (sortOrder == true) {
+                sortOrderglobal = false;
+            }
+            else {
+                sortOrderglobal = true;
+            }
+        }
+        else {
+            sortColumnglobal = e;
+            if (sortOrder == true) {
+                sortOrderglobal = false;
+            }
+            else {
+                sortOrderglobal = true;
+            }
+        }
+       
+        console.log(sortOrderglobal);
+        console.log(sortColumnglobal);
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Index", "Dashboard")',
+            data: {
+                page: page,
+                sortColumn: sortColumnglobal,
+                sortOrder: sortOrderglobal,
+            },
+            success: function (data) {
+                $("#btnContent").html(data);
+                console.log("AJAX success");
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    }
+</script>
+ 

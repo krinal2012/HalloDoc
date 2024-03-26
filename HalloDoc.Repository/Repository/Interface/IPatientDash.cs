@@ -6,7 +6,7 @@ namespace HalloDoc.Repository.Repository.Interface
 {
     public interface IPatientDash
     {
-        public List<PatientDashList> PatientList(int id);
+        public PaginatedViewModel<PatientDashList> PatientList(int id, int page, int pagesize, string sortColumn, string sortOrder);
         public viewProfile viewProfile(int id);
         public void EditProfile(int id, viewProfile vp);
         public void uploadDocument(int id, IFormFile UploadFile);

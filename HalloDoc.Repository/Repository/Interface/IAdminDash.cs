@@ -24,6 +24,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public viewDocument ViewUploadsInfo(int requestid);
         public bool ViewUploadPost(viewDocument v, int userid, IFormFile UploadFile);
         public void DeleteFile(int id);
+        public Task<bool> SendFileEmail(string ids, int Requestid, string email);
         public bool Delete(int id, int[] requestfileid);
         public List<HealthProfessionalType> Professions(int RequestId );
         public List<HealthProfessional> VendorByProfession(int Professionid);

@@ -6,6 +6,7 @@ using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using System.Collections.Generic;
 using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Repository.Repository
@@ -17,16 +18,39 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
         }
-        public List<PatientDashList> PatientList(int id)
+        public PaginatedViewModel<PatientDashList> PatientList(int id,  int page, int pagesize, string sortColumn, string sortOrder)
         {
-            var items = _context.Requests.Include(x => x.RequestWiseFiles).Where(x => x.UserId == id).Select(x => new PatientDashList
+            var list = _context.Requests.Include(x => x.RequestWiseFiles).Where(x => x.UserId == id).Select(x => new PatientDashList
             {
                 createdDate = x.CreatedDate,
                 Status = (status)x.Status,
                 RequestId = x.RequestId,
                 Fcount = x.RequestWiseFiles.Count()
             }).ToList();
-            return items;
+            switch (sortColumn)
+            {
+                case "Status":
+                    list = sortOrder == "false" ? list.OrderByDescending(x => x.Status).ToList() : list.OrderBy(x => x.Status).ToList();
+                    break;
+                case "CreatedDate":
+                    list = sortOrder == "false" ? list.OrderByDescending(x => x.createdDate).ToList() : list.OrderBy(x => x.createdDate).ToList();
+                    break;
+                default:
+                    list = list.OrderByDescending(x => x.createdDate).ToList();
+                    break;
+            }
+            int totalItemCount = list.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
+            List<PatientDashList> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();
+
+            PaginatedViewModel<PatientDashList> viewModel = new PaginatedViewModel<PatientDashList>()
+            {
+                AdminList = list1,
+                CurrentPage = page,
+                TotalPages = totalPages,
+            };
+            return viewModel;
+           
         }
         public viewProfile viewProfile(int id)
         {

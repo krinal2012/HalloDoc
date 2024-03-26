@@ -8,5 +8,6 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool EditPassword(string Password, int UserId);
         public bool EditAdministratorInfo(AdminProfile AdminProfile);
         public bool EditBillingInfo(AdminProfile AdminProfile);
+        public List<PhysiciansData> PhysicianAll();
     }
 }

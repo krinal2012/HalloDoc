@@ -8,6 +8,7 @@ using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Cryptography;
 using System.Web.Helpers;
 using static HalloDoc.Repository.Repository.JWTService;
@@ -81,14 +82,13 @@ namespace HalloDoc.Controllers
                 else
                 {
                     _notyf.Error("Notes Not Updated");
-                    return View("../Admin/viewNotes");
+                    return RedirectToAction("viewNotes", new { RequestId = RequestID });
                 }
             }
             else
             {
-                _notyf.Information("Please Select one of the note!!");
-                TempData["Errormassage"] = "Please Select one of the note!!";
-                return RedirectToAction("viewNotes", new { id = RequestID });
+                _notyf.Error("Error!!");
+                return RedirectToAction("viewNotes", new { RequestId = RequestID });
             }
         }
         public IActionResult PhysicianbyRegion(int Regionid)
@@ -152,15 +152,9 @@ namespace HalloDoc.Controllers
             _IAdminDash.Delete(requestid, files);
             return RedirectToAction("ViewUploads", new { requestid });
         }
-        public IActionResult DocMail(int Reqid, string Email)
+        public async Task<IActionResult> DocMail(int Reqid, string Email, string mailids)
         {
-            sendAgreement sendAgreement = new()
-            {
-                RequestId = Reqid,
-                Email = Email
-            };
-
-            if (_IAdminDash.SendAgreement(sendAgreement))
+            if (await _IAdminDash.SendFileEmail(mailids, Reqid, Email))
             {
                 _notyf.Success("Mail Send  Successfully..!");
             }
@@ -194,7 +188,7 @@ namespace HalloDoc.Controllers
         }
         public IActionResult SendAgreementModal(int requestid)
         {
-            Request obj = _context.Requests.FirstOrDefault(x => x.RequestId == requestid);
+            Entity.DataModels.Request obj = _context.Requests.FirstOrDefault(x => x.RequestId == requestid);
             sendAgreement sendAgreement = new() { RequestId = requestid, PhoneNumber = obj.PhoneNumber, Email = obj.Email };
             return View("_sendAgreement", sendAgreement);
         }

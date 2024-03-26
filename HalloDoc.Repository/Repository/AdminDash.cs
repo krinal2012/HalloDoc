@@ -521,6 +521,29 @@ namespace HalloDoc.Repository.Repository
                 _context.SaveChanges();
             }
         }
+        public async Task<bool> SendFileEmail(string ids, int Requestid, string email)
+        {
+          
+            List<int> priceList = ids.Split(',').Select(int.Parse).ToList();
+            List<string> files = new();
+            foreach (int price in priceList)
+            {
+                if (price > 0)
+                {
+                    var data =  _context.RequestWiseFiles.Where(e => e.RequestWiseFileId == price).FirstOrDefault();
+                    files.Add(Directory.GetCurrentDirectory() + "\\wwwroot\\Upload\\" + data.FileName);
+                }
+            }
+            if  ( await _emailConfig.SendMailAsync(email, "All Document Of Your Request ", "Heeyy Kindly Check your Attachments", files))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
         public bool Delete(int id, int[] requestfileid)
         {
             var filesForRequest = _context.RequestWiseFiles

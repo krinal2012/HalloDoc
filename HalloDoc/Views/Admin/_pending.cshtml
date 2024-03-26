@@ -145,7 +145,7 @@
 
                     <div class="row">
                         <div class="col-6 mb-3">
-                            <button class="btn btn-warning text-white rounded-pill 2px w-100 " data-bs-toggle="modal" data-bs-target=" #SendAgreement">
+                            <button class="btn btn-warning text-white rounded-pill 2px w-100 " data-bs-toggle="modal" data-bs-target=" #SendAgreement" onclick="SendAgreement(@item.RequestId)">
                                 <small>Send Agreement </small>
                             </button>
                         </div>
@@ -231,6 +231,9 @@
     }
     function SendAgreement(requestid) {
         console.log(requestid);
+        //document.getElementById("SendAgreement_phone").value = patientPhoneNumber;
+        //document.getElementById("SendAgreement_email").value = email;
+      
         $.ajax({
             url: '@Url.Action("SendAgreementModal", "Admin")',
             data: { requestid: requestid },

@@ -75,5 +75,11 @@ namespace HalloDoc.Controllers
             return RedirectToAction("AdminProfile");
         }
 
+        public IActionResult ProviderMenu()
+        {
+            ViewBag.AssignCase = _IAdminDash.AssignCase();
+            var res = _IAdminTabs.PhysicianAll();
+            return View(res);
+        }
     }
 }

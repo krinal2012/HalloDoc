@@ -29,5 +29,12 @@ namespace HalloDoc.Entity.Models
             Clear=10,
             Block=11
         }
+        public enum state
+        {
+           
+            Active = 1,
+            Pending = 2,
+           
+        }
     }
 }

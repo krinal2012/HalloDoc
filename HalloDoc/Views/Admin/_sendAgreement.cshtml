@@ -1,8 +1,8 @@
-﻿@model HalloDoc.Entity.Models.ViewModel.sendAgreement;
+﻿@model HalloDoc.Entity.Models.ViewModel.sendAgreement
 @{
     Layout = null;
 }
-<div class="modal fade" id="SendMail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="SendAgreement" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-info">
@@ -16,14 +16,14 @@
                   
                     <div class="col my-3">
                         <div class="form-floating">
-                            <input type="text" class="form-control" placeholder="Contact" id="SendAgreement_phone" asp-for="PhoneNumber">
+                            <input type="text" class="form-control" placeholder="Contact" id="SendAgreement_phone" asp-for="PhoneNumber" disabled>
                             <label for="Contact" class="form-label">Contact Number </label>
                         </div>
                     </div>
                   
                     <div class="col my-3">
                         <div class="form-floating">
-                            <input type="email" class="form-control" placeholder="abc@email.com" id="SendAgreement_email" asp-for="Email"
+                            <input type="email" class="form-control" placeholder="abc@email.com" id="SendAgreement_email" asp-for="Email" disabled
                                    aria-describedby="emailHelp">
                             <label for="email" class="form-label">E-mail</label>
                         </div>

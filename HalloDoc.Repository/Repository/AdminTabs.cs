@@ -2,10 +2,13 @@
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models;
 using HalloDoc.Entity.Models.ViewModel;
+using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using static HalloDoc.Entity.Models.Constant;
 
-namespace HalloDoc.Repository.Repository.Interface
+namespace HalloDoc.Repository.Repository
 {
     public class AdminTabs : IAdminTabs
     {
@@ -19,42 +22,42 @@ namespace HalloDoc.Repository.Repository.Interface
         public AdminProfile ViewAdminProfile(string UserId)
         {
 
-            AdminProfile? v =  (from a in _context.Admins
-                                             join Aspnetuser in _context.AspNetUsers
-                                             on a.AspNetUserId equals Aspnetuser.Id into aspGroup
-                                             from asp in aspGroup.DefaultIfEmpty()
-                                             where a.AdminId.ToString() == UserId
-                                             select new AdminProfile
-                                             {
-                                                 AdminId = a.AdminId,
-                                                 UserName = asp.UserName,
-                                                 LastName = a.LastName,
-                                                 FirstName = a.FirstName,
-                                                 Email = a.Email,
-                                                 ConformEmail = a.Email,
-                                                 Address1 = a.Address1,
-                                                 Address2 = a.Address2,
-                                                 Mobile = a.Mobile,
-                                                 City = a.City,
-                                                 ZipCode = a.Zip,
-                                             }).FirstOrDefault();
-                List<Region> regions = new List<Region>();
-                regions =  _context.AdminRegions
-                      .Where(r => r.AdminId.ToString() == UserId)
-                      .Select(req => new Region()
-                      {
-                          RegionId = req.RegionId
-                      })
-                      .ToList();
-                v.RegionIds = regions;
+            AdminProfile? v = (from a in _context.Admins
+                               join Aspnetuser in _context.AspNetUsers
+                               on a.AspNetUserId equals Aspnetuser.Id into aspGroup
+                               from asp in aspGroup.DefaultIfEmpty()
+                               where a.AdminId.ToString() == UserId
+                               select new AdminProfile
+                               {
+                                   AdminId = a.AdminId,
+                                   UserName = asp.UserName,
+                                   LastName = a.LastName,
+                                   FirstName = a.FirstName,
+                                   Email = a.Email,
+                                   ConformEmail = a.Email,
+                                   Address1 = a.Address1,
+                                   Address2 = a.Address2,
+                                   Mobile = a.Mobile,
+                                   City = a.City,
+                                   ZipCode = a.Zip,
+                               }).FirstOrDefault();
+            List<Region> regions = new List<Region>();
+            regions = _context.AdminRegions
+                  .Where(r => r.AdminId.ToString() == UserId)
+                  .Select(req => new Region()
+                  {
+                      RegionId = req.RegionId
+                  })
+                  .ToList();
+            v.RegionIds = regions;
             return v;
-           
+
         }
         public bool EditPassword(string Password, int UserId)
         {
             var hasher = new PasswordHasher<string>();
-            var Admin =  _context.Admins.Where(A => A.AdminId == UserId).FirstOrDefault();
-            AspNetUser? U =  _context.AspNetUsers.FirstOrDefault(m => m.Id == Admin.AspNetUserId);
+            var Admin = _context.Admins.Where(A => A.AdminId == UserId).FirstOrDefault();
+            AspNetUser? U = _context.AspNetUsers.FirstOrDefault(m => m.Id == Admin.AspNetUserId);
             if (U != null)
             {
                 U.PasswordHash = Password;
@@ -79,7 +82,7 @@ namespace HalloDoc.Repository.Repository.Interface
                     _context.SaveChanges();
                     List<int> regions = _context.AdminRegions.Where(r => r.AdminId == AdminProfile.AdminId).Select(req => req.RegionId).ToList();
                     List<int> Regionsid = AdminProfile.RegionIdList.Split(',').Select(int.Parse).ToList();
-                    
+
                     if (regions.Count > 0)
                     {
                         foreach (var item in regions)
@@ -100,7 +103,7 @@ namespace HalloDoc.Repository.Repository.Interface
                         _context.SaveChanges();
                         regions.Remove(item);
                     }
-                   
+
                     return true;
                 }
                 else
@@ -113,7 +116,7 @@ namespace HalloDoc.Repository.Repository.Interface
         }
         public bool EditBillingInfo(AdminProfile AdminProfile)
         {
-            var Data =  _context.Admins.Where(W => W.AdminId == AdminProfile.AdminId).FirstOrDefault();
+            var Data = _context.Admins.Where(W => W.AdminId == AdminProfile.AdminId).FirstOrDefault();
             if (Data != null)
             {
                 Data.Address1 = AdminProfile.Address1;
@@ -129,6 +132,24 @@ namespace HalloDoc.Repository.Repository.Interface
                 return false;
             }
         }
-            
+
+        public List<PhysiciansData> PhysicianAll()
+        {
+            List<PhysiciansData> data =  (from r in _context.Physicians
+                                               join role in _context.Roles
+                                               on r.RoleId equals role.RoleId into roleGroup
+                                               from roles in roleGroup.DefaultIfEmpty()
+                                               where r.IsDeleted == new BitArray(1)
+                                               select new PhysiciansData
+                                               {
+                                                   FirstName = r.FirstName,
+                                                   LastName = r.LastName,
+                                                   Role = roles.Name,
+                                                   Status = (state)r.Status,
+                                                   IsNonDisclosureDoc = r.IsNonDisclosureDoc
+                                               }).ToList();
+            return data;
+        }
+
     }
 }

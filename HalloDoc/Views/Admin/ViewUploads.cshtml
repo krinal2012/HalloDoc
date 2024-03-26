@@ -52,7 +52,7 @@
                     <a class="btn btn-outline-info dNone" onclick="DownloadAll()">Download all</a>
                     <a type="button" class="btn btn-outline-info dBlock" onclick="DownloadAll()"> + </a>
                     <button id="delete" class="btn btn-outline-info text-end mx-1" onclick="DeleteAll(@Model.RequestId)">Delete All</button>
-                    <a id="sendmail" class="btn btn-outline-info text-end mx-1" data-bs-toggle="modal"  data-bs-target=" #SendMail" SendMail>
+                    <a class="btn btn-outline-info text-end mx-1" data-bs-toggle="modal" data-bs-target=" #mailmodal" SendMail>
                         <i class="fa-solid fa-mail"></i>  Send Mail
                     </a>
                 </div>
@@ -99,6 +99,56 @@
     </div>
 </div>
 
+<div class="modal fade" id="mailmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-white bg-info" id="staticBackdropLabel"> Send Mail</h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="DocMail" asp-controller="Admin" id="SendMail">
+                <input type="hidden" value="@Model.RequestId" name="Reqid" />
+                <input type="hidden" id="mailids" name="mailids" />
+                <div class="modal-body">
+                    <div class="col my-3">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" placeholder="abc@email.com" id="email"
+                                   aria-describedby="emailHelp" name="Email">
+                            <label for="email" class="form-label">E-mail</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-info " id="sendmail">Send</button>
+                <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#submit-btn').click(function () {
+
+        var email = $("#email").val();
+        var reqId = $("#RequestID_Model").val();
+
+        $.ajax({
+            url: "/Admin/DocMail",
+            data: {
+                Reqid: reqId,
+                Email: email,
+            },
+            type: 'POST',
+            success: function (result) {
+                location.reload();
+            },
+            error: function (error) {
+                console.log(error);
+                alert('Error Fetching Request.')
+            },
+        });
+    });
+</script>
 
 <script>
     $("#files").change(function () {
@@ -179,4 +229,47 @@
             alert('No files selected');
         }
     }
+    $('#sendmail').click(function () {
+        anyCheckboxSelected = false;
+        $('tbody tr').each(function () {
+            if ($(this).find('.form-check-input').prop('checked')) {
+                anyCheckboxSelected = true;
+                var downloadLink = $(this).find('.doc-checkbox').val();
+                var deleteids = $('#mailids').val();
+                console.log(deleteids);
+                if (deleteids == '') {
+                    $('#mailids').val(downloadLink);
+                } else {
+                    $('#mailids').val(deleteids + ',' + downloadLink);
+                }
+                console.log($('#mailids').val());
+            }
+        });
+        if (anyCheckboxSelected) {
+            Swal.fire({
+                title: "Do you want to Send Mail of All file ?",
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                denyButtonText: `Don't save`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#SendMail').submit();
+                }
+                console.log(result);
+            });
+        }
+        else {
+            swal.fire({
+                title: "Oops..",
+                text: "Please Select One File ",
+                icon: "error",
+                showCancelButton: true,
+                showConfirmButton: false,
+                cancelButtonText: "Okay",
+                cancelButtonColor: "#01BBE7",
+            })
+        }
+    });
+
 </script>

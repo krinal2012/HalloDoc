@@ -9,11 +9,11 @@
     ViewData["Title"] = "Dashboard";
 }
 <div>
-    
     @Html.Partial("_CancleCase.cshtml")
     @Html.Partial("_TransferCase.cshtml")
     @Html.Partial("_BlockCase.cshtml")
     @Html.Partial("_AssignCase.cshtml")
+   
     
 </div>
 <div class="row mb-5 px-3">
@@ -92,10 +92,8 @@
                         <option value="50">50</option>
                     </select>
                 </div>
-                
             </div>
            
-
             <div class="text-secondary requestType">
                 <button class="me-2 bg-white border-0 reqtype" data-id="-1">
                     <i class="fa fa-circle" aria-hidden="true"></i> All
@@ -119,7 +117,6 @@
 <div id="btnContent"></div>
 @Html.Partial("_RequestSupport.cshtml")
 @Html.Partial("_sendLink.cshtml")
-
 <script>
     $(document).ready(function () {
         $(".row > .btn").click(function () {
@@ -212,8 +209,6 @@
         });
     }
     function Export(status) {
-        console.log(status);
-        console.log(statusidglobal);
         if(status == null)
         {
             status= statusidglobal;

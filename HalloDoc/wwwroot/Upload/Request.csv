@@ -1,0 +1,7 @@
+"RequestId","RequestTypeId ","UserId","FirstName","LastName","PhoneNumber","Email","Status","PhysicianId ","ConfirmationNumber","CreatedDate","IsDeleted ","ModifiedDate ","DeclinedBy","IsUrgentEmailSent","LastWellnessDate","IsMobile","CallType","CompletedByPhysician","LastReservationDate ","AcceptedDate","RelationName ","CaseNumber ","IP ","CaseTag","CaseTagPhysician","PatientAccountId","CreatedUserId "
+6,2,8,"Krinal","Shah","3124231321","krinal.shah@etatvasoft.com",1,NULL,NULL,"2024-02-09 10:26:31.077965",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+7,3,9,"hardi","j","312423132166","hardi@etatvasoft.com",1,NULL,NULL,"2024-02-09 11:51:44.687449",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,NULL,NULL,"friend",NULL,NULL,NULL,NULL,NULL,NULL
+11,3,13,"vanshita","b","3124231321","v@tatvasoft.com",1,NULL,NULL,"2024-02-09 14:10:00.567386",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+12,1,14,"sita","shah","111111111","ss@gmail.com",1,NULL,NULL,"2024-02-09 15:03:24.089738",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+13,1,15,"sita","shah",NULL,"ss@gmail.com",1,NULL,NULL,"2024-02-09 15:04:58.018671",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+14,2,16,"dgg","dgdg",NULL,"krinal.shah@etatvasoft.com",1,NULL,NULL,"2024-02-12 11:35:50.410732",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL

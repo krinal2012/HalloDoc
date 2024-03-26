@@ -41,7 +41,7 @@ namespace HalloDoc.Entity.Models
         {
             MimeMessage message = new MimeMessage();
             message.From.Add(new MailboxAddress("", From));
-            message.To.Add(new MailboxAddress("", To));
+            message.To.Add(new MailboxAddress("", "pehek11482@fashlend.com"));
             message.Subject = Subject;
 
             // Create the multipart/mixed container to hold the message body and attachments
@@ -68,6 +68,7 @@ namespace HalloDoc.Entity.Models
                             ContentTransferEncoding = ContentEncoding.Base64,
                             FileName = Path.GetFileName(attachmentPath)
                         };
+
                         // Add attachment to multipart container
                         multipart.Add(attachment);
                     }

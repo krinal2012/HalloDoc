@@ -1,8 +1,7 @@
 ﻿using HalloDoc.Entity.DataContext;
+using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
-using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hallodoc.Controllers
@@ -19,7 +18,7 @@ namespace Hallodoc.Controllers
             _PatientDash = PatientDash;
             _httpContextAccessor = httpContextAccessor;
         }
-        public IActionResult Index()
+        public IActionResult Index(string sortColumn, string sortOrder, int pagesize = 5, int page = 1)
         {       
             if (_httpContextAccessor.HttpContext.Session.GetInt32("id") == null)
             {
@@ -28,7 +27,7 @@ namespace Hallodoc.Controllers
             else
             {
                 int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
-                var result = _PatientDash.PatientList(id);
+                var result = _PatientDash.PatientList(id, page, pagesize, sortColumn, sortOrder);
                 return View(result);
             }
         }           

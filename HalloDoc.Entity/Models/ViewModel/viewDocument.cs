@@ -1,9 +1,4 @@
 ﻿using HalloDoc.Entity.DataModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HalloDoc.Entity.Models.ViewModel
 {
@@ -19,5 +14,10 @@ namespace HalloDoc.Entity.Models.ViewModel
         //public string Filename { get; set; }
         public string isDeleted { get; set; }
         public List<RequestWiseFile> Files { get; set; }
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
+        public string sortColumn { get; set; } = "RequestedDate";
+        public bool sortOrder { get; set; } = false;
+
     }
 }

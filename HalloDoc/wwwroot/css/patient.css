@@ -93,11 +93,11 @@ body {
     border-color: #5d6fff;
     color: #5d6fff;
 }
-    .btn-p:hover, .btn-p:active, .btn-p.as {
-        background-color: #0c1c7c;
-        border-color: #0c1c7c;
-        color: #e4e4e4;
-    }
+.btn-p:hover, .btn-p:active, .btn-p.as {
+    background-color: #0c1c7c;
+    border-color: #0c1c7c;
+    color: #e4e4e4;
+}
 .btn-info, .btn-info:hover{
     color:white;
 }
@@ -167,14 +167,18 @@ body {
     display: block;
     width: 100%;
 }
+.phone .form-control {
+    line-height: 2.6;
+}
 /*tabs */
 .activeNav {
     color: #8dcaf0 !important;
     font-weight: 600;
     border-bottom: 2px solid #8dcaf0;
 }
-.phone .form-control {
-    line-height: 2.6;
+.NavDropdown:hover {
+    color: #0dcaf0;
+    background-color: rgb(220, 246, 255);
 }
 /*admin dashboard*/
 .search {
@@ -197,17 +201,17 @@ body {
     box-shadow: none;
     border: 2px solid #0dcaf0;
 }
-    .search .pagesize {
-        position: absolute !important;
-        top: 9px !important;
-        left: 16px !important;
-    }
-    .search .pagesizeselect {
-        height: 50px !important;
-        min-width: 150px !important;
-        text-indent: 97px !important;
-        border: 2px solid #d6d4d4 !important;
-    }
+.search .pagesize {
+    position: absolute !important;
+    top: 9px !important;
+    left: 16px !important;
+}
+.search .pagesizeselect {
+    height: 50px !important;
+    min-width: 150px !important;
+    text-indent: 97px !important;
+    border: 2px solid #d6d4d4 !important;
+}
 .searchBar {
     display: flex;
     justify-content: space-between;
@@ -218,6 +222,9 @@ body {
 .requestType {
     display: inline-flex;
     align-items: center;
+}
+reqtype:focus {
+    border: 1.5px solid #d6d4d4 !important;
 }
 .mobile-table {
     background-color: #dcf6ff;
@@ -298,12 +305,10 @@ body {
         display: none;
     }
 }
-
 @media only screen and (max-width: 992px) {
     .leftDiv {
         display: none;
     }
-
     .rightDiv {
         background: linear-gradient(rgba(255, 255, 255, .75), rgba(255, 255, 255, .75)), url('../Images/11116016_415.png');
         background-repeat: no-repeat;
@@ -314,14 +319,10 @@ body {
     }
 }
 
-.reqtype:focus {
-    border: 1.5px solid #d6d4d4 !important;
-}
-.was-validated .custom-select:valid {
+
+/*.was-validated .custom-select:valid {
     background-image: none;
 }
-
-
 .was-validated .custom-select:invalid {
     background-image: none;
-}
+}*/
