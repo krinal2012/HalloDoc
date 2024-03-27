@@ -237,6 +237,8 @@ public partial class HelloDocContext : DbContext
         {
             entity.HasKey(e => e.PhysicianId).HasName("Physician_pkey");
 
+            entity.Property(e => e.IsNonDisclosureDoc).HasDefaultValueSql("false");
+
             entity.HasOne(d => d.AspNetUser).WithMany(p => p.PhysicianAspNetUsers).HasConstraintName("AspNetUserId");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.PhysicianCreatedByNavigations)

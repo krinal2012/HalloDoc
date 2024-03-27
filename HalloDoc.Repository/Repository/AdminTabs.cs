@@ -4,9 +4,10 @@ using HalloDoc.Entity.Models;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using System.Drawing;
 using static HalloDoc.Entity.Models.Constant;
+using Region = HalloDoc.Entity.DataModels.Region;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -132,24 +133,58 @@ namespace HalloDoc.Repository.Repository
                 return false;
             }
         }
-
-        public List<PhysiciansData> PhysicianAll()
+        public List<PhysiciansData> PhysicianAll(int region)
         {
-            List<PhysiciansData> data =  (from r in _context.Physicians
-                                               join role in _context.Roles
-                                               on r.RoleId equals role.RoleId into roleGroup
-                                               from roles in roleGroup.DefaultIfEmpty()
-                                               where r.IsDeleted == new BitArray(1)
-                                               select new PhysiciansData
-                                               {
-                                                   FirstName = r.FirstName,
-                                                   LastName = r.LastName,
-                                                   Role = roles.Name,
-                                                   Status = (state)r.Status,
-                                                   IsNonDisclosureDoc = r.IsNonDisclosureDoc
-                                               }).ToList();
+            List<PhysiciansData> data = (from r in _context.Physicians
+                                         join role in _context.Roles
+                                         on r.RoleId equals role.RoleId into roleGroup
+                                         from roles in roleGroup.DefaultIfEmpty()
+                                         join Notifications in _context.PhysicianNotifications
+                                         on r.PhysicianId equals Notifications.PhysicianId into aspGroup
+                                         from nof in aspGroup.DefaultIfEmpty()
+                                         where r.IsDeleted == new BitArray(1)
+                                           && (region == -1 || r.RegionId == region)
+                                         select new PhysiciansData
+                                         {
+                                             Email = r.Email,
+                                             notificationid = nof.PhysicianId,
+                                             FirstName = r.FirstName,
+                                             LastName = r.LastName,
+                                             Role = roles.Name,
+                                             Status = (state)r.Status,
+                                             IsNonDisclosureDoc = r.IsNonDisclosureDoc,
+                                             IsNotificationStopped = nof.IsNotificationStopped
+                                         }).ToList();
             return data;
         }
-
+        public bool changeNoti(int[] files, int region)
+        {
+            List<PhysicianNotification> PhysicianNotification = (from noti in _context.PhysicianNotifications join 
+                                                                 phy in _context.Physicians on noti.PhysicianId equals phy.PhysicianId 
+                                                                 where (region == -1 || phy.RegionId == region)
+                                                                 select noti)
+                                                                 .ToList();
+            foreach (var item in PhysicianNotification) 
+            {
+                if (files.Contains(item.PhysicianId))
+                {
+                    item.IsNotificationStopped = true;
+                    _context.PhysicianNotifications.Update(item);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    item.IsNotificationStopped = false;
+                    _context.PhysicianNotifications.Update(item);
+                    _context.SaveChanges();
+                }
+            }
+            return true;
+        }
+        public bool ContactProviderMail(string Email, string Message)
+        {
+            _emailConfig.SendMail(Email, "Message from admin", Message);
+            return true;
+        }
     }
 }

@@ -75,11 +75,35 @@ namespace HalloDoc.Controllers
             return RedirectToAction("AdminProfile");
         }
 
-        public IActionResult ProviderMenu()
+        public IActionResult ProviderMenu(int region=-1)
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            var res = _IAdminTabs.PhysicianAll();
+            var res = _IAdminTabs.PhysicianAll(region);
             return View(res);
+        }
+        public IActionResult changeNoti(int[] files, int region=-1)
+        {
+            //bool res = _IAdminTabs.changeNoti(files);
+            if (_IAdminTabs.changeNoti(files, region))
+            {
+                _notyf.Success("Information changed Successfully...");
+            }
+            else
+            {
+                _notyf.Error("Information not Changed...");
+            }
+            return RedirectToAction("ProviderMenu");
+        }
+        [HttpPost]
+        public IActionResult ContactProviderMail(string Email, string Message)
+        {
+            bool res = _IAdminTabs.ContactProviderMail(Email, Message);
+            return RedirectToAction("ProviderMenu");
+        }
+        public IActionResult EditProvider()
+        {
+            ViewBag.AssignCase = _IAdminDash.AssignCase();
+            return View();
         }
     }
 }

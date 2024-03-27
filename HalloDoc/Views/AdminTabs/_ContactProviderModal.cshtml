@@ -1,0 +1,50 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+﻿﻿<div class="modal fade" id="Contact" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header  bg-info text-white">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Contact Your Provider</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method=post asp-action="ContactProviderMail" asp-controller="AdminTabs" class="needs-validation" novalidate>
+                <input type="hidden" value="" id="emailIdProvider" name="Email" />
+                <div class="modal-body">
+                   <p class="mb-4 text-secondary"> Choose communication to send message.</p>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" >
+                        <label class="form-check-label">
+                            SMS
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" >
+                        <label class="form-check-label">
+                            Email
+                        </label>
+                    </div>
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" checked>
+                        <label class="form-check-label">
+                           Both
+                        </label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea rows="4" name="Message" class="input-outline w-100 h-100 fs-6 form-control shadow-none" type="text" required></textarea>
+                        <label class="inputs-lable fs-6">Message</label>
+                        <span class="invalid-feedback">
+                            Please add some text.
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info text-white" >Send</button>
+                    <a class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

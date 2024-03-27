@@ -4,7 +4,7 @@
 }
 @using HalloDoc.Entity.Models.ViewModel;
 @model List<PhysiciansData>;
-
+@Html.Partial("_ContactProviderModal.cshtml")
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-5">
     <div class="d-flex align-self-center">
         <h3><b>Provider Information</b></h3>
@@ -14,45 +14,42 @@
     <div class="d-flex justify-content-between align-items-center ">
         <div class="searchPatientRegion search m-1">
             <i class="fa fa-search"></i>
-            <select class="form-select" id="SelectedRegion" onchange="handleSearchClick()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
+            <select class="form-select" id="SelectRegion" onchange="searchRegion()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
                 <option value="">All</option>
             </select>
         </div>
         <div>
+            <a class="btn btn-outline-info" style="display:none;" id="saveChangesButton" onclick="changeNoti()"> Save Changes </a>
             <button class="btn btn-info">Create Provider Account</button>
         </div>
     </div>
     <table class="table table-responsive my-2">
         <thead>
             <tr class="table-secondary">
-                <th>Stop Notification</th>
+                <th width="10%" class="text-center">Stop Notification</th>
                 <th>Provider Name</th>
                 <th>Role</th>
                 <th>On Call Status</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th class="text-center">Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="providerbody">
             @foreach (var item in Model)
             {
                 <tr>
-                    <td class="table-text px-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox">
-                        </div>
+                    <td class="table-text px-3 text-center ">
+                            <input class="form-check-input" value="@item.notificationid" onchange="showbtn()" type="checkbox" @(item.IsNotificationStopped ? "checked" : " " )    >
                     </td>
                     <td class="table-text" >@item.FirstName @item.LastName</td>
                     <td class="table-text" >@item.Role</td>
                     <td class="table-text">@item.IsNonDisclosureDoc</td>
                     <td class="table-text">@item.Status</td>
-                   
-                  
-                    <td class="table-text">
-                        <a class="btn btn-sm btn-outline-info mx-2">
-                          Contact
+                    <td class="table-text text-center">
+                        <a class="btn btn-sm btn-outline-info mx-2" data-bs-toggle="modal" id="contactprovider" data-bs-target="#Contact" data-id="@item.Email">
+                            Contact
                         </a>
-                        <a class="btn btn-sm  btn-outline-info" >
+                        <a class="btn btn-sm  btn-outline-info" asp-action="EditProvider" asp-controller="AdminTabs">
                             Edit
                         </a>
                     </td>
@@ -62,3 +59,51 @@
     </table>
 
 </div>
+<script>
+   function showbtn() {
+        $('#saveChangesButton').show(); 
+    }
+    function searchRegion() {
+        var region = $("#SelectRegion").val();
+        console.log("Region id: " + region);
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ProviderMenu", "AdminTabs")',
+            data: {  Region: region },
+            success: function (data) {
+                console.log("AJAX success");
+                var bodyContent = $(data).find('tbody').html();
+                $('#providerbody').html(bodyContent);
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    }
+    function changeNoti() {
+        var region = $("#SelectRegion").val();
+        var files= [];
+        $('input[type="checkbox"]:checked').each(function () {
+            files.push(this.value);
+        });
+        console.log(files);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("changeNoti", "AdminTabs")',
+            data: { files: files, Region: region },
+            success: function (data) {
+                console.log("AJAX success");
+                location.reload();
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    }
+    function setemail(){
+        var email = $(this).data("id");
+        console.log(email);
+        document.getElementById('emailIdProvider').value = email;
+    }
+    document.getElementById('contactprovider').addEventListener('click', setemail);
+</script>

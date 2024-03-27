@@ -1,0 +1,210 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_AdminDashboardLayout";
+    ViewData["Title"] = "Edit Provider";
+}
+@using HalloDoc.Entity.Models.ViewModel;
+@model PhysiciansData;
+
+<div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
+    <div class="d-flex align-self-center">
+        <h3 class="">Edit Physician Account</h3>
+    </div>
+    <div class=" btn d-flex justify-content-end">
+        <a asp-action="ProviderMenu" asp-controller="AdminTabs" class="btn border border-info shadow-none">
+            <strong class="text-info">
+                <i class="fa fa-angle-left pe-1 text-info"> </i> Back
+            </strong>
+        </a>
+    </div>
+</div>
+<div class="bg-white reqform p-3 container ">
+    <form class="bg-white sbox">
+        <p class="h5 p-1"><b>Account Information</b></p>
+        <div class="row">
+            <div class="mb-3 col-lg-6 form-floating">
+                <input asp-for="UserName" type="text" class="form-control" placeholder="User Name" disabled>
+                <label for="UserName" class="form-label">User Name</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input asp-for="Password" type="text" class="form-control" placeholder="Password" required>
+                <label for="Password" class="form-label">Password </label>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input asp-for="Status" type="text" class="form-control" placeholder="Status" value="Active" disabled>
+                <label for="Status" class="form-label">Status </label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <select class="form-select" id="role" disabled>
+                    @* <option>Options</option>*@
+                    <option>1</option>
+                </select>
+                <label for="role">Role</label>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-outline-info" asp-action="ProfilePassword" asp-controller="AdminTabs">Reset Password</button>
+        </div>
+    </form>
+    <form class="bg-white sbox" asp-action="EditAdministratorInfo" asp-controller="AdminTabs" id="AdministratorInfoForm">
+        <p class="h5 p-1"><b>Administrator Information</b></p>
+        <input type="hidden" asp-for="Physicianid" />
+        <div class="row">
+            <div class="mb-3 col-lg-6 form-floating">
+                <input asp-for="FirstName" type="text" class="form-control" placeholder="First Name" disabled required>
+                <label for="FirstName" class="form-label">First Name</label>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="LastName" class="form-control" placeholder="last Name" disabled>
+                <label for="LastName" class="form-label">Last Name</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="email" asp-for="Email" class="form-control" placeholder="abc@email.com"
+                       aria-describedby="emailHelp" disabled required>
+                <label for="email" class="form-label">E-mail</label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating phone">
+                <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone" disabled>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="Medicallicense" class="form-control" placeholder="License" disabled>
+                <label for="License" class="form-label">Medical License</label>
+            </div>
+             <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="NpiNumber" class="form-control" placeholder="NpiNumber" disabled>
+                <label for="NpiNumber" class="form-label">NPI Number</label>
+            </div>
+             <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="SyncEmailaddress" class="form-control" placeholder="SyncEmailaddress" disabled>
+                <label for="SyncEmailaddress" class="form-label">Synchronization Email Address</label>
+            </div>
+            <input asp-for="RegionIdList" type="hidden" id="regionids" />
+            @foreach (var items in ViewBag.AssignCase)
+            {
+                @if (Model != null && Model.RegionIds.Count > 0 && Model.RegionIds.Exists(id => id.regionid == items.RegionId))
+                {
+                    <div class="form-check col">
+                        <input class="form-check-input" type="checkbox" name="RegionIds" value="@items.RegionId" disabled checked>
+                        <label class="form-check-label" for="flexCheckDisabled"> @items.Name </label>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-check col">
+                        <input class="form-check-input" type="checkbox" value="@items.RegionId" name="RegionIds" disabled>
+                        <label class="form-check-label" for="flexCheckDisabled"> @items.Name </label>
+                    </div>
+                }
+            }
+
+
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="editprofile btn btn-info text-white rounded px-4">Edit</button>
+            <a id="save" class=" btn bg-info text-white rounded px-3 submit" value="Save" style="display: none;">Save</a>
+        </div>
+    </form>
+    <form class="bg-white sbox" asp-action="EditBillingInfo" asp-controller="AdminTabs">
+        <p class="h5 p-1"><b>Mailing & Billing Information</b></p>
+        <input type="hidden" asp-for="Physicianid" />
+        <div class="row">
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="Address1" class="form-control" placeholder="Address1" disabled>
+                <label for="Address1" class="form-label">Address 1</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="Address2" class="form-control" placeholder="Address2" disabled>
+                <label for="Address2" class="form-label">Address 2</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="City" class="form-control" placeholder="City" disabled>
+                <label for="City" class="form-label">City</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="State" class="form-control" placeholder="State" disabled>
+                <label for="State" class="form-label">State</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="ZipCode" class="form-control" placeholder="Zip-code" disabled>
+                <label for="Zip-code" class="form-label">Zip-code</label>
+                <span asp-validation-for="ZipCode" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating phone">
+                <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone1" disabled>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="editprofile btn btn-info text-white rounded px-4">Edit</button>
+            <input type="button" class=" btn bg-info text-white rounded px-3 submit" value="Save" style="display: none;">
+        </div>
+    </form>
+    <form class="bg-white sbox" asp-action="EditBillingInfo" asp-controller="AdminTabs">
+        <p class="h5 p-1"><b>Provider Profile</b></p>
+        <input type="hidden" asp-for="Physicianid" />
+        <div class="row">
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="Address1" class="form-control" placeholder="Address1" disabled>
+                <label for="Address1" class="form-label">Address 1</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="Address2" class="form-control" placeholder="Address2" disabled>
+                <label for="Address2" class="form-label">Address 2</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="City" class="form-control" placeholder="City" disabled>
+                <label for="City" class="form-label">City</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="State" class="form-control" placeholder="State" disabled>
+                <label for="State" class="form-label">State</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="ZipCode" class="form-control" placeholder="Zip-code" disabled>
+                <label for="Zip-code" class="form-label">Zip-code</label>
+                <span asp-validation-for="ZipCode" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating phone">
+                <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone1" disabled>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="editprofile btn btn-info text-white rounded px-4">Edit</button>
+            <input type="button" class=" btn bg-info text-white rounded px-3 submit" value="Save" style="display: none;">
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".editprofile").click(function () {
+            var form = $(this).closest('form');
+            form.find("input").removeAttr('disabled');
+            form.find(".submit").css("display", "block");
+            $(this).css("display", "none");
+        });
+    });
+
+    $(function () {
+        $('#save').on('click', function () {
+            let checkboxes = document.querySelectorAll('input[name="RegionIds"]:checked');
+            let RegionIdList = [];
+            checkboxes.forEach((checkbox) => {
+                RegionIdList.push(checkbox.value);
+            });
+            document.querySelector('#regionids').value = RegionIdList.join(',');
+            console.log(RegionIdList);
+            console.log(document.querySelector('#regionids').value)
+
+            $('#AdministratorInfoForm').submit();
+        });
+
+    });
+</script>
+
+
+
