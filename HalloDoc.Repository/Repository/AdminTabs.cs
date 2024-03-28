@@ -1,4 +1,5 @@
-﻿using HalloDoc.Entity.DataContext;
+﻿using Hallodoc.Entity.Models.ViewModel;
+using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models;
 using HalloDoc.Entity.Models.ViewModel;
@@ -22,7 +23,6 @@ namespace HalloDoc.Repository.Repository
         }
         public AdminProfile ViewAdminProfile(string UserId)
         {
-
             AdminProfile? v = (from a in _context.Admins
                                join Aspnetuser in _context.AspNetUsers
                                on a.AspNetUserId equals Aspnetuser.Id into aspGroup
@@ -54,7 +54,12 @@ namespace HalloDoc.Repository.Repository
             return v;
 
         }
-        public bool EditPassword(string Password, int UserId)
+        public List<Role> Role()
+        {
+            var role = _context.Roles.ToList();
+            return (role);
+        }
+        public bool ProfilePassword(string Password, int UserId)
         {
             var hasher = new PasswordHasher<string>();
             var Admin = _context.Admins.Where(A => A.AdminId == UserId).FirstOrDefault();
@@ -185,6 +190,172 @@ namespace HalloDoc.Repository.Repository
         {
             _emailConfig.SendMail(Email, "Message from admin", Message);
             return true;
+        }
+        public PhysiciansData ViewProviderProfile(int PhysicianId)
+        {
+            PhysiciansData? v = (from p in _context.Physicians
+                               join Aspnetuser in _context.AspNetUsers
+                               on p.AspNetUserId equals Aspnetuser.Id into aspGroup
+                               from asp in aspGroup.DefaultIfEmpty()
+                               where p.PhysicianId == PhysicianId
+                               select new PhysiciansData
+                               {
+                                   Physicianid = p.PhysicianId,
+                                   UserName = asp.UserName,
+                                   Status = (state)p.Status,
+                                   LastName = p.LastName,
+                                   FirstName = p.FirstName,
+                                   Email = p.Email,
+                                   Mobile = p.Mobile,
+                                   Medicallicense = p.MedicalLicense,
+                                   NpiNumber = p.Npinumber,
+                                   SyncEmailaddress= p.SyncEmailAddress,
+                                   Address1 = p.Address1,
+                                   Address2 = p.Address2,
+                                   City = p.City,
+                                   ZipCode = p.Zip,
+                               }).FirstOrDefault();
+            List<Region> regions = new List<Region>();
+            regions = _context.PhysicianRegions
+                  .Where(r => r.PhysicianId == PhysicianId)
+                  .Select(req => new Region()
+                  {
+                      RegionId = req.RegionId
+                  })
+                  .ToList();
+            v.RegionIds = regions;
+            return v;
+        }
+        public bool EditPassword(string Password, int UserId)
+        {
+
+            var Admin = _context.Physicians.Where(A => A.PhysicianId == UserId).FirstOrDefault();
+            AspNetUser? U = _context.AspNetUsers.FirstOrDefault(m => m.Id == Admin.AspNetUserId);
+            if (U != null)
+            {
+                U.PasswordHash = Password;
+                _context.AspNetUsers.Update(U);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public bool EditAdministrator(PhysiciansData PhysiciansData)
+        {
+            try
+            {
+                var Data = _context.Physicians.Where(W => W.PhysicianId == PhysiciansData.Physicianid).FirstOrDefault();
+                if (Data != null)
+                {
+                    Data.FirstName = PhysiciansData.FirstName;
+                    Data.LastName = PhysiciansData.LastName;
+                    Data.Mobile = PhysiciansData.Mobile;
+                    Data.Email = PhysiciansData.Email;
+                    Data.MedicalLicense = PhysiciansData.Medicallicense;
+                    Data.Npinumber = PhysiciansData.NpiNumber;
+                    Data.SyncEmailAddress = PhysiciansData.SyncEmailaddress;
+                    _context.Physicians.Update(Data);
+                    _context.SaveChanges();
+                    List<int> regions = _context.PhysicianRegions.Where(r => r.PhysicianId == PhysiciansData.Physicianid).Select(req => req.RegionId).ToList();
+                    List<int> Regionsid = PhysiciansData.RegionIdList.Split(',').Select(int.Parse).ToList();
+
+                    if (regions.Count > 0)
+                    {
+                        foreach (var item in regions)
+                        {
+                            PhysicianRegion ar = _context.PhysicianRegions.Where(r => r.PhysicianId == PhysiciansData.Physicianid && r.RegionId == item).First();
+                            _context.PhysicianRegions.Remove(ar);
+                            _context.SaveChanges();
+                        }
+                    }
+                    foreach (var item in Regionsid)
+                    {
+                        PhysicianRegion ar = new()
+                        {
+                            RegionId = item,
+                            PhysicianId = PhysiciansData.Physicianid
+                        };
+                        _context.PhysicianRegions.Update(ar);
+                        _context.SaveChanges();
+                        regions.Remove(item);
+                    }
+
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+        public bool EditBilling(PhysiciansData AdminProfile)
+        {
+            var Data = _context.Physicians.Where(W => W.PhysicianId == AdminProfile.Physicianid).FirstOrDefault();
+            if (Data != null)
+            {
+                Data.Address1 = AdminProfile.Address1;
+                Data.Address2 = AdminProfile.Address2;
+                Data.City = AdminProfile.City;
+                Data.Zip = AdminProfile.ZipCode;
+                Data.Mobile = AdminProfile.Mobile;
+                _context.Physicians.Update(Data);
+                _context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool EditProviderProfile(PhysiciansData PhysiciansData)
+        {
+            var Data = _context.Physicians.Where(W => W.PhysicianId == PhysiciansData.Physicianid).FirstOrDefault();
+            if (Data != null)
+            {
+                Data.BusinessName = PhysiciansData.BusinessName;
+                Data.BusinessWebsite = PhysiciansData.BusinessWebsite;
+                Data.AdminNotes = PhysiciansData.AdminNotes;
+                if (PhysiciansData.SignatureFile != null)
+                {
+                    string FilePath = "wwwroot\\Upload";
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
+                    string fileNameWithPath = Path.Combine(path, PhysiciansData.SignatureFile.FileName);
+                 
+                    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        PhysiciansData.SignatureFile.CopyTo(stream);
+                    }
+
+                    Data.Signature = PhysiciansData.SignatureFile.FileName;
+                   
+                }
+                if (PhysiciansData.PhotoFile != null)
+                {
+                    string FilePath = "wwwroot\\Upload";
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
+                    string fileNameWithPath = Path.Combine(path, PhysiciansData.PhotoFile.FileName);
+
+                    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        PhysiciansData.PhotoFile.CopyTo(stream);
+                    }
+
+                    Data.Photo = PhysiciansData.PhotoFile.FileName;
+
+                }
+                _context.Physicians.Update(Data);
+                _context.SaveChanges();
+                return true;
+
+                
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

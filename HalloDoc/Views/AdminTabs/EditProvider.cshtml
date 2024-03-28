@@ -6,6 +6,7 @@
     ViewData["Title"] = "Edit Provider";
 }
 @using HalloDoc.Entity.Models.ViewModel;
+@using static HalloDoc.Entity.Models.Constant;
 @model PhysiciansData;
 
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
@@ -22,6 +23,7 @@
 </div>
 <div class="bg-white reqform p-3 container ">
     <form class="bg-white sbox">
+        <input type="hidden" asp-for="Physicianid" />
         <p class="h5 p-1"><b>Account Information</b></p>
         <div class="row">
             <div class="mb-3 col-lg-6 form-floating">
@@ -34,22 +36,20 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input asp-for="Status" type="text" class="form-control" placeholder="Status" value="Active" disabled>
+                <select asp-for="Status" type="text" class="form-control" placeholder="Status" disabled asp-items="@new SelectList(Enum.GetNames(typeof(state)))"></select>
                 <label for="Status" class="form-label">Status </label>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <select class="form-select" id="role" disabled>
-                    @* <option>Options</option>*@
-                    <option>1</option>
+                <select asp-for="Role" class="form-select" id="role" placeholder="role" asp-items="@(new SelectList(ViewBag.Role, "RoleId", "Name"))" disabled>
                 </select>
-                <label for="role">Role</label>
+                <label for="role" class="form-label">Role</label>
             </div>
         </div>
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-outline-info" asp-action="ProfilePassword" asp-controller="AdminTabs">Reset Password</button>
+            <button type="submit" class="btn btn-outline-info" asp-action="EditPassword" asp-controller="AdminTabs">Reset Password</button>
         </div>
     </form>
-    <form class="bg-white sbox" asp-action="EditAdministratorInfo" asp-controller="AdminTabs" id="AdministratorInfoForm">
+    <form class="bg-white sbox" asp-action="EditAdministrator" asp-controller="AdminTabs" id="AdministratorInfoForm">
         <p class="h5 p-1"><b>Administrator Information</b></p>
         <input type="hidden" asp-for="Physicianid" />
         <div class="row">
@@ -86,7 +86,7 @@
             <input asp-for="RegionIdList" type="hidden" id="regionids" />
             @foreach (var items in ViewBag.AssignCase)
             {
-                @if (Model != null && Model.RegionIds.Count > 0 && Model.RegionIds.Exists(id => id.regionid == items.RegionId))
+                @if (Model != null && Model.RegionIds.Count > 0 && Model.RegionIds.Exists(id => id.RegionId == items.RegionId))
                 {
                     <div class="form-check col">
                         <input class="form-check-input" type="checkbox" name="RegionIds" value="@items.RegionId" disabled checked>
@@ -109,7 +109,7 @@
             <a id="save" class=" btn bg-info text-white rounded px-3 submit" value="Save" style="display: none;">Save</a>
         </div>
     </form>
-    <form class="bg-white sbox" asp-action="EditBillingInfo" asp-controller="AdminTabs">
+    <form class="bg-white sbox" asp-action="EditBilling" asp-controller="AdminTabs">
         <p class="h5 p-1"><b>Mailing & Billing Information</b></p>
         <input type="hidden" asp-for="Physicianid" />
         <div class="row">
@@ -140,50 +140,164 @@
         </div>
         <div class="d-flex justify-content-end">
             <button type="button" class="editprofile btn btn-info text-white rounded px-4">Edit</button>
-            <input type="button" class=" btn bg-info text-white rounded px-3 submit" value="Save" style="display: none;">
+            <input type="submit" class=" btn bg-info text-white rounded px-3 submit" value="Save" style="display: none;">
         </div>
     </form>
-    <form class="bg-white sbox" asp-action="EditBillingInfo" asp-controller="AdminTabs">
+    <form class="bg-white sbox" asp-action="EditProviderProfile" asp-controller="AdminTabs" enctype="multipart/form-data">
         <p class="h5 p-1"><b>Provider Profile</b></p>
         <input type="hidden" asp-for="Physicianid" />
         <div class="row">
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="Address1" class="form-control" placeholder="Address1" disabled>
-                <label for="Address1" class="form-label">Address 1</label>
+                <input asp-for="BusinessName" type="text" class="form-control" placeholder="Business Name" disabled required>
+                <label for="BusinessName" class="form-label">Business Name</label>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="Address2" class="form-control" placeholder="Address2" disabled>
-                <label for="Address2" class="form-label">Address 2</label>
+                <input type="text" asp-for="BusinessWebsite" class="form-control" placeholder="Business Website" disabled>
+                <label for="BusinessWebsite" class="form-label">Business Website </label>
             </div>
-            <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="City" class="form-control" placeholder="City" disabled>
-                <label for="City" class="form-label">City</label>
+            <div class="col-md-6 pb-3 d-flex">
+                <button type="button" id="choosenfile" class="col p-2 btn text-start text-secondary form-control border border-secondary rounded"  disabled>
+                    Select Photo
+                </button>
+                <input id="files" type="file" class="d-none form-control doc_uploder" asp-for="PhotoFile">
+                <button type="submit" class="btn btn-info text-white" value="Upload" onclick="document.getElementById('files').click()" disabled>
+                    <i class="fa fa-cloud-upload"></i>
+                    <span class="dNone"> Upload </span>
+                </button>
             </div>
-            <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="State" class="form-control" placeholder="State" disabled>
-                <label for="State" class="form-label">State</label>
+            <div class="col-md-5 pb-3 d-flex">
+                <button type="button" id="choosenfile1" class="col p-2 btn text-start text-secondary form-control border border-secondary rounded" disabled>
+                    Select Signature
+                </button>
+                <input id="files1" type="file" class="d-none form-control doc_uploder" asp-for="SignatureFile">
+                <button type="submit" class="btn btn-info text-white" value="Upload" onclick="document.getElementById('files1').click()" disabled>
+                    <i class="fa fa-cloud-upload"></i>
+                    <span class="dNone"> Upload </span>
+                </button>
             </div>
-            <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="ZipCode" class="form-control" placeholder="Zip-code" disabled>
-                <label for="Zip-code" class="form-label">Zip-code</label>
-                <span asp-validation-for="ZipCode" class="text-danger"></span>
+            <div class="col-md-1 pb-3 p-0 d-flex">
+                <button type="" class="btn btn-info text-white" value="Create">
+                    <i class="fa fa-pen"></i>
+                    <span class="dNone"> Create </span>
+                </button>
             </div>
-            <div class="mb-3 col-lg-6 form-floating phone">
-                <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone1" disabled>
+            <div class="form-floating mb-3">
+                <textarea rows="4" asp-for="AdminNotes" class="input-outline w-100 h-100 fs-6 form-control shadow-none" type="text" disabled required></textarea>
+                <label class="inputs-lable fs-6">Admin Notes</label>
+                <span class="invalid-feedback">
+                    Please add some text.
+                </span>
             </div>
         </div>
         <div class="d-flex justify-content-end">
             <button type="button" class="editprofile btn btn-info text-white rounded px-4">Edit</button>
-            <input type="button" class=" btn bg-info text-white rounded px-3 submit" value="Save" style="display: none;">
+            <input type="submit" class=" btn bg-info text-white rounded px-3 submit" value="Save" style="display: none;">
         </div>
     </form>
+    <hr />
+    <p class="h5 p-1"><b>Onboarding </b></p>
+    <table class="w-auto m-1">
+        <tbody >
+            <tr>
+                <td >
+                    <input type="checkbox" class="form-check-input">
+                </td>
+                <td>Independent Contractor Agreement</td>
+                <td>
+                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> Upload </span>
+                    </button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> View </span>
+                    </button>
+                </td>
+            </tr>
+            <tr >
+                <td>
+                    <input type="checkbox" class="form-check-input">
+                </td>
+                <td>Background Check</td>
+                <td>
+                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> Upload </span>
+                    </button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> View </span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" class="form-check-input">
+                </td>
+                <td>HIPAA Compliance</td>
+                <td>
+                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> Upload </span>
+                    </button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> View </span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" class="form-check-input">
+                </td>
+                <td>Non-Disclosure Agreement</td>
+                <td>
+                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> Upload </span>
+                    </button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> View </span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" class="form-check-input">
+                </td>
+                <td>License Document</td>
+                <td>
+                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> Upload </span>
+                    </button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-info text-white" value="Upload">
+                        <span class="dNone"> View </span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <hr />
+    <div class=" d-flex justify-content-end">
+        <input type="button" class=" btn bg-info text-white rounded px-3 me-2" value="Save" />
+        <input type="button" class=" btn bg-danger text-white rounded px-3 " value="Delete Account">
+    </div>
 </div>
 
 <script>
     $(document).ready(function () {
         $(".editprofile").click(function () {
             var form = $(this).closest('form');
-            form.find("input").removeAttr('disabled');
+            form.find("input, textarea, button").removeAttr('disabled');
             form.find(".submit").css("display", "block");
             $(this).css("display", "none");
         });
@@ -203,6 +317,16 @@
             $('#AdministratorInfoForm').submit();
         });
 
+    });
+    $("#files").change(function () {
+        filename = this.files[0].name;
+        console.log(filename);
+        $("#choosenfile").text(filename);
+    });
+    $("#files1").change(function () {
+        filename = this.files[0].name;
+        console.log(filename);
+        $("#choosenfile1").text(filename);
     });
 </script>
 

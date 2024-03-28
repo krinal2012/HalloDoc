@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HalloDoc.Entity.DataModels;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +16,10 @@ namespace HalloDoc.Entity.Models.ViewModel
         public int? notificationid { get; set; }
         public bool IsNotificationStopped { get; set; }
         public string? Role { get; set; }
-        public int? Physicianid { get; set; }
+        public int Physicianid { get; set; }
         public string? Aspnetuserid { get; set; }
         public string? UserName { get; set; }
+        [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
         public string? RegionIdList { get; set; }
         public string FirstName { get; set; } = null!;
@@ -29,7 +32,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Medicallicense { get; set; }
         public string? Photo { get; set; }
         public IFormFile? PhotoFile { get; set; }
-        public string? Adminnotes { get; set; }
+        public string? AdminNotes { get; set; }
         public bool Isagreementdoc { get; set; }
         public bool Isbackgrounddoc { get; set; }
         public bool Istrainingdoc { get; set; }
@@ -45,8 +48,8 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Modifiedby { get; set; }
         public DateTime? Modifieddate { get; set; }
         public state? Status { get; set; }
-        public string Businessname { get; set; } = null!;
-        public string Businesswebsite { get; set; } = null!;
+        public string BusinessName { get; set; } = null!;
+        public string BusinessWebsite { get; set; } = null!;
         public BitArray? Isdeleted { get; set; }
         public int? Roleid { get; set; }
         public string? NpiNumber { get; set; }
@@ -60,12 +63,12 @@ namespace HalloDoc.Entity.Models.ViewModel
         public IFormFile? Trainingdoc { get; set; }
         public IFormFile? BackGrounddoc { get; set; }
         public IFormFile? Licensedoc { get; set; }
-        public List<Regions>? RegionIds { get; set; }
-        public class Regions
-        {
-            public int? regionid { get; set; }
-            public string? regionname { get; set; }
-        }
+        public List<Region>? RegionIds { get; set; }
+        //public class Regions
+        //{
+        //    public int? regionid { get; set; }
+        //    public string? regionname { get; set; }
+        //}
         
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using HalloDoc.Entity.DataContext;
+using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Models;
 using HalloDoc.Repository.Repository;
@@ -38,7 +39,7 @@ namespace HalloDoc.Controllers
         {
             var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
             var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
-            if (_IAdminTabs.EditPassword(Password, Convert.ToInt32(UserId)))
+            if (_IAdminTabs.ProfilePassword(Password, Convert.ToInt32(UserId)))
             {
                 _notyf.Success("Password changed Successfully...");
             }
@@ -100,10 +101,60 @@ namespace HalloDoc.Controllers
             bool res = _IAdminTabs.ContactProviderMail(Email, Message);
             return RedirectToAction("ProviderMenu");
         }
-        public IActionResult EditProvider()
+        public IActionResult EditProvider(int PhysicianId)
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            return View();
+            ViewBag.Role = _IAdminTabs.Role();
+            var result = _IAdminTabs.ViewProviderProfile(PhysicianId);
+            return View(result);
+        }
+        public IActionResult EditPassword(int PhysicianId,string Password)
+        {
+            if (_IAdminTabs.EditPassword(Password, PhysicianId))
+            {
+                _notyf.Success("Password changed Successfully...");
+            }
+            else
+            {
+                _notyf.Error("Password not Changed...");
+            }
+            return RedirectToAction("EditProvider", new { PhysicianId= PhysicianId });
+        }
+        public IActionResult EditAdministrator(PhysiciansData physiciansData)
+        {
+            if (_IAdminTabs.EditAdministrator(physiciansData))
+            {
+                _notyf.Success("Information changed Successfully...");
+            }
+            else
+            {
+                _notyf.Error("Information not Changed...");
+            }
+            return RedirectToAction("EditProvider", new { PhysicianId = physiciansData.Physicianid });
+        }
+        public IActionResult EditBilling(PhysiciansData physiciansData)
+        {
+            if (_IAdminTabs.EditBilling(physiciansData))
+            {
+                _notyf.Success("Information changed Successfully...");
+            }
+            else
+            {
+                _notyf.Error("Information not Changed...");
+            }
+            return RedirectToAction("EditProvider", new { PhysicianId = physiciansData.Physicianid });
+        }
+        public IActionResult EditProviderProfile(PhysiciansData physiciansData)
+        {
+            if (_IAdminTabs.EditProviderProfile(physiciansData))
+            {
+                _notyf.Success("Information changed Successfully...");
+            }
+            else
+            {
+                _notyf.Error("Information not Changed...");
+            }
+            return RedirectToAction("EditProvider", new { PhysicianId = physiciansData.Physicianid });
         }
     }
 }

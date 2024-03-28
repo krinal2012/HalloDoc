@@ -1,4 +1,3 @@
-
 //country code
 const phoneInputField = document.querySelector("#phone");
 const phoneInput = window.intlTelInput(phoneInputField, {
@@ -16,13 +15,6 @@ function displayFilename() {
     var output = document.getElementById('selectedFilename');
     output.textContent = input.files[0].name;
 }
-//function displayFilename() {
-//    var input = document.getElementById('myFile');
-//    var output = document.getElementById('selectedFilename');
-//    for (let i = 0; i < selectedFilename.length; i++) {
-//        output.append = input.files[i].name;
-//    }   
-//}
 
 //sweet alert
 swal({

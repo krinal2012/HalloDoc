@@ -40,7 +40,7 @@ namespace Hallodoc.Controllers
         public IActionResult UploadDocument(int RequestId, IFormFile? UploadFile)
         {
             _PatientDash.uploadDocument(RequestId, UploadFile);
-            return RedirectToAction("UploadDocument", new { id = RequestId });
+            return RedirectToAction("UploadDocument", new { RequestId = RequestId });
         }   
         public IActionResult PatientProfile()
         {

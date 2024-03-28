@@ -49,7 +49,7 @@
                         <a class="btn btn-sm btn-outline-info mx-2" data-bs-toggle="modal" id="contactprovider" data-bs-target="#Contact" data-id="@item.Email">
                             Contact
                         </a>
-                        <a class="btn btn-sm  btn-outline-info" asp-action="EditProvider" asp-controller="AdminTabs">
+                        <a class="btn btn-sm  btn-outline-info" asp-action="EditProvider" asp-controller="AdminTabs" asp-route-PhysicianId="@item.notificationid">
                             Edit
                         </a>
                     </td>
