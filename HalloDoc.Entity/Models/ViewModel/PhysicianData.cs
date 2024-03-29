@@ -55,7 +55,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? NpiNumber { get; set; }
         public string? Signature { get; set; }
         public IFormFile? SignatureFile { get; set; }
-        public BitArray? Iscredentialdoc { get; set; }
+        public bool Iscredentialdoc { get; set; }
         public BitArray? Istokengenerate { get; set; }
         public string? SyncEmailaddress { get; set; }
         public IFormFile? Agreementdoc { get; set; }

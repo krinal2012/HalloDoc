@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Collections;
 using System.Drawing;
 using static HalloDoc.Entity.Models.Constant;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Region = HalloDoc.Entity.DataModels.Region;
 
 namespace HalloDoc.Repository.Repository
@@ -214,7 +215,15 @@ namespace HalloDoc.Repository.Repository
                                    Address2 = p.Address2,
                                    City = p.City,
                                    ZipCode = p.Zip,
-                               }).FirstOrDefault();
+                                   BusinessName = p.BusinessName,
+                                   BusinessWebsite = p.BusinessWebsite,
+                                   AdminNotes = p.AdminNotes,
+                                   IsNonDisclosureDoc=p.IsNonDisclosureDoc,
+                                   Isbackgrounddoc = p.IsBackgroundDoc[0],
+                                   Isagreementdoc = p.IsAgreementDoc[0],
+                                   Iscredentialdoc = p.IsCredentialDoc[0],
+                                   Islicensedoc = p.IsLicenseDoc[0]
+        }).FirstOrDefault();
             List<Region> regions = new List<Region>();
             regions = _context.PhysicianRegions
                   .Where(r => r.PhysicianId == PhysicianId)
@@ -356,6 +365,34 @@ namespace HalloDoc.Repository.Repository
             {
                 return false;
             }
+        }
+        public bool SaveProvider(int[] checkboxes, int physicianid)
+        {
+            Physician phy = _context.Physicians.Where(x=>x.PhysicianId == physicianid).FirstOrDefault();
+            foreach(var i in checkboxes)
+            {
+                switch(i)
+                {
+                    case 1:
+                        phy.IsAgreementDoc = new BitArray(1);
+                        phy.IsAgreementDoc[0] = true; break;
+                    case 2:
+                        phy.IsBackgroundDoc = new BitArray(1);
+                        phy.IsBackgroundDoc[0] = true; break;
+                    case 3:
+                        phy.IsCredentialDoc = new BitArray(1);
+                        phy.IsCredentialDoc[0] = true; break;
+                    case 4:
+                        phy.IsNonDisclosureDoc = true; break;
+                    case 5:
+                        phy.IsLicenseDoc = new BitArray(1);
+                        phy.IsLicenseDoc[0] = true; break;
+                }
+                
+            }
+            _context.Physicians.Update(phy);
+            _context.SaveChanges();
+            return true;
         }
     }
 }

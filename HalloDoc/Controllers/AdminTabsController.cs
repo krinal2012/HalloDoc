@@ -103,10 +103,18 @@ namespace HalloDoc.Controllers
         }
         public IActionResult EditProvider(int PhysicianId)
         {
+            ViewData["Heading"] = "Edit";
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             ViewBag.Role = _IAdminTabs.Role();
             var result = _IAdminTabs.ViewProviderProfile(PhysicianId);
             return View(result);
+        }
+        public IActionResult AddProvider()
+        {
+            ViewData["Heading"] = "Add";
+            ViewBag.AssignCase = _IAdminDash.AssignCase();
+            ViewBag.Role = _IAdminTabs.Role();
+            return View("EditProvider");
         }
         public IActionResult EditPassword(int PhysicianId,string Password)
         {
@@ -155,6 +163,11 @@ namespace HalloDoc.Controllers
                 _notyf.Error("Information not Changed...");
             }
             return RedirectToAction("EditProvider", new { PhysicianId = physiciansData.Physicianid });
+        }
+        public IActionResult SaveProvider(int[] checkboxes, int physicianid)
+        {
+            bool res = _IAdminTabs.SaveProvider(checkboxes, physicianid);
+            return RedirectToAction("ProviderMenu");
         }
     }
 }

@@ -11,7 +11,7 @@
 
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
     <div class="d-flex align-self-center">
-        <h3 class="">Edit Physician Account</h3>
+        <h3 class="">@ViewData["Heading"] Physician Account</h3>
     </div>
     <div class=" btn d-flex justify-content-end">
         <a asp-action="ProviderMenu" asp-controller="AdminTabs" class="btn border border-info shadow-none">
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-outline-info" asp-action="EditPassword" asp-controller="AdminTabs">Reset Password</button>
+            <button type="submit" class="btn btn-outline-info reset" asp-action="EditPassword" asp-controller="AdminTabs">Reset Password</button>
         </div>
     </form>
     <form class="bg-white sbox" asp-action="EditAdministrator" asp-controller="AdminTabs" id="AdministratorInfoForm">
@@ -177,10 +177,10 @@
                 </button>
             </div>
             <div class="col-md-1 pb-3 p-0 d-flex">
-                <button type="" class="btn btn-info text-white" value="Create">
+                <a class="btn btn-info text-white" value="Create">
                     <i class="fa fa-pen"></i>
                     <span class="dNone"> Create </span>
-                </button>
+                </a>
             </div>
             <div class="form-floating mb-3">
                 <textarea rows="4" asp-for="AdminNotes" class="input-outline w-100 h-100 fs-6 form-control shadow-none" type="text" disabled required></textarea>
@@ -201,12 +201,12 @@
         <tbody >
             <tr>
                 <td >
-                    <input type="checkbox" class="form-check-input row-checkbox">
+                    <input type="checkbox" class="form-check-input row-checkbox" name="boardcheck" value="1" disabled @(Model != null && Model.Isagreementdoc==true ? "checked" : "")>
                 </td>
                 <td>Independent Contractor Agreement</td>
                 <td>
                     <input type="file" id="files2" class="d-none form-control doc_uploder file-input" data-target="choosenfile">
-                    <button type="submit" class="btn btn-info text-white upload-btn" disabled>
+                    <button type="submit" class="btn btn-info text-white upload-btn" >
                         <span onclick="document.getElementById('files2').click()"> Upload </span>
                     </button>
                 </td>
@@ -218,12 +218,12 @@
             </tr>
             <tr >
                 <td>
-                    <input type="checkbox" class="form-check-input row-checkbox">
+                    <input type="checkbox" class="form-check-input row-checkbox" name="boardcheck" value="2" disabled @(Model != null && Model.Isbackgrounddoc ? "checked" : "")>
                 </td>
                 <td>Background Check</td>
                 <td>
                     <input id="files3" type="file" class="d-none form-control doc_uploder">
-                    <button type="submit" class="btn btn-info  upload-btn text-white" disabled>
+                    <button type="submit" class="btn btn-info  upload-btn text-white" >
                         <span onclick="document.getElementById('files3').click()"> Upload </span>
                     </button>
                 </td>
@@ -235,12 +235,12 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" class="form-check-input row-checkbox">
+                    <input type="checkbox" class="form-check-input row-checkbox" name="boardcheck" value="3" disabled @(Model != null && Model.Iscredentialdoc ? "checked" : "")>
                 </td>
                 <td>HIPAA Compliance</td>
                 <td>
                     <input id="files4" type="file" class="d-none form-control doc_uploder">
-                    <button type="submit" class="btn btn-info upload-btn text-white" disabled>
+                    <button type="submit" class="btn btn-info upload-btn text-white" >
                         <span  onclick="document.getElementById('files4').click()"> Upload </span>
                     </button>
                 </td>
@@ -252,12 +252,12 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" class="form-check-input row-checkbox">
+                    <input type="checkbox" class="form-check-input row-checkbox" name="boardcheck" value="4" disabled @(Model != null && Model.IsNonDisclosureDoc == true ? "checked" : "")>
                 </td>
                 <td>Non-Disclosure Agreement</td>
                 <td>
                     <input id="files5" type="file" class="d-none form-control doc_uploder">
-                    <button type="submit" class="btn btn-info text-white  upload-btn" disabled>
+                    <button type="submit" class="btn btn-info text-white  upload-btn" >
                         <span onclick="document.getElementById('files5').click()"> Upload </span>
                     </button>
                 </td>
@@ -269,12 +269,12 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" class="form-check-input row-checkbox">
+                    <input type="checkbox" class="form-check-input row-checkbox" name="boardcheck" value="5" disabled @(Model != null && Model.Islicensedoc ? "checked" : "")>
                 </td>
                 <td>License Document</td>
                 <td>
                     <input id="files6" type="file" class="d-none form-control doc_uploder">
-                    <button type="submit" class="btn btn-info text-white upload-btn" disabled>
+                    <button type="submit" class="btn btn-info text-white upload-btn" >
                         <span onclick="document.getElementById('files6').click()"> Upload </span>
                     </button>
                 </td>
@@ -288,19 +288,46 @@
     </table>
     <hr />
     <div class=" d-flex justify-content-end">
-        <input type="button" class=" btn bg-info text-white rounded px-3 me-2" value="Save" />
+        <input type="button" class=" btn bg-info text-white rounded px-3 me-2" value="Save" onclick="saveChng(@Model != null && Model.Physicianid)" />
         <input type="button" class=" btn bg-danger text-white rounded px-3 " value="Delete Account">
     </div>
 </div>
 
 <script>
-    //enable disable
+   
     $(document).ready(function () {
+        if("@ViewData["Heading"]" == "Add"){
+            $(".editprofile, .reset").css("display", "none");
+            $("input, textarea, button, select").removeAttr('disabled');
+        }
+        //enable disable
         $(".editprofile").click(function () {
             var form = $(this).closest('form');
             form.find("input, textarea, button").removeAttr('disabled');
             form.find(".submit").css("display", "block");
             $(this).css("display", "none");
+        });
+        $('.row-checkbox').each(function () {
+            var row = $(this).closest('tr');
+            if ($(this).is(':checked')) {
+                row.find('.view-btn').show();
+            }
+        });
+        //Upload files
+        $('.doc_uploder').change(function () {
+            var filename = this.files[0].name;
+            console.log(filename);
+            var targetId = $(this).data('target');
+            $('#' + targetId).text(filename);
+            var row = $(this).closest('tr');
+            row.find('.view-btn').show();
+            row.find('.row-checkbox').prop('checked', true);
+            row.find('.row-checkbox').prop('disabled', false);
+        });
+        $('.row-checkbox').change(function () {
+            var row = $(this).closest('tr');
+            row.find('.view-btn').hide();
+            row.find('.row-checkbox').prop('disabled', true);
         });
     });
     //Region checkbox
@@ -314,53 +341,40 @@
             document.querySelector('#regionids').value = RegionIdList.join(',');
             console.log(RegionIdList);
             console.log(document.querySelector('#regionids').value)
-
             $('#AdministratorInfoForm').submit();
-        });
-
-    });
-    //Upload files
-    $(document).ready(function () {
-        $('.doc_uploder').change(function () {
-            var filename = this.files[0].name;
-            console.log(filename);
-            var targetId = $(this).data('target');
-            $('#' + targetId).text(filename);
-            var row = $(this).closest('tr');
-            row.find('.view-btn').show();
         });
     });
     //onboarding checkbox trigger upload
-    $(document).ready(function () {
-        $(document).on('change', '.row-checkbox', function () {
-            var checkbox = $(this);
-            var row = checkbox.closest('tr');
-            var uploadBtn = row.find('.upload-btn');
-            uploadBtn.prop('disabled', !checkbox.prop('checked'));
-        });
-    });
-    //upload-view 
     //$(document).ready(function () {
-    //    $('.upload-btn').on('change', function () {
-    //        console.log("abc");
-    //        var row = $(this).closest('tr');
-    //        row.find('.view-btn').show();
-            
+    //    $(document).on('change', '.row-checkbox', function () {
+    //        var checkbox = $(this);
+    //        var row = checkbox.closest('tr');
+    //        var uploadBtn = row.find('.upload-btn');
+    //        uploadBtn.prop('disabled', !checkbox.prop('checked'));
     //    });
     //});
 
-    //$('.upload-btn').change(function () {
-    //        var row = $(this).closest('tr');
-    //        var doc = row.find('.doc_uploder');
-    //        console.log(doc.filename);
-    //        if (doc.filename.length > 0) {
-    //            console.log(this);
-    //            $(this).closest('tr').find('.view-btn').show();
-    //        } else {
-    //            $(this).closest('tr').find('.view-btn').hide();
-    //        }
-    //    });
-
+    //save btn
+    function saveChng(physicianid) {
+        var checkboxes = [];
+        var physicianid = physicianid;
+        $('input[name="boardcheck"]:checked').each(function () {
+            checkboxes.push(this.value);
+        });
+        console.log(checkboxes);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveProvider", "AdminTabs")',
+            data: { checkboxes: checkboxes, physicianid: physicianid },
+            success: function (data) {
+                console.log("AJAX success");
+                location.reload();
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    }
 </script>
 
 
