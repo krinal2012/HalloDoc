@@ -167,7 +167,7 @@
                 </button>
             </div>
             <div class="col-md-5 pb-3 d-flex">
-                <button type="button" id="choosenfile1" class="col p-2 btn text-start text-secondary form-control border border-secondary rounded" disabled>
+                <button type="button" id="choosenfile1" class="col p-2 btn text-start text-secondary form-control border border-secondary rounded file-input" disabled>
                     Select Signature
                 </button>
                 <input id="files1" type="file" class="d-none form-control doc_uploder" asp-for="SignatureFile">
@@ -201,86 +201,86 @@
         <tbody >
             <tr>
                 <td >
-                    <input type="checkbox" class="form-check-input">
+                    <input type="checkbox" class="form-check-input row-checkbox">
                 </td>
                 <td>Independent Contractor Agreement</td>
                 <td>
-                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> Upload </span>
+                    <input type="file" class="d-none form-control doc_uploder file-input" data-target="choosenfile">
+                    <button type="submit" class="btn btn-info text-white upload-btn" disabled>
+                        <span class="" onclick="document.getElementById('files3').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> View </span>
+                    <button type="submit" class="btn btn-info text-white view-btn" style="display: none;">
+                        <span class=""> View </span>
                     </button>
                 </td>
             </tr>
             <tr >
                 <td>
-                    <input type="checkbox" class="form-check-input">
+                    <input type="checkbox" class="form-check-input row-checkbox">
                 </td>
                 <td>Background Check</td>
                 <td>
-                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> Upload </span>
+                    <input id="files3" type="file" class="d-none form-control doc_uploder">
+                    <button type="submit" class="btn btn-info  upload-btn text-white" disabled>
+                        <span class="" onclick="document.getElementById('files3').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> View </span>
+                    <button type="submit" class="btn btn-info text-white" style="display: none;">
+                        <span class=""> View </span>
                     </button>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" class="form-check-input">
+                    <input type="checkbox" class="form-check-input row-checkbox">
                 </td>
                 <td>HIPAA Compliance</td>
                 <td>
-                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> Upload </span>
+                    <input id="files" type="file" class="d-none form-control doc_uploder">
+                    <button type="submit" class="btn btn-info upload-btn text-white" disabled>
+                        <span class="" onclick="document.getElementById('files3').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> View </span>
+                    <button type="submit" class="btn btn-info text-white" style="display: none;">
+                        <span class=""> View </span>
                     </button>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" class="form-check-input">
+                    <input type="checkbox" class="form-check-input row-checkbox">
                 </td>
                 <td>Non-Disclosure Agreement</td>
                 <td>
-                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> Upload </span>
+                    <input id="files" type="file" class="d-none form-control doc_uploder">
+                    <button type="submit" class="btn btn-info text-white  upload-btn" disabled>
+                        <span class="" onclick="document.getElementById('files3').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> View </span>
+                    <button type="submit" class="btn btn-info text-white" style="display: none;">
+                        <span class=""> View </span>
                     </button>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" class="form-check-input">
+                    <input type="checkbox" class="form-check-input row-checkbox">
                 </td>
                 <td>License Document</td>
                 <td>
-                    <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> Upload </span>
+                    <input id="files" type="file" class="d-none form-control doc_uploder">
+                    <button type="submit" class="btn btn-info text-white upload-btn" disabled>
+                        <span class="" onclick="document.getElementById('files3').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white" value="Upload">
-                        <span class="dNone"> View </span>
+                    <button type="submit" class="btn btn-info text-white" style="display: none;">
+                        <span class=""> View </span>
                     </button>
                 </td>
             </tr>
@@ -294,6 +294,7 @@
 </div>
 
 <script>
+    //enable disable
     $(document).ready(function () {
         $(".editprofile").click(function () {
             var form = $(this).closest('form');
@@ -302,7 +303,7 @@
             $(this).css("display", "none");
         });
     });
-
+    //Region checkbox
     $(function () {
         $('#save').on('click', function () {
             let checkboxes = document.querySelectorAll('input[name="RegionIds"]:checked');
@@ -318,6 +319,7 @@
         });
 
     });
+    //Upload files
     $("#files").change(function () {
         filename = this.files[0].name;
         console.log(filename);
@@ -328,6 +330,27 @@
         console.log(filename);
         $("#choosenfile1").text(filename);
     });
+    //onboarding checkbox
+    $(document).ready(function () {
+        $(document).on('change', '.row-checkbox', function () {
+            var checkbox = $(this);
+            var row = checkbox.closest('tr');
+            var uploadBtn = row.find('.upload-btn');
+            uploadBtn.prop('disabled', !checkbox.prop('checked'));
+        });
+    });
+    //upload-view
+    $(document).ready(function () {
+       
+        $('.upload-btn').on('change', function () {
+            if ($(this).val() !== '') {
+                console.log("abc");
+            var row = $(this).closest('tr');
+            row.find('.view-btn').show();
+            }
+        });
+    });
+
 </script>
 
 
