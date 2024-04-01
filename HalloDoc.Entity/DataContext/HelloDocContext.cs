@@ -237,7 +237,14 @@ public partial class HelloDocContext : DbContext
         {
             entity.HasKey(e => e.PhysicianId).HasName("Physician_pkey");
 
+            entity.Property(e => e.IsAgreementDoc).HasDefaultValueSql("'0'::\"bit\"");
+            entity.Property(e => e.IsBackgroundDoc).HasDefaultValueSql("'0'::\"bit\"");
+            entity.Property(e => e.IsCredentialDoc).HasDefaultValueSql("'0'::\"bit\"");
+            entity.Property(e => e.IsDeleted).HasDefaultValueSql("'0'::\"bit\"");
+            entity.Property(e => e.IsLicenseDoc).HasDefaultValueSql("'0'::\"bit\"");
             entity.Property(e => e.IsNonDisclosureDoc).HasDefaultValueSql("false");
+            entity.Property(e => e.IsTokenGenerate).HasDefaultValueSql("'0'::\"bit\"");
+            entity.Property(e => e.IsTrainingDoc).HasDefaultValueSql("'0'::\"bit\"");
 
             entity.HasOne(d => d.AspNetUser).WithMany(p => p.PhysicianAspNetUsers).HasConstraintName("AspNetUserId");
 

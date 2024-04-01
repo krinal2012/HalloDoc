@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "_AdminDashboardLayout";
-    ViewData["Title"] = "Providers";
+    ViewData["Title"] = "Account Access";
 }
 @using HalloDoc.Entity.DataModels;
 @using static HalloDoc.Entity.Models.Constant;
@@ -13,7 +13,7 @@
 </div>
 <div class="bg-white reqform container p-3">
     <div class="d-flex justify-content-end align-items-center ">
-        <a class="btn btn-info" asp-controller="AdminTabs" asp-action="AddProvider">Create Acccess</a>
+        <a class="btn btn-info" asp-controller="AdminTabs" asp-action="CreateRole">Create Acccess</a>
     </div>
     <table class="table table-responsive my-2">
         <thead>

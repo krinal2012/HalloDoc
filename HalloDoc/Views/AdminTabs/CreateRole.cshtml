@@ -1,0 +1,59 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_AdminDashboardLayout";
+    ViewData["Title"] = "Create Role";
+}
+@using HalloDoc.Entity.Models.ViewModel;
+@using static HalloDoc.Entity.Models.Constant;
+@model PhysiciansData;
+
+<div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
+    <div class="d-flex align-self-center">
+        <h3><b>Create Role</b></h3>
+    </div>
+    <div class=" btn d-flex justify-content-end">
+        <a asp-action="AccountAccess" asp-controller="AdminTabs" class="btn border border-info shadow-none">
+            <strong class="text-info">
+                <i class="fa fa-angle-left pe-1 text-info"> </i> Back
+            </strong>
+        </a>
+    </div>
+</div>
+<div class="bg-white reqform p-3 container ">
+    <form class="bg-white sbox row">
+        <div class="mb-3 col-lg-6 form-floating">
+            <input asp-for="Role" type="text" class="form-control" placeholder="Status"  required/>
+            <label for="Status" class="form-label">Role Name </label>
+        </div>
+        <div class="mb-3 col-lg-6 form-floating">
+            <select class="form-control" placeholder="Account" id="AccountType" onchange="rolemenu()" asp-items="@new SelectList(Enum.GetNames(typeof(AccountType)))">  </select>
+            <label for="Account" class="form-label">Account Type</label>
+        </div>
+       
+        <div class="response"></div>
+    </form>
+</div>
+<script>
+    function rolemenu() {
+        var region = $("#AccountType").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RolebyAccountType", "AdminTabs")?Account=' + region,
+            cache: false,
+            success: function (response) {
+                console.log(response);
+                var select = "";
+                for (var i = 0; i < response.length; i++) {
+                    select += '<div class="form-check form-check-inline">< input class="form-check-input" type = "checkbox" value = + response[i].manuId ><label class="form-check-label" > response[i].name < /label>< /div>';
+                }
+
+                $(".response").html(select);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+</script>

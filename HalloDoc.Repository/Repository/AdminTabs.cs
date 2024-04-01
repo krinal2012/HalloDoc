@@ -201,7 +201,7 @@ namespace HalloDoc.Repository.Repository
                                where p.PhysicianId == PhysicianId
                                select new PhysiciansData
                                {
-                                   Physicianid = p.PhysicianId,
+                                   Physicianid = PhysicianId,
                                    UserName = asp.UserName,
                                    Status = (state)p.Status,
                                    LastName = p.LastName,
@@ -434,7 +434,7 @@ namespace HalloDoc.Repository.Repository
             Data.RoleId = Convert.ToInt32(PhysiciansData.Role);
             Data.IsDeleted=new BitArray(1);
             Data.Status = (short?)(state)PhysiciansData.Status;
-            Data.CreatedBy = "530f75ff-944e-48c4-a12b-ce657cb";
+            Data.CreatedBy = UserId;
             if (PhysiciansData.SignatureFile != null)
             {
                 string FilePath = "wwwroot\\Upload";
@@ -507,6 +507,22 @@ namespace HalloDoc.Repository.Repository
             _context.SaveChanges();
             
             return true;
+        }
+        public bool DeleteProvider(int PhysicianId)
+        {
+            Physician phy = _context.Physicians.Where(x => x.PhysicianId == PhysicianId).FirstOrDefault();
+            phy.IsDeleted[0] = true;
+            _context.Physicians.Update(phy);
+            _context.SaveChanges();
+            return true;
+
+        }
+        public List<Menu> RolebyAccountType(int Account)
+        {
+            var result = _context.Menus
+                      .Where(req => req.AccountType == Account)
+                      .ToList();
+            return result;
         }
 
     }

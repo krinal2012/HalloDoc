@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HalloDoc.Entity.Models
+﻿namespace HalloDoc.Entity.Models
 {
     public class Constant
     {
@@ -12,7 +6,8 @@ namespace HalloDoc.Entity.Models
         {
             Patient =1,
             Admin=2,
-            Physician=3
+            Physician=3,
+            All=4
         }
         public enum RequestTypes
         {

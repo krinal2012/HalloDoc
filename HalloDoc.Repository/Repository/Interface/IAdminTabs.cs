@@ -21,7 +21,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool EditProviderProfile(PhysiciansData PhysiciansData);
         public bool SaveProvider(int[] checkboxes, int physicianid);
         public bool AddProviderAccount(PhysiciansData PhysiciansData, int[] checkboxes, string UserId);
-
-
+        public bool DeleteProvider(int PhysicianId);
+        public List<Menu> RolebyAccountType(int Account);
     }
 }

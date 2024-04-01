@@ -8,6 +8,7 @@ using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace HalloDoc.Controllers
 {
@@ -172,14 +173,30 @@ namespace HalloDoc.Controllers
         public IActionResult AddAccount(PhysiciansData physicianData, int[] checkboxes)
         {
             var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
-            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
+            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "AspNetUserId").Value;
             bool res = _IAdminTabs.AddProviderAccount(physicianData, checkboxes, UserId);
             return RedirectToAction("ProviderMenu");
+        }
+        public IActionResult DeleteProvider(int PhysicianId)
+        {
+            bool res = _IAdminTabs.DeleteProvider(PhysicianId);
+            _notyf.Success("Account Deleted..");
+            return RedirectToAction("Index", "Provider");
         }
         public IActionResult AccountAccess()
         {
             var res = _context.Roles.ToList();
             return View(res);
         }
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
+        public IActionResult RolebyAccountType(int Account)
+        {
+            var v = _IAdminTabs.RolebyAccountType(Account);
+            return Json(v);
+        }
+              
     }
 }
