@@ -368,31 +368,146 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SaveProvider(int[] checkboxes, int physicianid)
         {
-            Physician phy = _context.Physicians.Where(x=>x.PhysicianId == physicianid).FirstOrDefault();
+            Physician data = _context.Physicians.Where(x=>x.PhysicianId == physicianid).FirstOrDefault();
             foreach(var i in checkboxes)
             {
                 switch(i)
                 {
                     case 1:
-                        phy.IsAgreementDoc = new BitArray(1);
-                        phy.IsAgreementDoc[0] = true; break;
+                        data.IsAgreementDoc = new BitArray(1);
+                        data.IsAgreementDoc[0] = true; break;
                     case 2:
-                        phy.IsBackgroundDoc = new BitArray(1);
-                        phy.IsBackgroundDoc[0] = true; break;
+                        data.IsBackgroundDoc = new BitArray(1);
+                        data.IsBackgroundDoc[0] = true; break;
                     case 3:
-                        phy.IsCredentialDoc = new BitArray(1);
-                        phy.IsCredentialDoc[0] = true; break;
+                        data.IsCredentialDoc = new BitArray(1);
+                        data.IsCredentialDoc[0] = true; break;
                     case 4:
-                        phy.IsNonDisclosureDoc = true; break;
+                        data.IsNonDisclosureDoc = true; break;
                     case 5:
-                        phy.IsLicenseDoc = new BitArray(1);
-                        phy.IsLicenseDoc[0] = true; break;
+                        data.IsLicenseDoc = new BitArray(1);
+                        data.IsLicenseDoc[0] = true; break;
                 }
                 
             }
-            _context.Physicians.Update(phy);
+            _context.Physicians.Update(data);
             _context.SaveChanges();
             return true;
         }
+        public bool AddProviderAccount(PhysiciansData PhysiciansData, int[] checkboxes, string UserId)
+        {
+            var Data = new Physician();
+            var Aspnetuser = new AspNetUser();
+            var AspNetUserRoles = new AspNetUserRole();
+            var phyNoti = new PhysicianNotification();
+            Guid g = Guid.NewGuid();
+            Aspnetuser.Id = g.ToString();
+            Aspnetuser.UserName = PhysiciansData.FirstName;
+            Aspnetuser.PasswordHash = PhysiciansData.Password;
+            Aspnetuser.Email = PhysiciansData.Email;
+            Aspnetuser.PhoneNumber = PhysiciansData.Mobile;
+            Aspnetuser.CreatedDate = DateTime.Now;
+            _context.AspNetUsers.Add(Aspnetuser);
+            _context.SaveChanges();
+
+            AspNetUserRoles.UserId = Aspnetuser.Id;
+            AspNetUserRoles.RoleId = "3";
+            _context.AspNetUserRoles.Add(AspNetUserRoles);
+            _context.SaveChanges();
+
+            Data.AspNetUserId = Aspnetuser.Id;
+            Data.FirstName = PhysiciansData.FirstName;
+            Data.LastName = PhysiciansData.LastName;
+            Data.Mobile = PhysiciansData.Mobile;
+            Data.Email = PhysiciansData.Email;
+            Data.MedicalLicense = PhysiciansData.Medicallicense;
+            Data.Npinumber = PhysiciansData.NpiNumber;
+            Data.SyncEmailAddress = PhysiciansData.SyncEmailaddress;
+            Data.Address1 = PhysiciansData.Address1;
+            Data.Address2 = PhysiciansData.Address2;
+            Data.City = PhysiciansData.City;
+            Data.Zip = PhysiciansData.ZipCode;
+            Data.Mobile = PhysiciansData.Mobile;
+            Data.BusinessName = PhysiciansData.BusinessName;
+            Data.BusinessWebsite = PhysiciansData.BusinessWebsite;
+            Data.AdminNotes = PhysiciansData.AdminNotes;
+            Data.RoleId = Convert.ToInt32(PhysiciansData.Role);
+            Data.IsDeleted=new BitArray(1);
+            Data.Status = (short?)(state)PhysiciansData.Status;
+            Data.CreatedBy = "530f75ff-944e-48c4-a12b-ce657cb";
+            if (PhysiciansData.SignatureFile != null)
+            {
+                string FilePath = "wwwroot\\Upload";
+                string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
+                string fileNameWithPath = Path.Combine(path, PhysiciansData.SignatureFile.FileName);
+
+                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    PhysiciansData.SignatureFile.CopyTo(stream);
+                }
+
+                Data.Signature = PhysiciansData.SignatureFile.FileName;
+
+            }
+            if (PhysiciansData.PhotoFile != null)
+            {
+                string FilePath = "wwwroot\\Upload";
+                string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
+                string fileNameWithPath = Path.Combine(path, PhysiciansData.PhotoFile.FileName);
+
+                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    PhysiciansData.PhotoFile.CopyTo(stream);
+                }
+
+                Data.Photo = PhysiciansData.PhotoFile.FileName;
+            }
+            foreach (var i in checkboxes)
+            {
+                switch (i)
+                {
+                    case 1:
+                        Data.IsAgreementDoc = new BitArray(1);
+                        Data.IsAgreementDoc[0] = true; break;
+                    case 2:
+                        Data.IsBackgroundDoc = new BitArray(1);
+                        Data.IsBackgroundDoc[0] = true; break;
+                    case 3:
+                        Data.IsCredentialDoc = new BitArray(1);
+                        Data.IsCredentialDoc[0] = true; break;
+                    case 4:
+                        Data.IsNonDisclosureDoc = true; break;
+                    case 5:
+                        Data.IsLicenseDoc = new BitArray(1);
+                        Data.IsLicenseDoc[0] = true; break;
+                }
+            }
+            _context.Physicians.Add(Data);
+            _context.SaveChanges();
+
+            
+            if(PhysiciansData.RegionIdList != null)
+            {
+                List<int> Regionsid = PhysiciansData.RegionIdList.Split(',').Select(int.Parse).ToList();
+                foreach (var item in Regionsid)
+                {
+                    PhysicianRegion ar = new()
+                    {
+                        RegionId = item,
+                        PhysicianId = Data.PhysicianId
+                    };
+                    _context.PhysicianRegions.Add(ar);
+                    _context.SaveChanges();
+                }
+            }
+
+            phyNoti.IsNotificationStopped = false;
+            phyNoti.PhysicianId= Data.PhysicianId;
+            _context.PhysicianNotifications.Add(phyNoti);
+            _context.SaveChanges();
+            
+            return true;
+        }
+
     }
 }

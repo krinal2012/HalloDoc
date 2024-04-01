@@ -23,7 +23,7 @@
 </div>
 <div class="bg-white reqform p-3 container ">
     <form class="bg-white sbox">
-        <input type="hidden" asp-for="Physicianid" />
+        <input type="hidden" asp-for="Physicianid" id="Physicianid" />
         <p class="h5 p-1"><b>Account Information</b></p>
         <div class="row">
             <div class="mb-3 col-lg-6 form-floating">
@@ -287,9 +287,13 @@
         </tbody>
     </table>
     <hr />
-    <div class=" d-flex justify-content-end">
-        <input type="button" class=" btn bg-info text-white rounded px-3 me-2" value="Save" onclick="saveChng(@Model != null && Model.Physicianid)" />
+  
+    <div class=" d-flex justify-content-end editprofile">
+        <input type="button" class=" btn bg-info text-white rounded px-3 me-2" value="Save" onclick="saveChng()" />
         <input type="button" class=" btn bg-danger text-white rounded px-3 " value="Delete Account">
+    </div>
+    <div class=" d-flex justify-content-end">
+        <button type="button" class=" btn bg-info text-white rounded px-3 me-2 submit-all">Add Account</button>
     </div>
 </div>
 
@@ -355,9 +359,10 @@
     //});
 
     //save btn
-    function saveChng(physicianid) {
+    function saveChng() {
+
         var checkboxes = [];
-        var physicianid = physicianid;
+        var physicianid = $("#Physicianid").val();
         $('input[name="boardcheck"]:checked').each(function () {
             checkboxes.push(this.value);
         });
@@ -375,6 +380,43 @@
             }
         });
     }
+    $('.submit-all').click(function () {
+        var physicianData = {}; // This will hold all the form data
+
+        $('form').each(function () {
+            var formData = $(this).serializeArray();
+            formData.forEach(function (item) {
+                // Handle the possibility of form fields having the same name
+                if (physicianData[item.name]) {
+                    if (!Array.isArray(physicianData[item.name])) {
+                        physicianData[item.name] = [physicianData[item.name]];
+                    }
+                    physicianData[item.name].push(item.value);
+                } else {
+                    physicianData[item.name] = item.value;
+                }
+            });
+        });
+        var checkboxes = [];
+        $('input[name="boardcheck"]:checked').each(function () {
+            checkboxes.push(this.value);
+        });
+        console.log(physicianData);
+        // Now send this data to the server
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("AddAccount", "AdminTabs")', // Replace with your actual URL
+            data: { physicianData: physicianData, checkboxes: checkboxes },
+            success: function (response) {
+                // Handle success
+                console.log('Data sent successfully', response);
+            },
+            error: function (error) {
+                // Handle error
+                console.log('Error sending data', error);
+            }
+        });
+    });
 </script>
 
 

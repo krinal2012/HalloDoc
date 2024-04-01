@@ -169,5 +169,17 @@ namespace HalloDoc.Controllers
             bool res = _IAdminTabs.SaveProvider(checkboxes, physicianid);
             return RedirectToAction("ProviderMenu");
         }
+        public IActionResult AddAccount(PhysiciansData physicianData, int[] checkboxes)
+        {
+            var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
+            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
+            bool res = _IAdminTabs.AddProviderAccount(physicianData, checkboxes, UserId);
+            return RedirectToAction("ProviderMenu");
+        }
+        public IActionResult AccountAccess()
+        {
+            var res = _context.Roles.ToList();
+            return View(res);
+        }
     }
 }

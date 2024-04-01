@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "_AdminDashboardLayout";
+    ViewData["Title"] = "Providers";
+}
+@using HalloDoc.Entity.DataModels;
+@using static HalloDoc.Entity.Models.Constant;
+@model List<Role>;
+@Html.Partial("_ContactProviderModal.cshtml")
+<div class="d-flex justify-content-between align-items-center container pb-1 mt-5">
+    <div class="d-flex align-self-center">
+        <h3><b>Account Access</b></h3>
+    </div>
+</div>
+<div class="bg-white reqform container p-3">
+    <div class="d-flex justify-content-end align-items-center ">
+        <a class="btn btn-info" asp-controller="AdminTabs" asp-action="AddProvider">Create Acccess</a>
+    </div>
+    <table class="table table-responsive my-2">
+        <thead>
+            <tr class="table-secondary">
+              
+                <th>Name</th>
+                <th>Account Type</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="providerbody">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="table-text">@item.Name</td>
+                    <td class="table-text"> @Enum.GetName(typeof(AccountType),item.AccountType)</td>
+                    <td class="table-text text-center">
+                        <a class="btn btn-sm  btn-outline-info" asp-action="" asp-controller="AdminTabs" asp-route-RoleId="@item.RoleId">
+                            Edit
+                        </a>
+                        <a class="btn btn-sm  btn-outline-info" asp-action="" asp-controller="AdminTabs" asp-route-RoleId="@item.RoleId">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

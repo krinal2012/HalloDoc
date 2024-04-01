@@ -20,6 +20,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool EditBilling(PhysiciansData AdminProfile);
         public bool EditProviderProfile(PhysiciansData PhysiciansData);
         public bool SaveProvider(int[] checkboxes, int physicianid);
+        public bool AddProviderAccount(PhysiciansData PhysiciansData, int[] checkboxes, string UserId);
 
 
     }

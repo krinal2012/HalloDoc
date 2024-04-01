@@ -8,6 +8,12 @@ namespace HalloDoc.Entity.Models
 {
     public class Constant
     {
+        public enum AccountType
+        {
+            Patient =1,
+            Admin=2,
+            Physician=3
+        }
         public enum RequestTypes
         {
             Business = 1,
@@ -31,10 +37,8 @@ namespace HalloDoc.Entity.Models
         }
         public enum state
         {
-           
             Active = 1,
             Pending = 2,
-           
         }
     }
 }
