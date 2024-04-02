@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "_AdminDashboardLayout";
+    ViewData["Title"] = "User Access";
+}
+@using HalloDoc.Entity.Models.ViewModel;
+@model List<PhysiciansData>;
+
+<div class="d-flex align-items-center container pb-1 mt-4">
+    <div class="d-flex align-self-center">
+        <h3><b>User Access</b></h3>
+    </div>
+</div>
+<div class="bg-white reqform container p-3">
+    <div class="d-flex justify-content-between align-items-center ">
+        <div class="searchPatientRegion search m-1">
+            <i class="fa fa-search"></i>
+            <select class="form-select" id="SelectRegion" onchange="searchRegion()" name="Region" asp-items="@(new SelectList(ViewBag.Role,"RoleId","Name"))">
+                <option value="">All</option>
+            </select>
+        </div>
+       @* <div>
+            <a class="btn btn-outline-info" style="display:none;" id="saveChangesButton" onclick="changeNoti()"> Save Changes </a>
+            <a class="btn btn-info" asp-controller="AdminTabs" asp-action="AddProvider">Create Provider Account</a>
+        </div>*@
+    </div>
+    <table class="table table-responsive my-2">
+        <thead>
+            <tr class="table-secondary">
+                
+                <th>Account Type</th>
+                <th>Account POC</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Actions</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        </table>
+        </div>

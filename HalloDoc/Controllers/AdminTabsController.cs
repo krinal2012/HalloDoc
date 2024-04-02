@@ -8,7 +8,9 @@ using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Drawing;
+using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Controllers
 {
@@ -185,18 +187,50 @@ namespace HalloDoc.Controllers
         }
         public IActionResult AccountAccess()
         {
-            var res = _context.Roles.ToList();
+            var res = _context.Roles.Where(r=> r.IsDeleted == new BitArray(1)). ToList();
             return View(res);
         }
         public IActionResult CreateRole()
         {
+          
             return View();
         }
-        public IActionResult RolebyAccountType(int Account)
+        public IActionResult EditRole(int RoleId)
+        {
+            var result = _IAdminTabs.ViewEditRole(RoleId);
+            return View(result);
+        }
+        public IActionResult RolebyAccountType(AccountType Account)
         {
             var v = _IAdminTabs.RolebyAccountType(Account);
             return Json(v);
         }
-              
+        public IActionResult SaveCreateRole(CreateRole roles)
+        {
+            var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
+            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "AspNetUserId").Value;
+            var v = _IAdminTabs.SaveCreateRole(roles,UserId);
+            _notyf.Success("Role Created Successfully");
+            ModelState.Clear();
+            return View("CreateRole");
+        }
+        public IActionResult SaveEditRole(CreateRole roles)
+        {
+            var v = _IAdminTabs.SaveEditRole(roles);
+            _notyf.Success("Role Edited Successfully");
+            return RedirectToAction("EditRole" , new { RoleId = roles.RoleId});
+        }
+        public IActionResult DeleteRole(int RoleId)
+        {
+            bool res = _IAdminTabs.DeleteRole(RoleId);
+            _notyf.Success("Role Deleted..");
+            return RedirectToAction("AccountAccess");
+        }
+        public IActionResult UserAccess()
+        {
+            ViewBag.role = _IAdminDash.Roles();
+            return View();
+        }
+
     }
 }

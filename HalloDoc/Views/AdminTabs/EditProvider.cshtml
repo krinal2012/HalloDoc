@@ -444,8 +444,8 @@
                     method: "POST",
                     url: "/AdminTabs/DeleteProvider?PhysicianId=" + pId,
                     success: function (result) {
-                        console.log(result);
-                        window.location.href("https://localhost:7151/AdminTabs/ProviderMenu");
+                        
+                        location.reload();
                     },
 
                     error: function () {

@@ -403,6 +403,8 @@ public partial class HelloDocContext : DbContext
         modelBuilder.Entity<Role>(entity =>
         {
             entity.HasKey(e => e.RoleId).HasName("Role_pkey");
+
+            entity.Property(e => e.IsDeleted).HasDefaultValueSql("'0'::\"bit\"");
         });
 
         modelBuilder.Entity<RoleMenu>(entity =>

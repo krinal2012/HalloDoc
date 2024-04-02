@@ -512,18 +512,95 @@ namespace HalloDoc.Repository.Repository
         {
             Physician phy = _context.Physicians.Where(x => x.PhysicianId == PhysicianId).FirstOrDefault();
             phy.IsDeleted[0] = true;
+            phy.ModifiedDate = DateTime.Now;
             _context.Physicians.Update(phy);
             _context.SaveChanges();
             return true;
 
         }
-        public List<Menu> RolebyAccountType(int Account)
+        public List<Menu> RolebyAccountType(AccountType Account)
         {
+            int accounttype = (int)Account;
             var result = _context.Menus
-                      .Where(req => req.AccountType == Account)
+                      .Where(req => accounttype == 4 || req.AccountType == accounttype)
                       .ToList();
             return result;
         }
+        public bool SaveCreateRole(CreateRole roles, string UserId)
+        {
+            var data = new Role();
+            data.Name = roles.Role;
+            data.AccountType = (short)roles.AccountType;
+            data.CreatedDate = DateTime.Now;
+            data.CreatedBy = UserId;
+            _context.Roles.Add(data);
+            _context.SaveChanges();
 
+            List<int> menus = roles.files.Split(',').Select(int.Parse).ToList();
+           
+            foreach (var item in menus)
+            {
+                var obj = new RoleMenu();
+                obj.RoleId = data.RoleId;
+                obj.MenuId = item;
+                _context.RoleMenus.Add(obj);
+                _context.SaveChanges();
+            }
+            return true;
+        }
+        public CreateRole ViewEditRole(int  RoleId)
+        {
+            CreateRole? v = (from p in _context.Roles
+                             
+                                 where p.RoleId == RoleId
+                                 select new CreateRole
+                                 {
+                                    Role = p.Name,
+                                    AccountType = (AccountType)p.AccountType,
+                                 }).FirstOrDefault();
+            List<Menu> Menu = _context.Menus
+                .Where(req => req.AccountType == (short)v.AccountType).ToList();
+            v.menus = Menu;
+            List<RoleMenu> rm= _context.RoleMenus
+                                .Where(obj=>obj.RoleId == RoleId).ToList();
+            v.rolemenus= rm;
+            return v;
+        }
+        public bool SaveEditRole(CreateRole roles)
+        {
+            List<int> selectedmenus = roles.files.Split(',').Select(int.Parse).ToList();
+            List<int> rolemenus = _context.RoleMenus.Where(r => r.RoleId == roles.RoleId).Select(req => req.RoleMenuId).ToList();
+
+            if (rolemenus.Count > 0)
+            {
+                foreach (var item in rolemenus)
+                {
+                    RoleMenu ar = _context.RoleMenus.Where(r => r.RoleId == roles.RoleId).First();
+                    _context.RoleMenus.Remove(ar);
+                    _context.SaveChanges();
+                }
+            }
+            foreach (var item in selectedmenus)
+            {
+                RoleMenu ar = new()
+                {
+                    RoleId = roles.RoleId,
+                    MenuId = item
+                };
+                _context.RoleMenus.Update(ar);
+                _context.SaveChanges();
+                //regions.Remove(item);
+            }
+            return true;
+        }
+        public bool DeleteRole(int RoleId)
+        {
+            Role r = _context.Roles.Where(x => x.RoleId == RoleId).FirstOrDefault();
+            r.IsDeleted[0] = true;
+            r.ModifiedDate = DateTime.Now;
+            _context.Roles.Update(r);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }

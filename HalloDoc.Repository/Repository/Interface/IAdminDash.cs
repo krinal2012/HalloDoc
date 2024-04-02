@@ -14,6 +14,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public ViewCaseModel EditViewCaseData(int RequestID, int RequestTypeId, ViewCaseModel vp);
         public List<Physician> ProviderbyRegion(int Regionid);
         public List<Region> AssignCase();
+        public List<Role> Roles();
         public void AssignCaseInfo(int RequestId, int PhysicianId, string Notes);
         public void TransferCaseInfo(int RequestId, int PhysicianId, string Notes);
         public viewNotesData viewNotesData(int RequestId);

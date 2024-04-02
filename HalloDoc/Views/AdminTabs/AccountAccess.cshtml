@@ -5,7 +5,7 @@
 @using HalloDoc.Entity.DataModels;
 @using static HalloDoc.Entity.Models.Constant;
 @model List<Role>;
-@Html.Partial("_ContactProviderModal.cshtml")
+
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-5">
     <div class="d-flex align-self-center">
         <h3><b>Account Access</b></h3>
@@ -31,15 +31,55 @@
                     <td class="table-text">@item.Name</td>
                     <td class="table-text"> @Enum.GetName(typeof(AccountType),item.AccountType)</td>
                     <td class="table-text text-center">
-                        <a class="btn btn-sm  btn-outline-info" asp-action="" asp-controller="AdminTabs" asp-route-RoleId="@item.RoleId">
+                        <a class="btn btn-sm  btn-outline-info" asp-action="EditRole" asp-controller="AdminTabs" asp-route-RoleId="@item.RoleId">
                             Edit
                         </a>
-                        <a class="btn btn-sm  btn-outline-info" asp-action="" asp-controller="AdminTabs" asp-route-RoleId="@item.RoleId">
+                        <a class="btn btn-sm  btn-outline-info deleterolebutton" data-roleid="@item.RoleId" >
                             Delete
                         </a>
+
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+<script>
+    $('.deleterolebutton').on('click', function () {
+        var RoleId = $(this).data("roleid");
+        console.log(RoleId);
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-info m-2 shadow-none text-white",
+                cancelButton: "btn btn-outline-info m-2"
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure you want to delete this Role?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Delete",
+            cancelButtonText: "Cancel",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log("Success");
+                $.ajax({
+                    method: "POST",
+                    url: "/AdminTabs/DeleteRole?RoleId=" + RoleId,
+                    success: function (result) {
+                        console.log(result);
+                        location.reload();
+                    },
+
+                    error: function () {
+                        console.log("error");
+                    }
+                });
+            }
+
+        });
+    });
+</script>

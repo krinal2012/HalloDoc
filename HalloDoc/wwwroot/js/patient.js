@@ -15,7 +15,6 @@ function displayFilename() {
     var output = document.getElementById('selectedFilename');
     output.textContent = input.files[0].name;
 }
-
 //sweet alert
 swal({
     title: "Information",

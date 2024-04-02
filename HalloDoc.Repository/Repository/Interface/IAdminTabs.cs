@@ -1,5 +1,6 @@
 ﻿using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
+using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Repository.Repository.Interface
 {
@@ -22,6 +23,10 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool SaveProvider(int[] checkboxes, int physicianid);
         public bool AddProviderAccount(PhysiciansData PhysiciansData, int[] checkboxes, string UserId);
         public bool DeleteProvider(int PhysicianId);
-        public List<Menu> RolebyAccountType(int Account);
+        public List<Menu> RolebyAccountType(AccountType Account);
+        public bool SaveCreateRole(CreateRole roles, string UserId);
+        public CreateRole ViewEditRole(int RoleId);
+        public bool SaveEditRole(CreateRole roles);
+        public bool DeleteRole(int RoleId);
     }
 }

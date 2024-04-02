@@ -195,6 +195,11 @@ namespace HalloDoc.Repository.Repository
             var regiondata = _context.Regions.ToList();
             return (regiondata);
         }
+        public List<Role> Roles()
+        {
+            var data = _context.Roles.ToList();
+            return (data);
+        }
         public void AssignCaseInfo(int RequestId, int PhysicianId, string Notes)
         {
             var request = _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
