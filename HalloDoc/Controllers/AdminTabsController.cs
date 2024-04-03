@@ -187,7 +187,7 @@ namespace HalloDoc.Controllers
             _notyf.Success("Account Deleted..");
             return RedirectToAction("Index", "Provider");
         }
-        public IActionResult AccountAccess()
+        public IActionResult AccessAccount()
         {
             var res = _context.Roles.Where(r=> r.IsDeleted == new BitArray(1)). ToList();
             return View(res);
@@ -229,14 +229,18 @@ namespace HalloDoc.Controllers
             {
                 _notyf.Success("Role Deleted..");
             }
-            return RedirectToAction("AccountAccess");
+            return RedirectToAction("AccessAccount");
         }
-        public IActionResult UserAccess()
+        public IActionResult AccessUser(string AccountType)
         {
-            ViewBag.role = _IAdminDash.Roles();
-            var res = _IAdminTabs.UserAccessData();
+            ViewBag.AspNetRole = _IAdminDash.AspNetRole();
+            var res = _IAdminTabs.UserAccessData(AccountType);
             return View(res);
         }
-
+        public async Task<IActionResult> ProviderLocation()
+        {
+            ViewBag.Log = _IAdminTabs.FindPhysicianLocation();
+            return View();
+        }
     }
 }

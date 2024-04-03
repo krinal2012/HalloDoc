@@ -603,7 +603,7 @@ namespace HalloDoc.Repository.Repository
             _context.SaveChanges();
             return true;
         }
-        public List<UserAccessData> UserAccessData()
+        public List<UserAccessData> UserAccessData(string AccountType)
         {
             var result = (from aspuser in _context.AspNetUsers
                           join admin in _context.Admins
@@ -623,7 +623,30 @@ namespace HalloDoc.Repository.Repository
                               OpenReq = _context.Requests.Count(r => r.PhysicianId == physician.PhysicianId),
                               isAdmin = admin != null 
                           }).ToList();
+            if(AccountType!= null )
+            {
+                result = result.Where(r => r.AccountType == "All" || r.AccountType == AccountType).ToList();
+            }
+          
             return result;
         }
+
+        #region Find_Location_Physician
+        public List<PhysicianLocation> FindPhysicianLocation()
+        {
+            List<PhysicianLocation> pl = _context.PhysicianLocations
+                                    .OrderByDescending(x => x.PhysicianName)
+                        .Select(r => new PhysicianLocation
+                        {
+                            LocationId = r.LocationId,
+                            Longitude = r.Longitude,
+                            Latitude = r.Latitude,
+                            PhysicianName = r.PhysicianName
+
+                        }).ToList();
+            return pl;
+
+        }
+        #endregion
     }
 }

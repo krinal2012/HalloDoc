@@ -61,13 +61,13 @@
                             <a class="nav-link px-2 text-dark  @(path.StartsWith ("/Admin/") ? "activeNav" : "")" aria-current="page" asp-action="Index" asp-controller="Admin">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Provider Location</a>
+                            <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/ProviderLocation") ? "activeNav" : "")" asp-action="ProviderLocation" asp-controller="AdminTabs">ProviderLocation</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-2 text-dark @(path.EndsWith ("/AdminTabs/AdminProfile") ? "activeNav" : "")" asp-action="AdminProfile" asp-controller="AdminTabs">My Profile</a>
                         </li>
                         <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown px-2 text-dark @(path.StartsWith ("/AdminTabs/Provider") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown px-2 text-dark @(path.StartsWith ("/AdminTabs/Providers") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                  Providers
                             </a>
                             <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
@@ -80,12 +80,12 @@
                             <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" >Partners</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link dropdown px-2 text-dark @(path.StartsWith("/AdminTabs/AccountAccess") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown px-2 text-dark @(path.StartsWith("/AdminTabs/Access") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Access
                             </a>
                             <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item NavDropdown" asp-action="AccountAccess" asp-controller="AdminTabs">Account Access</a>
-                                <a class="dropdown-item NavDropdown" asp-action="UserAccess" asp-controller="AdminTabs">User Access</a>
+                                <a class="dropdown-item NavDropdown" asp-action="AccessAccount" asp-controller="AdminTabs">Account Access</a>
+                                <a class="dropdown-item NavDropdown" asp-action="AccessUser" asp-controller="AdminTabs">User Access</a>
                             </div>
                         </li>
                         <li class="nav-item">

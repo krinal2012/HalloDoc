@@ -195,9 +195,9 @@ namespace HalloDoc.Repository.Repository
             var regiondata = _context.Regions.ToList();
             return (regiondata);
         }
-        public List<Role> Roles()
+        public List<AspNetRole> AspNetRole()
         {
-            var data = _context.Roles.ToList();
+            var data = _context.AspNetRoles.ToList();
             return (data);
         }
         public void AssignCaseInfo(int RequestId, int PhysicianId, string Notes)
