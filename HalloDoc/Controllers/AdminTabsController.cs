@@ -30,12 +30,15 @@ namespace HalloDoc.Controllers
             _httpContextAccessor = httpContextAccessor;
             _IAdminTabs = IAdminTabs;
         }
-        public IActionResult AdminProfile()
+        public IActionResult AdminProfile(string UserId)
         {
+            if(UserId == null)
+            {
+                var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
+                UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
+            }
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
-            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
-            var result = _IAdminTabs.ViewAdminProfile(UserId);
+           var result = _IAdminTabs.ViewAdminProfile(UserId);
             return View(result);
         }
         public IActionResult ProfilePassword(string Password)
@@ -78,7 +81,6 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("AdminProfile");
         }
-
         public IActionResult ProviderMenu(int region=-1)
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
@@ -223,13 +225,17 @@ namespace HalloDoc.Controllers
         public IActionResult DeleteRole(int RoleId)
         {
             bool res = _IAdminTabs.DeleteRole(RoleId);
-            _notyf.Success("Role Deleted..");
+            if(res==true)
+            {
+                _notyf.Success("Role Deleted..");
+            }
             return RedirectToAction("AccountAccess");
         }
         public IActionResult UserAccess()
         {
             ViewBag.role = _IAdminDash.Roles();
-            return View();
+            var res = _IAdminTabs.UserAccessData();
+            return View(res);
         }
 
     }

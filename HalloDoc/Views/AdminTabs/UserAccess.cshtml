@@ -3,7 +3,8 @@
     ViewData["Title"] = "User Access";
 }
 @using HalloDoc.Entity.Models.ViewModel;
-@model List<PhysiciansData>;
+@using static HalloDoc.Entity.Models.Constant;
+@model List<UserAccessData>;
 
 <div class="d-flex align-items-center container pb-1 mt-4">
     <div class="d-flex align-self-center">
@@ -18,22 +19,48 @@
                 <option value="">All</option>
             </select>
         </div>
-       @* <div>
-            <a class="btn btn-outline-info" style="display:none;" id="saveChangesButton" onclick="changeNoti()"> Save Changes </a>
-            <a class="btn btn-info" asp-controller="AdminTabs" asp-action="AddProvider">Create Provider Account</a>
+        @* <div>
+        <a class="btn btn-outline-info" style="display:none;" id="saveChangesButton" onclick="changeNoti()"> Save Changes </a>
+        <a class="btn btn-info" asp-controller="AdminTabs" asp-action="AddProvider">Create Provider Account</a>
         </div>*@
     </div>
     <table class="table table-responsive my-2">
         <thead>
             <tr class="table-secondary">
-                
                 <th>Account Type</th>
                 <th>Account POC</th>
                 <th>Phone</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th>Open Requests</th>
                 <th class="text-center">Actions</th>
             </tr>
         </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.AccountType</td>
+                    <td>@item.AccountPOC</td>
+                    <td>@item.Phone</td>
+                    <td>@Enum.GetName(typeof(state),item.Status)</td>
+                    <td>@item.OpenReq</td>
+                    <td class="text-center">
+                        @if (item.isAdmin == true)
+                        {
+                            <a class="btn btn-sm  btn-outline-info" asp-action="AdminProfile" asp-controller="AdminTabs" asp-route-UserId="@item.Id">
+                                Edit
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm  btn-outline-info" asp-action="EditProvider" asp-controller="AdminTabs" asp-route-PhysicianId="@item.Id">
+                                Edit
+                            </a>
+                        }
+                    </td>
+                </tr>
+
+            }
+            </tbody>
         </table>
-        </div>
+    </div>

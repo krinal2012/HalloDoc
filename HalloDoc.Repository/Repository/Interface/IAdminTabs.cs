@@ -28,5 +28,6 @@ namespace HalloDoc.Repository.Repository.Interface
         public CreateRole ViewEditRole(int RoleId);
         public bool SaveEditRole(CreateRole roles);
         public bool DeleteRole(int RoleId);
+        public List<UserAccessData> UserAccessData();
     }
 }

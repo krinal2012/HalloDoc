@@ -7,6 +7,7 @@ using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Identity;
 using System.Collections;
 using System.Drawing;
+using System.Numerics;
 using static HalloDoc.Entity.Models.Constant;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Region = HalloDoc.Entity.DataModels.Region;
@@ -601,6 +602,28 @@ namespace HalloDoc.Repository.Repository
             _context.Roles.Update(r);
             _context.SaveChanges();
             return true;
+        }
+        public List<UserAccessData> UserAccessData()
+        {
+            var result = (from aspuser in _context.AspNetUsers
+                          join admin in _context.Admins
+                          on aspuser.Id equals admin.AspNetUserId into AdminGroup
+                          from admin in AdminGroup.DefaultIfEmpty()
+                          join physician in _context.Physicians
+                          on aspuser.Id equals physician.AspNetUserId into PhyGroup
+                          from physician in PhyGroup.DefaultIfEmpty()
+                          where (admin != null || physician != null) && (admin.IsDeleted == new BitArray(1) || physician.IsDeleted == new BitArray(1))
+                          select new UserAccessData
+                          {
+                              Id = admin != null ? admin.AdminId: (physician != null ? physician.PhysicianId : 0),
+                              AccountType = admin != null ? "Admin" : (physician != null ? "Physician" : null),
+                              AccountPOC = admin != null ? admin.FirstName + " " + admin.LastName : (physician != null ? physician.FirstName + " " + physician.LastName : null),
+                              Status = (int)(admin != null ? admin.Status : (physician != null ? physician.Status : null)),
+                              Phone = admin != null ? admin.Mobile : (physician != null ? physician.Mobile : null),
+                              OpenReq = _context.Requests.Count(r => r.PhysicianId == physician.PhysicianId),
+                              isAdmin = admin != null 
+                          }).ToList();
+            return result;
         }
     }
 }
