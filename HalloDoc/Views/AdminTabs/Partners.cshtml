@@ -1,0 +1,61 @@
+﻿@{
+    Layout = "_AdminDashboardLayout";
+    ViewData["Title"] = "Partners";
+}
+@using HalloDoc.Entity.Models.ViewModel;
+@model List<PhysiciansData>;
+
+<div class="d-flex justify-content-between align-items-center container pb-1 mt-5">
+    <div class="d-flex align-self-center">
+        <h3><b>Partners</b></h3>
+    </div>
+</div>
+<div class="bg-white reqform container p-3">
+    <div class="d-flex justify-content-between align-items-center ">
+        <div class="searchPatientRegion search m-1">
+            <i class="fa fa-search"></i>
+            @*<select class="form-select" id="SelectRegion" onchange="searchRegion()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
+                <option value="">All</option>
+            </select>*@
+        </div>
+        <div>
+            <a class="btn btn-outline-info" asp-controller="AdminTabs" asp-action=""> + Add Business</a>
+        </div>
+    </div>
+    <table class="table table-responsive my-2">
+        <thead>
+            <tr class="table-secondary">
+                <th>Profession </th>
+                <th>business Name</th>
+                <th> Email</th>
+                <th>Fax Number</th>
+                <th>Phone Number</th>
+                <th>Business Contact</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="">
+           @* @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="table-text px-3 text-center ">
+                        <input class="form-check-input" value="@item.notificationid" onchange="showbtn()" type="checkbox" @(item.IsNotificationStopped ? "checked" : " ")>
+                    </td>
+                    <td class="table-text">@item.FirstName @item.LastName</td>
+                    <td class="table-text">@item.Role</td>
+                    <td class="table-text">@item.IsNonDisclosureDoc</td>
+                    <td class="table-text">@item.Status</td>
+                    <td class="table-text text-center">
+                        <a class="btn btn-sm btn-outline-info mx-2" data-bs-toggle="modal" id="contactprovider" data-bs-target="#Contact" data-id="@item.Email">
+                            Contact
+                        </a>
+                        <a class="btn btn-sm  btn-outline-info" asp-action="EditProvider" asp-controller="AdminTabs" asp-route-PhysicianId="@item.notificationid">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+            }*@
+        </tbody>
+    </table>
+
+</div>

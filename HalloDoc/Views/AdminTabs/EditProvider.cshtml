@@ -14,11 +14,9 @@
         <h3 class="">@ViewData["Heading"] Physician Account</h3>
     </div>
     <div class=" btn d-flex justify-content-end">
-        <a asp-action="ProviderMenu" asp-controller="AdminTabs" class="btn border border-info shadow-none">
-            <strong class="text-info">
+        <button class="btn border border-info text-info shadow-none backButton">
                 <i class="fa fa-angle-left pe-1 text-info"> </i> Back
-            </strong>
-        </a>
+        </button>
     </div>
 </div>
 <div class="bg-white reqform p-3 container ">
@@ -337,6 +335,12 @@
             row.find('.view-btn').hide();
             row.find('.row-checkbox').prop('disabled', true);
         });
+    });
+    // Event listener for the "Back" button
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('backButton')) {
+            history.back();
+        }
     });
     //Region checkbox
     $(function () {

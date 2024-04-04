@@ -16,6 +16,7 @@ namespace HalloDoc.Repository.Repository
         public  void PatientReq(viewPatientReq viewPatientReq)
         {
             var Aspnetuser = new AspNetUser();
+            var role = new AspNetUserRole();
             var User = new User();
             var Request = new Request();
             var Requestclient = new RequestClient();
@@ -31,6 +32,10 @@ namespace HalloDoc.Repository.Repository
                 Aspnetuser.PhoneNumber = viewPatientReq.Mobile;
                 Aspnetuser.CreatedDate = DateTime.Now;
                 _context.AspNetUsers.Add(Aspnetuser);
+                _context.SaveChanges();
+                role.UserId = Aspnetuser.Id;
+                role.RoleId = "1";
+                _context.AspNetUserRoles.Add(role);
                 _context.SaveChanges();
                 User.AspNetUserId = Aspnetuser.Id;
                 User.FirstName = viewPatientReq.FirstName;

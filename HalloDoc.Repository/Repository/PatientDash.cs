@@ -50,7 +50,6 @@ namespace HalloDoc.Repository.Repository
                 TotalPages = totalPages,
             };
             return viewModel;
-           
         }
         public viewProfile viewProfile(int id)
         {
@@ -124,7 +123,6 @@ namespace HalloDoc.Repository.Repository
         }
         public viewPatientReq viewMeData(int id)
         {
-            
             var ViewPatientCreateRequest = _context.Users
                               .Where(r => (r.UserId) == id)
                               .Select(r => new viewPatientReq

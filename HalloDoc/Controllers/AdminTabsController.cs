@@ -30,6 +30,11 @@ namespace HalloDoc.Controllers
             _httpContextAccessor = httpContextAccessor;
             _IAdminTabs = IAdminTabs;
         }
+        public IActionResult ProviderLocation()
+        {
+            ViewBag.Log = _IAdminTabs.FindPhysicianLocation();
+            return View();
+        }
         public IActionResult AdminProfile(string UserId)
         {
             if(UserId == null)
@@ -37,10 +42,23 @@ namespace HalloDoc.Controllers
                 var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
                 UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
             }
+            ViewData["Heading"] = "My Profile";
             ViewBag.AssignCase = _IAdminDash.AssignCase();
            var result = _IAdminTabs.ViewAdminProfile(UserId);
             return View(result);
         }
+        public IActionResult AddAdminProfile()
+        {
+            ViewData["Heading"] = "Add Admin Account";
+            ViewBag.AssignCase = _IAdminDash.AssignCase();
+            return View("AdminProfile");
+        }
+        public IActionResult AddAdminAccount(AdminProfile admindata, int[] checkboxes)
+        {
+           bool res = _IAdminTabs.AddAdminAccount(admindata, checkboxes);
+            return RedirectToAction("AdminProfile");
+        }
+        
         public IActionResult ProfilePassword(string Password)
         {
             var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
@@ -110,7 +128,7 @@ namespace HalloDoc.Controllers
         {
             ViewData["Heading"] = "Edit";
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            ViewBag.Role = _IAdminTabs.Role();
+            ViewBag.Role = _IAdminTabs.RolePhyscian();
             var result = _IAdminTabs.ViewProviderProfile(PhysicianId);
             return View(result);
         }
@@ -118,7 +136,7 @@ namespace HalloDoc.Controllers
         {
             ViewData["Heading"] = "Add";
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            ViewBag.Role = _IAdminTabs.Role();
+            ViewBag.Role = _IAdminTabs.RolePhyscian();
             return View("EditProvider");
         }
         public IActionResult EditPassword(int PhysicianId,string Password)
@@ -237,10 +255,10 @@ namespace HalloDoc.Controllers
             var res = _IAdminTabs.UserAccessData(AccountType);
             return View(res);
         }
-        public async Task<IActionResult> ProviderLocation()
+        public IActionResult Partners()
         {
-            ViewBag.Log = _IAdminTabs.FindPhysicianLocation();
-            return View();
+              return View();
         }
+       
     }
 }

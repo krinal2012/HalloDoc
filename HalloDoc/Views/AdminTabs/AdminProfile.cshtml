@@ -10,14 +10,12 @@
 
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
     <div class="d-flex align-self-center">
-        <h3 class="">My Profile</h3>
+        <h3 class="">@ViewData["Heading"]</h3>
         </div>
     <div class=" btn d-flex justify-content-end">
-        <a asp-action="Index" asp-controller="Admin" class="btn border border-info shadow-none">
-            <strong class="text-info">
-                <i class="fa fa-angle-left pe-1 text-info"> </i> Back
-            </strong>
-        </a>
+        <button class="btn border border-info text-info shadow-none backButton">
+            <i class="fa fa-angle-left pe-1 text-info"> </i> Back
+        </button>
     </div>
 </div>
 <div class="bg-white reqform p-3 container ">
@@ -46,7 +44,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-outline-info" asp-action="ProfilePassword" asp-controller="AdminTabs">Reset Password</button>
+            <button type="submit" class="btn btn-outline-info reset" asp-action="ProfilePassword" asp-controller="AdminTabs">Reset Password</button>
         </div>
     </form>
     <form class="bg-white sbox" asp-action="EditAdministratorInfo" asp-controller="AdminTabs" id="AdministratorInfoForm">
@@ -137,10 +135,21 @@
             <input type="submit" class=" btn bg-info text-white rounded px-3 submit" value="Save" style="display: none;">
         </div>
     </form>
+    <div class=" d-flex justify-content-end">
+        <button type="button" class=" btn btn-success text-white rounded px-3 me-2 submit-all add">Add Account</button>
+    </div>
 </div>
 
 <script>
     $(document).ready(function(){
+        if ("@ViewData["Heading"]" == "Add Admin Account") {
+            $(".editprofile, .reset, .save, .delete").css("display", "none");
+            $("input, textarea, button, select").removeAttr('disabled');
+        }
+        if ("@ViewData["Heading"]" == "My Profile") {
+            $(".add").css("display", "none");
+
+        }
         $(".editprofile").click(function () {
             var form = $(this).closest('form');
             form.find("input").removeAttr('disabled');
@@ -148,7 +157,12 @@
             $(this).css("display", "none");
         });
     });
-
+    // Event listener for the "Back" button 
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('backButton')) {
+            history.back(); 
+        }
+    });
     $(function () {
         $('#save').on('click', function () {
             let checkboxes = document.querySelectorAll('input[name="RegionIds"]:checked');
@@ -162,7 +176,38 @@
 
             $('#AdministratorInfoForm').submit();
         });
-
+    });
+    $('.submit-all').click(function () {
+        var physicianData = {}; // This will hold all the form data
+        $('form').each(function () {
+            var formData = $(this).serializeArray();
+            formData.forEach(function (item) {
+                if (physicianData[item.name]) {
+                    if (!Array.isArray(physicianData[item.name])) {
+                        physicianData[item.name] = [physicianData[item.name]];
+                    }
+                    physicianData[item.name].push(item.value);
+                } else {
+                    physicianData[item.name] = item.value;
+                }
+            });
+        });
+        var checkboxes = [];
+        $('input[name="boardcheck"]:checked').each(function () {
+            checkboxes.push(this.value);
+        });
+        console.log(physicianData);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("AddAdminAccount", "AdminTabs")', 
+            data: { AdminProfile: physicianData, checkboxes: checkboxes },
+            success: function (response) {
+                console.log('Data sent successfully', response);
+            },
+            error: function (error) {
+                console.log('Error sending data', error);
+            }
+        });
     });
 </script>
 

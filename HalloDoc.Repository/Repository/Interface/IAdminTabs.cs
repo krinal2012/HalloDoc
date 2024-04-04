@@ -6,9 +6,9 @@ namespace HalloDoc.Repository.Repository.Interface
 {
     public interface IAdminTabs
     {
-
-        public List<Role> Role();
+        public List<Role> RolePhyscian();
         public AdminProfile ViewAdminProfile(string UserId);
+        public bool AddAdminAccount(AdminProfile admindata, int[] checkboxes);
         public bool ProfilePassword(string Password, int UserId);
         public bool EditAdministratorInfo(AdminProfile AdminProfile);
         public bool EditBillingInfo(AdminProfile AdminProfile);

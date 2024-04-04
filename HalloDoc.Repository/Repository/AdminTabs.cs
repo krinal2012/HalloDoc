@@ -56,9 +56,29 @@ namespace HalloDoc.Repository.Repository
             return v;
 
         }
-        public List<Role> Role()
+        public bool AddAdminAccount(AdminProfile admindata, int[] checkboxes)
         {
-            var role = _context.Roles.ToList();
+            var Aspnetuser = new AspNetUser();
+            var AspNetUserRoles = new AspNetUserRole();
+            Guid g = Guid.NewGuid();
+            Aspnetuser.Id = g.ToString();
+            Aspnetuser.UserName = admindata.UserName;
+            Aspnetuser.PasswordHash = admindata.Password;
+            Aspnetuser.Email = admindata.Email;
+            Aspnetuser.PhoneNumber = admindata.Mobile;
+            Aspnetuser.CreatedDate = DateTime.Now;
+            _context.AspNetUsers.Add(Aspnetuser);
+            _context.SaveChanges();
+
+            AspNetUserRoles.UserId = Aspnetuser.Id;
+            AspNetUserRoles.RoleId = "2";
+            _context.AspNetUserRoles.Add(AspNetUserRoles);
+            _context.SaveChanges();
+            return true;
+        }
+        public List<Role> RolePhyscian()
+        {
+            var role = _context.Roles.Where(r=>r.AccountType==3).ToList();
             return (role);
         }
         public bool ProfilePassword(string Password, int UserId)
@@ -642,7 +662,6 @@ namespace HalloDoc.Repository.Repository
                             Longitude = r.Longitude,
                             Latitude = r.Latitude,
                             PhysicianName = r.PhysicianName
-
                         }).ToList();
             return pl;
 

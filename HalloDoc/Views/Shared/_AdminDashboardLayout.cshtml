@@ -72,12 +72,12 @@
                             </a>
                             <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item NavDropdown" asp-action="ProviderMenu" asp-controller="AdminTabs">Provider</a>
-                                <a class="dropdown-item NavDropdown" href="#">Scheduling</a>
+                                <a class="dropdown-item NavDropdown" asp-action="Index" asp-controller="Scheduling">Scheduling</a>
                                 <a class="dropdown-item NavDropdown" href="#"> Invoicing</a>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-2 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" >Partners</a>
+                            <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/Partners") ? "activeNav" : "")" asp-action="Partners" asp-controller="AdminTabs">Partners</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link dropdown px-2 text-dark @(path.StartsWith("/AdminTabs/Access") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
