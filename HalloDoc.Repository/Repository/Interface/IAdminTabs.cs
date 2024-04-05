@@ -30,5 +30,6 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool DeleteRole(int RoleId);
         public List<UserAccessData> UserAccessData(string AccountType);
         public List<PhysicianLocation> FindPhysicianLocation();
+        public List<Partners> PartnersData();
     }
 }

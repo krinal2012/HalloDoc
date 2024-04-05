@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
@@ -89,7 +90,23 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3 text-dark @(path.StartsWith("/PatientProfile/PatientProfile") ? "activeNav" : "")" asp-action="PatientProfile" asp-controller="PatientProfile">Records</a>
+                            <a class="nav-link dropdown px-2 text-dark @(path.StartsWith("/AdminTabs/") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Records
+                            </a>
+                            <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item NavDropdown" asp-action="" asp-controller="AdminTabs">Search Records</a>
+                                <a class="dropdown-item NavDropdown" asp-action="" asp-controller="AdminTabs"> Email logs
+                                </a>
+                                <a class="dropdown-item NavDropdown" asp-action="" asp-controller="AdminTabs">
+                                    SMS logs
+                                </a>
+                                <a class="dropdown-item NavDropdown" asp-action="" asp-controller="AdminTabs">
+                                    Patient Records
+                                </a>
+                                <a class="dropdown-item NavDropdown" asp-action="" asp-controller="AdminTabs">
+                                    Blocked History
+                                </a>
+                            </div>
                         </li>
                       
                     </ul>
@@ -115,22 +132,16 @@
             </ul>
         </div>
     </div>
-
     <main role="main" class="container-fluid pb-3">     
         @RenderBody()
     </main>
-
-
     <footer class="child fixed-bottom p-3 foot text-center">
     </footer>
     <script>
-
         (function () {
             'use strict'
-
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
             var forms = document.querySelectorAll('.needs-validation')
-
             // Loop over them and prevent submission
             Array.prototype.slice.call(forms)
                 .forEach(function (form) {
@@ -144,14 +155,12 @@
                     }, false)
                 })
         })()
-
-        </script>
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/patient.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
-  
 </body>
 </html>
 

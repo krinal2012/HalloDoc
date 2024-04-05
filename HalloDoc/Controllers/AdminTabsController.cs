@@ -212,7 +212,6 @@ namespace HalloDoc.Controllers
         }
         public IActionResult CreateRole()
         {
-          
             return View();
         }
         public IActionResult EditRole(int RoleId)
@@ -257,7 +256,8 @@ namespace HalloDoc.Controllers
         }
         public IActionResult Partners()
         {
-              return View();
+            var res = _IAdminTabs.PartnersData();
+            return View(res);
         }
        
     }

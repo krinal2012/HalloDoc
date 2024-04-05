@@ -24,7 +24,7 @@
             <label for="FormControlInput2" class="form-label">Last Name</label>            
         </div>
         <div class="mb-3 col-lg-6 form-floating">
-            <input type="date"  asp-for="DOB" class="form-control" id="Date">
+            <input type="date" asp-for="DOB" class="form-control" id="Date" max="@DateTime.Now.ToString("yyyy-MM-dd")">
             <label class="form-label" for="Date">Date of Birth</label>
         </div>
     </div>

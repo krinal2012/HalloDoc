@@ -74,6 +74,40 @@ namespace HalloDoc.Repository.Repository
             AspNetUserRoles.RoleId = "2";
             _context.AspNetUserRoles.Add(AspNetUserRoles);
             _context.SaveChanges();
+           
+            var Admin = new Admin();
+            Admin.AspNetUserId = Aspnetuser.Id;
+            Admin.FirstName = admindata.FirstName;
+            Admin.LastName = admindata.LastName;
+            Admin.Status = 1;
+            //Admin.RoleId = admindata.Role;
+            Admin.Email = admindata.Email;
+            Admin.Mobile = admindata.Mobile;
+            Admin.IsDeleted = new BitArray(1);
+            Admin.IsDeleted[0] = false;
+            Admin.Address1 = admindata.Address1;
+            Admin.Address2 = admindata.Address2;
+            Admin.City = admindata.City;
+            Admin.Zip = admindata.ZipCode;
+            Admin.CreatedDate = DateTime.Now;
+            //Admin.CreatedBy = AdminId;
+            _context.Admins.Add(Admin);
+            _context.SaveChanges();
+
+            if (admindata.RegionIds != null)
+            {
+                List<int> Regionsid = admindata.RegionIdList.Split(',').Select(int.Parse).ToList();
+                foreach (var item in Regionsid)
+                {
+                    AdminRegion ar = new()
+                    {
+                        RegionId = item,
+                        AdminId = Admin.AdminId
+                    };
+                    _context.AdminRegions.Add(ar);
+                    _context.SaveChanges();
+                }
+            }
             return true;
         }
         public List<Role> RolePhyscian()
@@ -650,8 +684,6 @@ namespace HalloDoc.Repository.Repository
           
             return result;
         }
-
-        #region Find_Location_Physician
         public List<PhysicianLocation> FindPhysicianLocation()
         {
             List<PhysicianLocation> pl = _context.PhysicianLocations
@@ -666,6 +698,19 @@ namespace HalloDoc.Repository.Repository
             return pl;
 
         }
-        #endregion
+        public List<Partners> PartnersData()
+        {
+            var result = (from Hp in _context.HealthProfessionals
+                          join hpt in _context.HealthProfessionalTypes
+                          on Hp.Profession equals hpt.ProfessionName into AdminGroup
+                          select new Partners
+                          {
+                             
+                          }).ToList();
+           
+
+            return result;
+        }
+
     }
 }

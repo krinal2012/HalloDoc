@@ -20,12 +20,8 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
         }
-        #region Scheduling
-
         public void AddShift(SchedulingData model, List<string?>? chk, string adminId)
         {
-
-
             var shiftid = _context.Shifts.Where(u => u.PhysicianId == model.physicianid).Select(u => u.ShiftId).ToList();
             if (shiftid.Count() > 0)
             {
@@ -71,7 +67,7 @@ namespace HalloDoc.Repository.Repository
             DateTime curdate = model.shiftdate;
             ShiftDetail shiftdetail = new ShiftDetail();
             shiftdetail.ShiftId = shift.ShiftId;
-            shiftdetail.ShiftDate = curdate;
+            shiftdetail.ShiftDate = model.shiftdate;
             shiftdetail.RegionId = model.regionid;
             shiftdetail.StartTime = model.starttime;
             shiftdetail.EndTime = model.endtime;
@@ -166,7 +162,6 @@ namespace HalloDoc.Repository.Repository
 
             }
         }
-
         public void ViewShift(int shiftdetailid)
         {
             SchedulingData modal = new SchedulingData();
@@ -189,7 +184,6 @@ namespace HalloDoc.Repository.Repository
             modal.shiftdetailid = shiftdetailid;
 
         }
-
         public void ViewShiftreturn(SchedulingData modal)
         {
             var shiftdetail = _context.ShiftDetails.FirstOrDefault(u => u.ShiftDetailId == modal.shiftdetailid);
@@ -204,6 +198,6 @@ namespace HalloDoc.Repository.Repository
             _context.ShiftDetails.Update(shiftdetail);
             _context.SaveChanges();
         }
-        #endregion
+      
     }
 }

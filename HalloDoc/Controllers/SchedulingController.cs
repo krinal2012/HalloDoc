@@ -68,7 +68,7 @@ namespace HalloDoc.Controllers
                         physicians = physician,
                         shiftdetails = _context.ShiftDetails.Include(u => u.Shift).ToList()
                     };
-                    return PartialView("../Scheduling/_DayWise", day);
+                    return PartialView("_DayWise", day);
 
                 case "_WeekWise":
                     WeekWiseScheduling week = new WeekWiseScheduling
@@ -77,7 +77,7 @@ namespace HalloDoc.Controllers
                         physicians = physician,
                         shiftdetails = _context.ShiftDetails.Include(u => u.Shift).ThenInclude(u => u.Physician).ToList()
                     };
-                    return PartialView("../Scheduling/_WeekWise", week);
+                    return PartialView("_WeekWise", week);
 
                 case "_MonthWise":
                     MonthWiseScheduling month = new MonthWiseScheduling
@@ -85,24 +85,21 @@ namespace HalloDoc.Controllers
                         date = currentDate,
                         shiftdetails = _context.ShiftDetails.Include(u => u.Shift).ThenInclude(u => u.Physician).ToList()
                     };
-                    return PartialView("../Scheduling/_MonthWise", month);
+                    return PartialView("_MonthWise", month);
 
                 default:
-                    return PartialView("../Scheduling/_DayWise");
+                    return PartialView("_DayWise");
             }
         }
 
-
         public IActionResult AddShift(SchedulingData model)
         {
-            string adminId = Crredntials.UserID();
+            string adminId = Crredntials.AspNetUserId();
             var chk = Request.Form["repeatdays"].ToList();
             _scheduling.AddShift(model, chk, adminId);
             return RedirectToAction("Index");
 
         }
-
-
 
         public SchedulingData viewshift(int shiftdetailid)
         {

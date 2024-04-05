@@ -50,7 +50,7 @@
             <label for="Lastname" class="form-label">Last Name</label>
         </div>
         <div class="mb-3 col-lg-6 form-floating">
-            <input asp-for="DOB" type="date" class="form-control" >
+            <input asp-for="DOB" type="date" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
             <label class="form-label" for="Date">Date of Birth</label>
         </div>
     </div>

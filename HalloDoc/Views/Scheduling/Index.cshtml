@@ -38,6 +38,11 @@
     td {
         vertical-align: top;
     }
+    .dot{
+        height: 30px;
+        width: 54px;
+        border-radius: 13%;
+    }
 </style>
 <div class="container-fluid dashboard">
     <div class="d-flex justify-content-between">
@@ -67,35 +72,34 @@
             </div>
 
             <div class="btns">
-                <button type="button" class="btn btn-info text-white">Providers On Call</button>
-                <button type="button" class="btn btn-info text-white">Shifts For Review</button>
-                <button type="button" class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#addShiftModal">Add New Shifts</button>
+                <button type="button" class="btn btn-info ">Providers On Call</button>
+                <button type="button" class="btn btn-info">Shifts For Review</button>
+                <button type="button" class="btn btn-info " data-bs-toggle="modal" data-bs-target="#addShiftModal">Add New Shifts</button>
             </div>
         </div>
         <div class="d-none" id="currentDateValue">
             @DateTime.Now.Date
         </div>
         <div class="h6 mt-3" id="showDate">
-            @DateTime.Now.DayOfWeek,
-            @DateTime.Now.Date
+            @DateTime.Now.DayOfWeek,@DateTime.Now.Date
         </div>
         <div class="d-flex justify-content-end">
             <div class="shifts d-flex">
                 <div class="d-flex">
-                    <span class="dot text-center text-white me-1" style="height: 30px;width: 54px;border-radius:13%;background-color:lightpink"></span> Pending Shifts
+                    <span class="dot me-1" style="background-color:lightpink"></span> Pending Shifts
                 </div>
                 <div class="d-flex ms-2">
-                    <span class="dot text-center text-white me-1" style="height: 30px;width: 54px;border-radius:13%;background-color:#73cd9b"></span> Approved Shifts
+                    <span class="dot me-1" style="background-color:#73cd9b"></span> Approved Shifts
                 </div>
             </div>
         </div>
         <div class="d-flex justify-content-between mt-3">
             <div class="calbtn">
-                <span class="dot bg-info text-center text-white me-1" id="prevDateBtn" style="height:27px;width:27px"><i class="fa-solid fa-chevron-left"></i></span>
+                <span class="dot bg-info text-center text-white me-1" id="prevDateBtn" ><i class="fa-solid fa-chevron-left"></i></span>
                 <span>
                     <i class="fa-solid fa-calendar-days"></i>
                 </span>
-                <span class="dot bg-info text-center text-white ms-1" id="nextDateBtn" style="height:27px;width:27px"><i class="fa-solid fa-chevron-right"></i></span>
+                <span class="dot bg-info text-center text-white ms-1" id="nextDateBtn" ><i class="fa-solid fa-chevron-right"></i></span>
             </div>
             <div class="d-flex">
                 <button type="button" onclick="loadSchedulingPartial('_DayWise')" class="btn btn-outline-info removeactive" id="Day">Day</button>
@@ -103,8 +107,7 @@
                 <button type="button" onclick="loadSchedulingPartial('_MonthWise')" class="btn btn-outline-info ms-2 removeactive" id="Month">Month</button>
             </div>
         </div>
-        <div class="calander mt-4">
-        </div>
+        <div class="calander mt-4">  </div>
     </div>
 </div>
 @*Add New Shift Modal*@
@@ -118,17 +121,19 @@
             <form asp-action="AddShift" asp-controller="Scheduling">
                 <div class="modal-body">
                     <div class="form-floating">
-                        <select class="form-select mb-3" id="region1" onchange="myFunction()" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
+                        <select asp-for="regionid" class="form-select mt-3 p-2" id="region1" onchange="myFunction()" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
                             <option value="">Search Region</option>
                         </select>
                       @*  <select class="form-select form-select-sm mt-3 p-2" required data-allow-clear="true" tabindex="-1" onchange="myFunction()" id="region1" asp-for="regionid" asp-items="@(new SelectList(ViewBag.RegionComboBox,"RegionId","RegionName"))" data-control="select2" data-placeholder="Select Level">
                             <option id="defaultreason" value="">All Region</option>
                         </select>*@
                     </div>
-                    <select class="form-select form-select-sm mt-3 p-2" required asp-for="physicianid" data-allow-clear="true" tabindex="-1" id="Physician" data-control="select2" data-placeholder="Select Level">
-                         @*<option>Select Physician</option> *@
+                    <div class="form-floating">
+                    <select class="form-select form-select-sm mt-3 p-2" required asp-for="physicianid" data-allow-clear="true" tabindex="-1" id="Physician" data-control="select2">
+                         <option value="">Select Physician</option> 
                     </select>
-                    <label for="region2">Select Physician</label>
+                    </div>
+                   @* <label for="region2">Select Physician</label>*@
                     <div class="form-floating mt-3">
                         <input asp-for="shiftdate" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" placeholder="Date">
                         <label for="floatingInput">Shift Date</label>
@@ -182,8 +187,6 @@
         </div>
     </div>
 </div>
-
-
 @*@View Shift Modal*@
 <div class="modal fade" id="viewShiftModal" tabindex="-1" aria-labelledby="viewShiftModalLabel1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -239,16 +242,19 @@
         </div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
 @section Scripts{
     <script>
         // Load View accoeding to day,month, week
         var regionid;
+       
         var filterDate = new Date($('#currentDateValue').text());
         loadSchedulingPartial('_DayWise');
         var currentPartial = localStorage.getItem("currentPartial");
         function loadSchedulingPartial(PartialName) {
             currentPartial = PartialName;
+         
             $.ajax({
                 url: '@Url.Action("LoadSchedulingPartial", "Scheduling")',
                 data: { PartialName: PartialName, date: filterDate.toISOString(), regionid: regionid },
@@ -268,7 +274,6 @@
                 url: '@Url.Action("GetPhysicianByRegion","Scheduling")?regionid=' + region,
                 cache: false,
                 success: function (response) {
-
                     console.log(response);
                     var s = '<option value="-1">Please Select</option>';
                     for (var i = 0; i < response.length; i++) {
@@ -286,7 +291,7 @@
             localStorage.getItem("currentPartial");
             $('.region').on('change', function () {
                 regionid = $(this).val();
-                console.log(regionid);
+                console.log("dan");
                 $.ajax({
                     url: '/Scheduling/LoadSchedulingPartial',
                     data: { PartialName: currentPartial, date: filterDate.toISOString(), regionid: regionid },
