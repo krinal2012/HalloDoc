@@ -270,7 +270,6 @@ namespace HalloDoc.Controllers
             {
                 ViewData["Heading"] = "Update";
             }
-            
             ViewBag.Professions = _context.HealthProfessionalTypes.ToList();
             var result = _IAdminTabs.EditPartners(VendorId);
             return View("PartnersAddEdit",result);
@@ -288,5 +287,15 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("Partners");
         }
+        public IActionResult DeleteBusiness(int VendorId)
+        {
+            bool res = _IAdminTabs.DeleteBusiness(VendorId);
+            if (res == true)
+            {
+                _notyf.Success("Business Deleted Successfully..");
+            }
+            return RedirectToAction("Partners");
+        }
+        
     }
 }

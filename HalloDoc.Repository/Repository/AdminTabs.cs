@@ -709,6 +709,7 @@ namespace HalloDoc.Repository.Repository
                           from asp in AdminGroup.DefaultIfEmpty()
                           where (searchValue == null || Hp.VendorName.Contains(searchValue))
                              && (Profession == 0 || Hp.Profession == Profession)
+                             && (Hp.IsDeleted== new BitArray(1))
                           select new Partners
                           {
                               VendorId = Hp.VendorId,
@@ -724,7 +725,6 @@ namespace HalloDoc.Repository.Repository
         public HealthProfessional EditPartners(int VendorId)
         {
             var result = _context.HealthProfessionals.Where(Req => Req.VendorId == VendorId).FirstOrDefault();
-
             return result;
         }
         public bool EditPartnersData(HealthProfessional hp)
@@ -749,7 +749,6 @@ namespace HalloDoc.Repository.Repository
             else
             {
                 var data = new HealthProfessional();
-
                 data.Profession = hp.Profession;
                 data.VendorName = hp.VendorName;
                 data.Email = hp.Email;
@@ -765,6 +764,14 @@ namespace HalloDoc.Repository.Repository
                 return true;
             }
         }
-
+        public bool DeleteBusiness(int VendorId)
+        {
+            HealthProfessional r = _context.HealthProfessionals.Where(x => x.VendorId == VendorId).FirstOrDefault();
+            r.IsDeleted[0] = true;
+            r.ModifiedDate = DateTime.Now;
+            _context.HealthProfessionals.Update(r);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }

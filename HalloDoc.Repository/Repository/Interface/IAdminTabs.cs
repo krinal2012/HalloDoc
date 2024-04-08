@@ -33,5 +33,6 @@ namespace HalloDoc.Repository.Repository.Interface
         public List<Partners> PartnersData(string searchValue, int Profession);
         public HealthProfessional EditPartners(int VendorId);
         public bool EditPartnersData(HealthProfessional hp);
+        public bool DeleteBusiness(int VendorId);
     }
 }
