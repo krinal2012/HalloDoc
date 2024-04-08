@@ -44,11 +44,6 @@ namespace HalloDoc.Controllers
             var result = _IAdminDash.NewRequestData(statusid, searchValue, page, pagesize, Region, sortColumn, sortOrder, requesttype);
             return PartialView(partialview, result);
         }
-        public IActionResult _new()
-        {
-            var result = _IAdminDash.NewRequestData(1, null, 1, 5, -1, null, null, -1);
-            return PartialView(result);
-        }
         public IActionResult viewCase(int RequestId, int RequestTypeId, int status)
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();

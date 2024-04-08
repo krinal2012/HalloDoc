@@ -64,42 +64,7 @@
                         </span>
                     </td>
                 }
-                @*@for (int i = 0; i < 24; i++)
-            {
-            if (shift.Count() > 0)
-            {
-            int flag = 0;
-            foreach (var item in shift)
-            {
-            var diff = item.Endtime.Hour - item.Starttime.Hour + 1;
-            if (item.Starttime.Hour <= i && item.Endtime.Hour >= i)
-            {
-            var perstart = (item.Starttime.Minute / 60.00) * 100;
-            int wid = 100;
-            if (item.Endtime.Minute != 0)
-            {
-            wid = 58;
-            }
-            perstart /= 2;
-            <td id="i_@obj.Physicianid" colspan="@diff" class="p-0" data-bs-toggle="modal" data-bs-target="#viewShiftModal">
-            <span class="dates d-flex align-items-center justify-content-center" style="margin-left:@perstart%;width:@wid%">
-            @item.Starttime-@item.Endtime
-            </span>
-            </td>
-            i += (@diff - 1);
-            flag = 1;
-            }
-            }
-            if (flag == 0)
-            {
-            <td id="i_@obj.Physicianid"></td>
-            }
-            }
-            else
-            {
-            <td id="i_@obj.Physicianid"></td>
-            }
-            } *@
+               
                 @for (int i = 0; i < 24; i++)
                 {
                     if (shift.Count() > 0)

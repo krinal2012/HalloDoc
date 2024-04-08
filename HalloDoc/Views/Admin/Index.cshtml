@@ -131,43 +131,34 @@
     var pageglobal = 1;
     var sortOrderglobal = false;
     var sortColumnglobal = "RequestedDate";
+
     $(document).ready(function () {
         console.log("Document ready");
-        var defaultPartial = '/Admin/_new';
+        $("[data-btn='new'][data-id='1']").click();
+    });
+
+    $(document).on("click", ".btn6", function () {
         var searchValue = document.getElementById('searchInput').value;
         var region = -1;
         var requesttype = -1;
-        console.log(statusidglobal +  btnnameglobal);
-        
+        console.log(statusidglobal + btnnameglobal);
+        var btnName = $(this).data("btn");
+        btnnameglobal = btnName;
+        var statusid = $(this).data("id");
+        statusidglobal = statusid;
+        console.log("Button clicked: " + btnName);
+        var statusid = $(this).data("id");
+        var page = $(this).data('page');
         $.ajax({
-            url: defaultPartial,
+            url: '@Url.Action("GetPartialView", "Admin")',
             method: 'GET',
+            data: { searchValue: searchValue, btnName: btnName, statusid: statusid, Region: region, requesttype: requesttype },
             success: function (data) {
                 $("#btnContent").html(data);
-                $(document).on("click", ".btn6", function () {
-                    var btnName = $(this).data("btn");
-                    btnnameglobal = btnName;                
-                    var statusid = $(this).data("id");
-                    statusidglobal = statusid;
-                    console.log("Button clicked: " + btnName);
-                    var statusid = $(this).data("id");
-                    var page = $(this).data('page');
-                    $.ajax({
-                        url: '@Url.Action("GetPartialView", "Admin")',
-                        method: 'GET',
-                        data: { searchValue: searchValue, btnName: btnName, statusid: statusid, Region: region, requesttype: requesttype },
-                        success: function (data) {
-                            $("#btnContent").html(data);
-                            console.log("data added");
-                        },
-                        error: function () {
-                            console.error('Error fetching partial view.');
-                        }
-                    });
-                });
+                console.log("data added");
             },
             error: function () {
-                console.error('Error fetching default partial view.');
+                console.error('Error fetching partial view.');
             }
         });
     });
@@ -185,6 +176,7 @@
             }
         });
     });
+
     function handleSearchClick() {
         var searchValue = document.getElementById('searchInput').value;
         var region = $("#SelectedRegion").val();

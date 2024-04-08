@@ -13,20 +13,27 @@
 <div class="bg-white reqform container p-3">
     <div class="d-flex justify-content-between align-items-center ">
         <div class="searchPatientRegion search m-1">
-            <i class="fa fa-search"></i>
-            @*<select class="form-select" id="SelectRegion" onchange="searchRegion()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
-                <option value="">All</option>
-            </select>*@
+            
+            <div class="search m-1">
+                <i class="fa fa-search bg-white " id="searchButton"></i>
+                <input type="text" class="form-control" placeholder="Search Vendors" id="searchVendor">
+            </div>
+            <div class="search m-1">
+                <i class="fa fa-search"></i>
+                <select class="form-select mb-3" id="Profession" onchange="handleSearchVendor()" asp-items="@(new SelectList(ViewBag.Professions,"HealthProfessionalId","ProfessionName"))">
+                    <option value="">All Profession</option>
+                </select>
+            </div>
         </div>
         <div>
-            <a class="btn btn-outline-info" asp-controller="AdminTabs" asp-action=""> + Add Business</a>
+            <a class="btn btn-outline-info" asp-action="PartnersAddEdit" asp-controller="AdminTabs"> + Add Business</a>
         </div>
     </div>
     <table class="table table-responsive my-2">
         <thead>
             <tr class="table-secondary">
                 <th>Profession </th>
-                <th>business Name</th>
+                <th>Vendor Name</th>
                 <th> Email</th>
                 <th>Fax Number</th>
                 <th>Phone Number</th>
@@ -34,7 +41,7 @@
                 <th class="text-center">Actions</th>
             </tr>
         </thead>
-        <tbody id="">
+        <tbody id="vendordata">
             @foreach (var item in Model)
             {
                 <tr>
@@ -45,11 +52,11 @@
                     <td class="table-text">@item.PhoneNumber</td>
                     <td class="table-text">@item.BusinessNumber</td>
                     <td class="table-text text-center">
-                        <a class="btn btn-sm btn-outline-info mx-2" data-bs-toggle="modal" id="contactprovider" data-bs-target="#Contact" data-id="@item.Email">
-                            Contact
-                        </a>
-                        <a class="btn btn-sm  btn-outline-info" asp-action="EditProvider" asp-controller="AdminTabs" asp-route-PhysicianId="@item.notificationid">
+                        <a class="btn btn-sm btn-outline-info mx-2" asp-action="PartnersAddEdit" asp-controller="AdminTabs" asp-route-VendorId="@item.VendorId">
                             Edit
+                        </a>
+                        <a class="btn btn-sm  btn-outline-info" asp-action="EditProvider" asp-controller="AdminTabs" asp-route-PhysicianId="@item.Profession">
+                           Delete
                         </a>
                     </td>
                 </tr>
@@ -57,3 +64,33 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('searchVendor').addEventListener('keyup', function (evt) {
+            if (evt.key === 'Enter') {
+                evt.preventDefault();
+                handleSearchVendor();
+            }
+        });
+    });
+    function handleSearchVendor() {
+        var searchValue = $('#searchVendor').val();
+        var Profession = $("#Profession").val();
+        console.log("Search value: " + searchValue);
+        console.log("Profession id: " + Profession);
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Partners", "AdminTabs")',
+            data: { searchValue: searchValue, Profession: Profession },
+            success: function (data) {
+                console.log("AJAX success");
+                var bodyContent = $(data).find('tbody').html();
+                $('#vendordata').html(bodyContent);
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    }
+</script>

@@ -5,9 +5,11 @@ using HalloDoc.Entity.Models;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Identity;
+using Org.BouncyCastle.Ocsp;
 using System.Collections;
 using System.Drawing;
 using System.Numerics;
+using System.Web.Helpers;
 using static HalloDoc.Entity.Models.Constant;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Region = HalloDoc.Entity.DataModels.Region;
@@ -74,7 +76,7 @@ namespace HalloDoc.Repository.Repository
             AspNetUserRoles.RoleId = "2";
             _context.AspNetUserRoles.Add(AspNetUserRoles);
             _context.SaveChanges();
-           
+
             var Admin = new Admin();
             Admin.AspNetUserId = Aspnetuser.Id;
             Admin.FirstName = admindata.FirstName;
@@ -112,7 +114,7 @@ namespace HalloDoc.Repository.Repository
         }
         public List<Role> RolePhyscian()
         {
-            var role = _context.Roles.Where(r=>r.AccountType==3).ToList();
+            var role = _context.Roles.Where(r => r.AccountType == 3).ToList();
             return (role);
         }
         public bool ProfilePassword(string Password, int UserId)
@@ -220,12 +222,13 @@ namespace HalloDoc.Repository.Repository
         }
         public bool changeNoti(int[] files, int region)
         {
-            List<PhysicianNotification> PhysicianNotification = (from noti in _context.PhysicianNotifications join 
-                                                                 phy in _context.Physicians on noti.PhysicianId equals phy.PhysicianId 
+            List<PhysicianNotification> PhysicianNotification = (from noti in _context.PhysicianNotifications
+                                                                 join
+                                                                 phy in _context.Physicians on noti.PhysicianId equals phy.PhysicianId
                                                                  where (region == -1 || phy.RegionId == region)
                                                                  select noti)
                                                                  .ToList();
-            foreach (var item in PhysicianNotification) 
+            foreach (var item in PhysicianNotification)
             {
                 if (files.Contains(item.PhysicianId))
                 {
@@ -250,35 +253,35 @@ namespace HalloDoc.Repository.Repository
         public PhysiciansData ViewProviderProfile(int PhysicianId)
         {
             PhysiciansData? v = (from p in _context.Physicians
-                               join Aspnetuser in _context.AspNetUsers
-                               on p.AspNetUserId equals Aspnetuser.Id into aspGroup
-                               from asp in aspGroup.DefaultIfEmpty()
-                               where p.PhysicianId == PhysicianId
-                               select new PhysiciansData
-                               {
-                                   Physicianid = PhysicianId,
-                                   UserName = asp.UserName,
-                                   Status = (state)p.Status,
-                                   LastName = p.LastName,
-                                   FirstName = p.FirstName,
-                                   Email = p.Email,
-                                   Mobile = p.Mobile,
-                                   Medicallicense = p.MedicalLicense,
-                                   NpiNumber = p.Npinumber,
-                                   SyncEmailaddress= p.SyncEmailAddress,
-                                   Address1 = p.Address1,
-                                   Address2 = p.Address2,
-                                   City = p.City,
-                                   ZipCode = p.Zip,
-                                   BusinessName = p.BusinessName,
-                                   BusinessWebsite = p.BusinessWebsite,
-                                   AdminNotes = p.AdminNotes,
-                                   IsNonDisclosureDoc=p.IsNonDisclosureDoc,
-                                   Isbackgrounddoc = p.IsBackgroundDoc[0],
-                                   Isagreementdoc = p.IsAgreementDoc[0],
-                                   Iscredentialdoc = p.IsCredentialDoc[0],
-                                   Islicensedoc = p.IsLicenseDoc[0]
-        }).FirstOrDefault();
+                                 join Aspnetuser in _context.AspNetUsers
+                                 on p.AspNetUserId equals Aspnetuser.Id into aspGroup
+                                 from asp in aspGroup.DefaultIfEmpty()
+                                 where p.PhysicianId == PhysicianId
+                                 select new PhysiciansData
+                                 {
+                                     Physicianid = PhysicianId,
+                                     UserName = asp.UserName,
+                                     Status = (state)p.Status,
+                                     LastName = p.LastName,
+                                     FirstName = p.FirstName,
+                                     Email = p.Email,
+                                     Mobile = p.Mobile,
+                                     Medicallicense = p.MedicalLicense,
+                                     NpiNumber = p.Npinumber,
+                                     SyncEmailaddress = p.SyncEmailAddress,
+                                     Address1 = p.Address1,
+                                     Address2 = p.Address2,
+                                     City = p.City,
+                                     ZipCode = p.Zip,
+                                     BusinessName = p.BusinessName,
+                                     BusinessWebsite = p.BusinessWebsite,
+                                     AdminNotes = p.AdminNotes,
+                                     IsNonDisclosureDoc = p.IsNonDisclosureDoc,
+                                     Isbackgrounddoc = p.IsBackgroundDoc[0],
+                                     Isagreementdoc = p.IsAgreementDoc[0],
+                                     Iscredentialdoc = p.IsCredentialDoc[0],
+                                     Islicensedoc = p.IsLicenseDoc[0]
+                                 }).FirstOrDefault();
             List<Region> regions = new List<Region>();
             regions = _context.PhysicianRegions
                   .Where(r => r.PhysicianId == PhysicianId)
@@ -387,14 +390,14 @@ namespace HalloDoc.Repository.Repository
                     string FilePath = "wwwroot\\Upload";
                     string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
                     string fileNameWithPath = Path.Combine(path, PhysiciansData.SignatureFile.FileName);
-                 
+
                     using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
                     {
                         PhysiciansData.SignatureFile.CopyTo(stream);
                     }
 
                     Data.Signature = PhysiciansData.SignatureFile.FileName;
-                   
+
                 }
                 if (PhysiciansData.PhotoFile != null)
                 {
@@ -414,7 +417,7 @@ namespace HalloDoc.Repository.Repository
                 _context.SaveChanges();
                 return true;
 
-                
+
             }
             else
             {
@@ -423,10 +426,10 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SaveProvider(int[] checkboxes, int physicianid)
         {
-            Physician data = _context.Physicians.Where(x=>x.PhysicianId == physicianid).FirstOrDefault();
-            foreach(var i in checkboxes)
+            Physician data = _context.Physicians.Where(x => x.PhysicianId == physicianid).FirstOrDefault();
+            foreach (var i in checkboxes)
             {
-                switch(i)
+                switch (i)
                 {
                     case 1:
                         data.IsAgreementDoc = new BitArray(1);
@@ -443,7 +446,7 @@ namespace HalloDoc.Repository.Repository
                         data.IsLicenseDoc = new BitArray(1);
                         data.IsLicenseDoc[0] = true; break;
                 }
-                
+
             }
             _context.Physicians.Update(data);
             _context.SaveChanges();
@@ -487,7 +490,7 @@ namespace HalloDoc.Repository.Repository
             Data.BusinessWebsite = PhysiciansData.BusinessWebsite;
             Data.AdminNotes = PhysiciansData.AdminNotes;
             Data.RoleId = Convert.ToInt32(PhysiciansData.Role);
-            Data.IsDeleted=new BitArray(1);
+            Data.IsDeleted = new BitArray(1);
             Data.Status = (short?)(state)PhysiciansData.Status;
             Data.CreatedBy = UserId;
             if (PhysiciansData.SignatureFile != null)
@@ -540,8 +543,8 @@ namespace HalloDoc.Repository.Repository
             _context.Physicians.Add(Data);
             _context.SaveChanges();
 
-            
-            if(PhysiciansData.RegionIdList != null)
+
+            if (PhysiciansData.RegionIdList != null)
             {
                 List<int> Regionsid = PhysiciansData.RegionIdList.Split(',').Select(int.Parse).ToList();
                 foreach (var item in Regionsid)
@@ -557,10 +560,10 @@ namespace HalloDoc.Repository.Repository
             }
 
             phyNoti.IsNotificationStopped = false;
-            phyNoti.PhysicianId= Data.PhysicianId;
+            phyNoti.PhysicianId = Data.PhysicianId;
             _context.PhysicianNotifications.Add(phyNoti);
             _context.SaveChanges();
-            
+
             return true;
         }
         public bool DeleteProvider(int PhysicianId)
@@ -592,7 +595,7 @@ namespace HalloDoc.Repository.Repository
             _context.SaveChanges();
 
             List<int> menus = roles.files.Split(',').Select(int.Parse).ToList();
-           
+
             foreach (var item in menus)
             {
                 var obj = new RoleMenu();
@@ -603,22 +606,22 @@ namespace HalloDoc.Repository.Repository
             }
             return true;
         }
-        public CreateRole ViewEditRole(int  RoleId)
+        public CreateRole ViewEditRole(int RoleId)
         {
             CreateRole? v = (from p in _context.Roles
-                             
-                                 where p.RoleId == RoleId
-                                 select new CreateRole
-                                 {
-                                    Role = p.Name,
-                                    AccountType = (AccountType)p.AccountType,
-                                 }).FirstOrDefault();
+
+                             where p.RoleId == RoleId
+                             select new CreateRole
+                             {
+                                 Role = p.Name,
+                                 AccountType = (AccountType)p.AccountType,
+                             }).FirstOrDefault();
             List<Menu> Menu = _context.Menus
                 .Where(req => req.AccountType == (short)v.AccountType).ToList();
             v.menus = Menu;
-            List<RoleMenu> rm= _context.RoleMenus
-                                .Where(obj=>obj.RoleId == RoleId).ToList();
-            v.rolemenus= rm;
+            List<RoleMenu> rm = _context.RoleMenus
+                                .Where(obj => obj.RoleId == RoleId).ToList();
+            v.rolemenus = rm;
             return v;
         }
         public bool SaveEditRole(CreateRole roles)
@@ -669,19 +672,19 @@ namespace HalloDoc.Repository.Repository
                           where (admin != null || physician != null) && (admin.IsDeleted == new BitArray(1) || physician.IsDeleted == new BitArray(1))
                           select new UserAccessData
                           {
-                              Id = admin != null ? admin.AdminId: (physician != null ? physician.PhysicianId : 0),
+                              Id = admin != null ? admin.AdminId : (physician != null ? physician.PhysicianId : 0),
                               AccountType = admin != null ? "Admin" : (physician != null ? "Physician" : null),
                               AccountPOC = admin != null ? admin.FirstName + " " + admin.LastName : (physician != null ? physician.FirstName + " " + physician.LastName : null),
                               Status = (int)(admin != null ? admin.Status : (physician != null ? physician.Status : null)),
                               Phone = admin != null ? admin.Mobile : (physician != null ? physician.Mobile : null),
                               OpenReq = _context.Requests.Count(r => r.PhysicianId == physician.PhysicianId),
-                              isAdmin = admin != null 
+                              isAdmin = admin != null
                           }).ToList();
-            if(AccountType!= null )
+            if (AccountType != null)
             {
                 result = result.Where(r => r.AccountType == "All" || r.AccountType == AccountType).ToList();
             }
-          
+
             return result;
         }
         public List<PhysicianLocation> FindPhysicianLocation()
@@ -698,18 +701,69 @@ namespace HalloDoc.Repository.Repository
             return pl;
 
         }
-        public List<Partners> PartnersData()
+        public List<Partners> PartnersData(string searchValue, int Profession)
         {
             var result = (from Hp in _context.HealthProfessionals
-                          join hpt in _context.HealthProfessionalTypes
-                          on Hp.Profession equals hpt.ProfessionName into AdminGroup
+                          join Hpt in _context.HealthProfessionalTypes
+                          on Hp.Profession equals Hpt.HealthProfessionalId into AdminGroup
+                          from asp in AdminGroup.DefaultIfEmpty()
+                          where (searchValue == null || Hp.VendorName.Contains(searchValue))
+                             && (Profession == 0 || Hp.Profession == Profession)
                           select new Partners
                           {
-                             
+                              VendorId = Hp.VendorId,
+                              Profession = asp.ProfessionName,
+                              Business = Hp.VendorName,
+                              Email = Hp.Email,
+                              FaxNumber = Hp.FaxNumber,
+                              PhoneNumber = Hp.PhoneNumber,
+                              BusinessNumber = Hp.BusinessContact
                           }).ToList();
-           
+            return result;
+        }
+        public HealthProfessional EditPartners(int VendorId)
+        {
+            var result = _context.HealthProfessionals.Where(Req => Req.VendorId == VendorId).FirstOrDefault();
 
             return result;
+        }
+        public bool EditPartnersData(HealthProfessional hp)
+        {
+            var Data = _context.HealthProfessionals.Where(req => req.VendorId == hp.VendorId).FirstOrDefault();
+            if (Data != null)
+            {
+                Data.Profession = hp.Profession;
+                Data.VendorName = hp.VendorName;
+                Data.Email = hp.Email;
+                Data.FaxNumber = hp.FaxNumber;
+                Data.PhoneNumber = hp.PhoneNumber;
+                Data.BusinessContact = hp.BusinessContact;
+                Data.Address = hp.Address;
+                Data.City = hp.City;
+                Data.Zip = hp.Zip;
+                Data.State = hp.State;
+                _context.HealthProfessionals.Update(Data);
+                _context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                var data = new HealthProfessional();
+
+                data.Profession = hp.Profession;
+                data.VendorName = hp.VendorName;
+                data.Email = hp.Email;
+                data.FaxNumber = hp.FaxNumber;
+                data.PhoneNumber = hp.PhoneNumber;
+                data.BusinessContact = hp.BusinessContact;
+                data.Address = hp.Address;
+                data.City = hp.City;
+                data.Zip = hp.Zip;
+                data.State = hp.State;
+                _context.HealthProfessionals.Add(data);
+                _context.SaveChanges();
+                return true;
+            }
         }
 
     }

@@ -254,11 +254,39 @@ namespace HalloDoc.Controllers
             var res = _IAdminTabs.UserAccessData(AccountType);
             return View(res);
         }
-        public IActionResult Partners()
+        public IActionResult Partners(string searchValue, int Profession)
         {
-            var res = _IAdminTabs.PartnersData();
+            ViewBag.Professions = _context.HealthProfessionalTypes.ToList();
+            var res = _IAdminTabs.PartnersData(searchValue, Profession);
             return View(res);
         }
-       
+        public IActionResult PartnersAddEdit(int VendorId)
+        {
+            if (VendorId == 0)
+            {
+                ViewData["Heading"] = "Add";
+            }
+            else
+            {
+                ViewData["Heading"] = "Update";
+            }
+            
+            ViewBag.Professions = _context.HealthProfessionalTypes.ToList();
+            var result = _IAdminTabs.EditPartners(VendorId);
+            return View("PartnersAddEdit",result);
+        }
+        public IActionResult EditPartnersData(HealthProfessional hp)
+        {
+            var result = _IAdminTabs.EditPartnersData(hp);
+            if (result==true)
+            {
+                _notyf.Success("Data edited Successfully...");
+            }
+            else
+            {
+                _notyf.Error("Data not Changed...");
+            }
+            return RedirectToAction("Partners");
+        }
     }
 }
