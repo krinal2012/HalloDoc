@@ -16,6 +16,8 @@ namespace HalloDoc.Entity.Models.ViewModel
         public int? notificationid { get; set; }
         public bool IsNotificationStopped { get; set; }
         public string? Role { get; set; }
+        public int? onCallStatus { get; set; } = 0;
+        public int? shiftid { get; set; }
         public int Physicianid { get; set; }
         public string? Aspnetuserid { get; set; }
         public string? UserName { get; set; }

@@ -709,7 +709,7 @@ namespace HalloDoc.Repository.Repository
                           from asp in AdminGroup.DefaultIfEmpty()
                           where (searchValue == null || Hp.VendorName.Contains(searchValue))
                              && (Profession == 0 || Hp.Profession == Profession)
-                             && (Hp.IsDeleted== new BitArray(1))
+                             && (Hp.IsDeleted == new BitArray(1))
                           select new Partners
                           {
                               VendorId = Hp.VendorId,
@@ -772,6 +772,40 @@ namespace HalloDoc.Repository.Repository
             _context.HealthProfessionals.Update(r);
             _context.SaveChanges();
             return true;
+        }
+        public List<User> PatientHistory(string fname, string lname, string email, string phone)
+        {
+            var His = _context.Users
+                     .Where(pp => (string.IsNullOrEmpty(fname) || pp.FirstName.Contains(fname))
+                               && (string.IsNullOrEmpty(lname) || pp.LastName.Contains(lname))
+                               && (string.IsNullOrEmpty(email) || pp.Email.Contains(email))
+                               && (string.IsNullOrEmpty(phone) || pp.Mobile.Contains(phone)))
+                     .ToList();
+
+            return His;
+        }
+        public List<PatientDashList> RecordsPatientExplore(int UserId)
+        {
+            List<PatientDashList> allData = (from req in _context.Requests
+                                                    join reqClient in _context.RequestClients
+                                                    on req.RequestId equals reqClient.RequestId into reqClientGroup
+                                                    from rc in reqClientGroup.DefaultIfEmpty()
+                                                    join phys in _context.Physicians
+                                                    on req.PhysicianId equals phys.PhysicianId into physGroup
+                                                    from p in physGroup.DefaultIfEmpty()
+                                                    where req.UserId == UserId 
+                                                    select new PatientDashList
+                                                    {
+                                                        PatientName = rc.FirstName + " " + rc.LastName,
+                                                        RequestedDate = (req.CreatedDate),
+                                                        Confirmation = req.ConfirmationNumber,
+                                                        Physician = p.FirstName + " " + p.LastName,
+                                                        ConcludedDate = req.CreatedDate,
+                                                        Status = (status)req.Status,
+                                                        RequestTypeId=req.RequestTypeId,
+                                                        RequestId=req.RequestId
+                                                    }).ToList();
+            return allData;
         }
     }
 }

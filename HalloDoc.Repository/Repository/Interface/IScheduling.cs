@@ -9,5 +9,6 @@ namespace HalloDoc.Repository.Repository.Interface
         public void ViewShiftreturn(SchedulingData modal);
         public bool EditShift(SchedulingData modal, string id);
         public bool ViewShiftDelete(SchedulingData modal, string id);
+        public List<PhysiciansData> PhysicianOnCall(int? region);
     }
 }

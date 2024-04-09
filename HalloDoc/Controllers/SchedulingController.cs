@@ -167,5 +167,15 @@ namespace HalloDoc.Controllers
 
             return RedirectToAction("Index");
         }
+        public IActionResult MDSOnCall(int? regionId)
+        {
+            ViewBag.AssignCase =  _IAdminDash.AssignCase();
+            List<PhysiciansData> v =  _scheduling.PhysicianOnCall(regionId);
+            if (regionId != null)
+            {
+                return Json(v);
+            }
+            return View("../Scheduling/MDSOnCall", v);
+        }
     }
 }

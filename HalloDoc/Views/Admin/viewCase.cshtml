@@ -15,10 +15,8 @@
         <btn class=" @Enum.GetName(typeof(RequestTypes),Model.RequestTypeId) mx-3 align-self-center p-2 rounded-pill text-white">@Enum.GetName(typeof(RequestTypes),Model.RequestTypeId)</btn>
     </div>
     <div class=" btn d-flex justify-content-end">
-        <a asp-action="Index" asp-controller="Admin" class="btn border border-info shadow-none">
-            <strong class="text-info">
-                <i class="fa fa-angle-left pe-1 text-info"> </i> Back
-            </strong>
+        <a  class="btn btn-outline-info shadow-none backButton">
+             <i class="fa fa-angle-left pe-1 text-info "> </i> Back
         </a>
     </div>
 </div>
@@ -117,3 +115,10 @@
     }
 </script>
 
+<script>
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('backButton')) {
+            history.back();
+        }
+    });
+</script>

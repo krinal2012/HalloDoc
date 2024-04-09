@@ -296,6 +296,15 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("Partners");
         }
-        
+        public IActionResult RecordsPatient(string firstname, string lastname, string email, string phone)
+        {
+            var res = _IAdminTabs.PatientHistory(firstname, lastname, email, phone);
+            return View("RecordsPatient", res);
+        }
+        public IActionResult RecordsPatientExplore(int UserId)
+        {
+            var res= _IAdminTabs.RecordsPatientExplore(UserId);
+            return View(res);
+        }
     }
 }
