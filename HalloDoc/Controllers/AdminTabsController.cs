@@ -58,7 +58,6 @@ namespace HalloDoc.Controllers
            bool res = _IAdminTabs.AddAdminAccount(admindata, checkboxes);
             return RedirectToAction("AdminProfile");
         }
-        
         public IActionResult ProfilePassword(string Password)
         {
             var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
@@ -304,6 +303,11 @@ namespace HalloDoc.Controllers
         public IActionResult RecordsPatientExplore(int UserId)
         {
             var res= _IAdminTabs.RecordsPatientExplore(UserId);
+            return View(res);
+        }
+        public IActionResult RecordsBlock(BlockHistory Formdata)
+        {
+            var res = _IAdminTabs.RecordsBlock(Formdata);
             return View(res);
         }
     }

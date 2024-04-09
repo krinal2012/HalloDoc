@@ -1,4 +1,5 @@
 ﻿                                                                                                                                                                                                                                                                                                        using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,17 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string PatientName { get; set; }
         public string Confirmation { get; set; }
         public string Physician { get; set; }
-
+        public string Email { get; set; }
+        public string? Mobile { get; set; }
+        public string? Notes { get; set; }
+        public bool? IsActive { get; set; }
+    }
+    public class BlockHistory
+    {
+        public string PatientName { get; set; }
+        public string Email { get; set; }
+        public string? Mobile { get; set; }
+        public DateTime? createdDate { get; set; }
+        public List<PatientDashList> pd { get; set; }
     }
 }

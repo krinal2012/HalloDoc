@@ -1,0 +1,101 @@
+﻿@{
+    Layout = "_AdminDashboardLayout";
+    ViewData["Title"] = "Patient Record";
+}
+@using HalloDoc.Entity.Models.ViewModel;
+@model BlockHistory;
+<div class="d-flex align-self-center m-3 ">
+    <h3><b>Block History</b></h3>
+</div>
+<div class="bg-white reqform container-fluid p-3 mx-2">
+    <form class="row bg-white " method="post" id="myform">
+        <div class="mb-3 col-lg-3 form-floating">
+            <input asp-for="PatientName" type="text" class="form-control" placeholder="First Name">
+            <label for="FormControlInput1" class="form-label">First Name</label>
+        </div>
+        <div class="mb-3 col-lg-3 form-floating">
+            <input type="date" asp-for="createdDate" class="form-control" id="createdDate">
+            <label class="form-label" for="Date">Created Date</label>
+        </div>
+        <div class="mb-3 col-lg-3 form-floating">
+            <input type="text" asp-for="Email" class="form-control" placeholder="abc@email.com"
+                   aria-describedby="emailHelp">
+            <label for="email" class="form-label">E-mail</label>
+        </div>
+        <div class="mb-3 col-lg-3 form-floating ">
+            <input type="text" asp-for="Mobile" class="form-control shadow-none" placeholder="123456">
+            <label for="Mobile" class="form-label">Phone Number</label>
+        </div>
+        <div class="d-flex justify-content-end">
+            <div class="m-2 shadow-none">
+                <a class="btn p-2 py-2 btn-outline-info text-info bg-white" id="clear" onclick="searchbtn(event)">
+                    Clear
+                </a>
+            </div>
+            <div class="m-2 shadow-none">
+                <a class="btn p-2 py-2 btn-info text-white" id="search" onclick="searchbtn(event)">
+                    Search
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-responsive my-2">
+        <thead>
+            <tr class="table-secondary">
+                <th>Patient Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Created Date</th>
+                <th>Notes</th>
+                <th>Is Active</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="patientbody">
+            @foreach (var item in Model.pd)
+            {
+                <tr>
+                    <td>@item.PatientName</td>
+                    <td>@item.Mobile</td>
+                    <td>@item.Email</td>
+                    <td>@item.createdDate.ToString("MMM d , yyyy")</td>
+                    <td>@item.Notes</td>
+                    <td class="table-text ">
+                        <input class="form-check-input" type="checkbox" disabled @(item.IsActive == true ? "checked" : " " )>
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-outline-info" asp-action="" asp-controller="AdminTabs" asp-route-UserId="">
+                            Unblock
+                        </a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+   
+    function searchbtn(event) {
+        var btnid = event.target.id;
+        console.log(btnid);
+        if (btnid == "clear") {
+            $('#myform').trigger('reset');
+        }
+        var formData = $('#myform').serialize(); // Serialize form data
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Recordsblock", "AdminTabs")',
+            data: formData, // Send serialized form data
+            success: function (data) {
+                var bodyContent = $(data).find('tbody').html();
+                $('#patientbody').html(bodyContent);
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    }
+</script>
+

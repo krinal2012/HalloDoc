@@ -1,5 +1,6 @@
 ﻿using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
+using Microsoft.AspNetCore.Http;
 using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Repository.Repository.Interface
@@ -36,5 +37,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool DeleteBusiness(int VendorId);
         public List<User> PatientHistory(string fname, string lname, string email, string phone);
         public List<PatientDashList> RecordsPatientExplore(int UserId);
+        public BlockHistory RecordsBlock(BlockHistory Formdata);
+        
     }
 }

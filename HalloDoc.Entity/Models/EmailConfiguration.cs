@@ -35,7 +35,7 @@ namespace HalloDoc.Entity.Models
             {
                 throw ex;
             }
-            return false;
+           
         }
         public async Task<bool> SendMailAsync(string To, string Subject, string Body, List<string> Attachments)
         {

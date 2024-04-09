@@ -4,13 +4,16 @@ using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Org.BouncyCastle.Ocsp;
 using System.Collections;
 using System.Drawing;
 using System.Numerics;
 using System.Web.Helpers;
+
 using static HalloDoc.Entity.Models.Constant;
+using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Region = HalloDoc.Entity.DataModels.Region;
 
@@ -787,25 +790,47 @@ namespace HalloDoc.Repository.Repository
         public List<PatientDashList> RecordsPatientExplore(int UserId)
         {
             List<PatientDashList> allData = (from req in _context.Requests
-                                                    join reqClient in _context.RequestClients
-                                                    on req.RequestId equals reqClient.RequestId into reqClientGroup
-                                                    from rc in reqClientGroup.DefaultIfEmpty()
-                                                    join phys in _context.Physicians
-                                                    on req.PhysicianId equals phys.PhysicianId into physGroup
-                                                    from p in physGroup.DefaultIfEmpty()
-                                                    where req.UserId == UserId 
-                                                    select new PatientDashList
-                                                    {
-                                                        PatientName = rc.FirstName + " " + rc.LastName,
-                                                        RequestedDate = (req.CreatedDate),
-                                                        Confirmation = req.ConfirmationNumber,
-                                                        Physician = p.FirstName + " " + p.LastName,
-                                                        ConcludedDate = req.CreatedDate,
-                                                        Status = (status)req.Status,
-                                                        RequestTypeId=req.RequestTypeId,
-                                                        RequestId=req.RequestId
-                                                    }).ToList();
+                                             join reqClient in _context.RequestClients
+                                             on req.RequestId equals reqClient.RequestId into reqClientGroup
+                                             from rc in reqClientGroup.DefaultIfEmpty()
+                                             join phys in _context.Physicians
+                                             on req.PhysicianId equals phys.PhysicianId into physGroup
+                                             from p in physGroup.DefaultIfEmpty()
+                                             where req.UserId == UserId
+                                             select new PatientDashList
+                                             {
+                                                 PatientName = rc.FirstName + " " + rc.LastName,
+                                                 RequestedDate = (req.CreatedDate),
+                                                 Confirmation = req.ConfirmationNumber,
+                                                 Physician = p.FirstName + " " + p.LastName,
+                                                 ConcludedDate = req.CreatedDate,
+                                                 Status = (status)req.Status,
+                                                 RequestTypeId = req.RequestTypeId,
+                                                 RequestId = req.RequestId
+                                             }).ToList();
             return allData;
+        }
+        public BlockHistory RecordsBlock(BlockHistory formData)
+        {
+            var data = (from req in _context.BlockRequests
+                        join r in _context.Requests on req.RequestId equals r.RequestId
+                        where (string.IsNullOrEmpty(formData.PatientName) || r.FirstName.Contains(formData.PatientName))
+                           && (formData.createdDate == null || req.CreatedDate.Value.Date == formData.createdDate)
+                           && (string.IsNullOrEmpty(formData.Email) || req.Email.Contains(formData.Email))
+                           && (string.IsNullOrEmpty(formData.Mobile) || req.PhoneNumber.Contains(formData.Mobile))
+                        select new PatientDashList
+                        {
+                            PatientName = r.FirstName,
+                            Email = req.Email,
+                            createdDate = (DateTime)req.CreatedDate,
+                            IsActive = req.IsActive[0],
+                            RequestId = Convert.ToInt32(req.RequestId),
+                            Mobile = req.PhoneNumber,
+                            Notes = req.Reason
+                        }).ToList();
+            BlockHistory bh = new BlockHistory();
+            bh.pd = data;
+            return bh;
         }
     }
 }
