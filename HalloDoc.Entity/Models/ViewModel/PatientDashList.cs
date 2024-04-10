@@ -38,6 +38,9 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string Email { get; set; }
         public string Mobile { get; set; }
         public List<SearchRecords> sr { get; set; }
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
+        public int PageSize { get; set; } = 5;
     }
 
     public class SearchRecords

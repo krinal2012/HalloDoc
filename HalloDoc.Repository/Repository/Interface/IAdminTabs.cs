@@ -39,6 +39,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public BlockHistory RecordsBlock(BlockHistory Formdata);
         public bool UnBlock(int reqId);
         public SearchInputs RecordsSearch(SearchInputs search);
+        public bool RecordsDelete(int reqId);
 
     }
 }

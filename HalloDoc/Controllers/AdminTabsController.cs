@@ -3,13 +3,9 @@ using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Models;
-using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections;
-using System.Drawing;
 using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Controllers
@@ -315,12 +311,21 @@ namespace HalloDoc.Controllers
             bool res = _IAdminTabs.UnBlock(reqId);
             return RedirectToAction("RecordsBlock"); 
         }
-
         public IActionResult RecordsSearch(SearchInputs search)
         {
             var res = _IAdminTabs.RecordsSearch(search);
             return View("RecordsSearch",res);
 
+        }
+        public IActionResult RecordsDelete(int reqId)
+        {
+            bool var = _IAdminTabs.RecordsDelete(reqId);
+            if (var)
+            {
+                _notyf.Success("Record deleted successfully");
+
+            }
+            return RedirectToAction("RecordsSearch");
         }
     }
 }
