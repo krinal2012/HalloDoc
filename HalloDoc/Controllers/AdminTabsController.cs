@@ -310,5 +310,17 @@ namespace HalloDoc.Controllers
             var res = _IAdminTabs.RecordsBlock(Formdata);
             return View(res);
         }
+        public IActionResult UnBlock(int reqId)
+        {
+            bool res = _IAdminTabs.UnBlock(reqId);
+            return RedirectToAction("RecordsBlock"); 
+        }
+
+        public IActionResult RecordsSearch(SearchInputs search)
+        {
+            var res = _IAdminTabs.RecordsSearch(search);
+            return View("RecordsSearch",res);
+
+        }
     }
 }

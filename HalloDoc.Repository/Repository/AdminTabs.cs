@@ -1,20 +1,13 @@
-﻿using Hallodoc.Entity.Models.ViewModel;
-using HalloDoc.Entity.DataContext;
+﻿using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Ocsp;
 using System.Collections;
-using System.Drawing;
-using System.Numerics;
-using System.Web.Helpers;
-
 using static HalloDoc.Entity.Models.Constant;
-using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Region = HalloDoc.Entity.DataModels.Region;
 
 namespace HalloDoc.Repository.Repository
@@ -832,5 +825,85 @@ namespace HalloDoc.Repository.Repository
             bh.pd = data;
             return bh;
         }
+        public bool UnBlock(int reqId)
+        {
+            BlockRequest r = _context.BlockRequests.Where(x => x.RequestId == reqId).FirstOrDefault();
+            r.IsActive[0] = true;
+            r.ModifiedDate = DateTime.Now;
+            _context.BlockRequests.Update(r);
+            _context.SaveChanges();
+
+            Request req = _context.Requests.Where(x => x.RequestId == reqId).FirstOrDefault();
+            req.Status = 1;
+            req.ModifiedDate = DateTime.Now;
+            _context.Requests.Update(req);
+            _context.SaveChanges();
+
+            return true;
+
+        }
+        public SearchInputs RecordsSearch(SearchInputs rm)
+        {
+            List<SearchRecords> allData = (from req in _context.Requests
+                                           join reqClient in _context.RequestClients
+                                           on req.RequestId equals reqClient.RequestId into reqClientGroup
+                                           from rc in reqClientGroup.DefaultIfEmpty()
+                                           join phys in _context.Physicians
+                                           on req.PhysicianId equals phys.PhysicianId into physGroup
+                                           from p in physGroup.DefaultIfEmpty()
+                                           join nts in _context.RequestNotes
+                                           on req.RequestId equals nts.RequestId into ntsgrp
+                                           from nt in ntsgrp.DefaultIfEmpty()
+                                           where    (rm.ReqStatus == 0 ||  req.Status == rm.ReqStatus) &&
+                                                    (rm.RequestTypeID == 0 || req.RequestTypeId == rm.RequestTypeID) &&
+                                                    (!rm.StartDOS.HasValue || req.CreatedDate.Date >= rm.StartDOS.Value.Date) &&
+                                                    (!rm.EndDOS.HasValue || req.CreatedDate.Date <= rm.EndDOS.Value.Date) &&
+                                                    (rm.PatientName.IsNullOrEmpty() || (req.FirstName + " " + req.LastName).ToLower().Contains(rm.PatientName.ToLower())) &&
+                                                    (rm.PhyName.IsNullOrEmpty() || (p.FirstName + " " + p.LastName).ToLower().Contains(rm.PhyName.ToLower())) &&
+                                                    (rm.Email.IsNullOrEmpty() || rc.Email.ToLower().Contains(rm.Email.ToLower())) &&
+                                                    (rm.Mobile.IsNullOrEmpty() || rc.PhoneNumber.ToLower().Contains(rm.Mobile.ToLower()))
+                                           orderby req.CreatedDate
+                                           select new SearchRecords
+                                           {
+                                               //Modifieddate = req.Modifieddate,
+                                               PatientName = req.FirstName + " " + req.LastName,
+                                               RequestTypeID = req.RequestTypeId,
+                                               DateOfService = req.CreatedDate,
+                                               Email = rc.Email ?? "-",
+                                               Mobile = rc.PhoneNumber ?? "-",
+                                               Address = rc.Address + "," + rc.City,
+                                               Zip = rc.ZipCode,
+                                               Status = (status)req.Status,
+                                               Physician = p.FirstName + " " + p.LastName ?? "-",
+                                               PhyNotes = nt != null ? nt.PhysicianNotes ?? "-" : "-",
+                                               AdminNotes = nt != null ? nt.AdminNotes ?? "-" : "-",
+                                               PatientNotes = rc.Notes ?? "-",
+                                               RequestID = req.RequestId,
+                                               Modifieddate = req.ModifiedDate
+                                           }).ToList();
+
+            SearchInputs data = new SearchInputs();
+            data.sr = allData;
+
+            for (int i = 0; i < data.sr.Count; i++)
+            {
+                if (data.sr[i].Status == (status)9)
+                {
+                    allData[i].CloseCaseDate = allData[i].Modifieddate;
+                }
+                else
+                {
+                    allData[i].CloseCaseDate = null;
+                }
+                if (allData[i].Status == (status)3 && allData[i].Physician != null)
+                {
+                    var res = _context.RequestStatusLogs.FirstOrDefault(x => (x.Status == 3) && (x.RequestId == allData[i].RequestID));
+                    allData[i].CancelByPhyNotes = res.Notes;
+                }
+            }
+            return data;
+        }
+
     }
 }
+                                                     

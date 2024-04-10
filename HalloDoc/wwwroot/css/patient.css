@@ -314,11 +314,14 @@ reqtype:focus {
 .calendar-table td {
     vertical-align: top;
 }
-
 .dot {
     height: 30px;
     width: 54px;
     border-radius: 13%;
+}
+
+.recordFont{
+    font-size:0.85rem;
 }
 /*media query*/
 @media only screen and (max-width: 600px) {

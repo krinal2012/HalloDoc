@@ -65,7 +65,7 @@
                         <input class="form-check-input" type="checkbox" disabled @(item.IsActive == true ? "checked" : " " )>
                     </td>
                     <td class="text-center">
-                        <a class="btn btn-sm btn-outline-info" asp-action="" asp-controller="AdminTabs" asp-route-UserId="">
+                        <a class="btn btn-sm btn-outline-info unblock" data-id="@item.RequestId">
                             Unblock
                         </a>
                     </td>
@@ -97,5 +97,40 @@
             }
         });
     }
+    $('.unblock').click(function (){
+        var reqId = $(this).data("id"); 
+        console.log(reqId);
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-info m-2 shadow-none text-white",
+                cancelButton: "btn btn-outline-info m-2"
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure you want to unblock this Request?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Unblock",
+            cancelButtonText: "Cancel",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log("Success");
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("UnBlock", "AdminTabs")',
+                    data: { reqId: reqId },
+                    success: function (data) {
+                        var bodyContent = $(data).find('tbody').html();
+                        $('#patientbody').html(bodyContent);
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            }
+        });
+    });
 </script>
 
