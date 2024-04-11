@@ -314,8 +314,7 @@ namespace HalloDoc.Controllers
         public IActionResult RecordsSearch(SearchInputs search)
         {
             var res = _IAdminTabs.RecordsSearch(search);
-            return View("RecordsSearch",res);
-
+            return View(res);
         }
         public IActionResult RecordsDelete(int reqId)
         {
