@@ -18,7 +18,7 @@
         <div class="row">
             <div class="mb-3 col-lg-6 form-floating">
                 <select class="form-select" id="Profession" asp-items="@(new SelectList(ViewBag.Professions,"HealthProfessionalId","ProfessionName"))" onchange="AssignVendor()" required>
-                    <option selected>Select Profession</option>
+                    <option value="">Select Profession</option>
                  </select>
                 <span class="invalid-feedback">
                     Please choose a Profession.

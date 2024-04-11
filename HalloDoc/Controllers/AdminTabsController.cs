@@ -94,10 +94,10 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("AdminProfile");
         }
-        public IActionResult ProviderMenu(int region=-1)
+        public IActionResult ProviderMenu(int page, int region=-1 )
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            var res = _IAdminTabs.PhysicianAll(region);
+            var res = _IAdminTabs.PhysicianAll(region, page);
             return View(res);
         }
         public IActionResult changeNoti(int[] files, int region=-1)
@@ -200,9 +200,9 @@ namespace HalloDoc.Controllers
             _notyf.Success("Account Deleted..");
             return RedirectToAction("Index", "Provider");
         }
-        public IActionResult AccessAccount()
+        public IActionResult AccessAccount(int page)
         {
-            var res = _context.Roles.Where(r=> r.IsDeleted == new BitArray(1)). ToList();
+            var res = _IAdminTabs.AccessAccount(page);
             return View(res);
         }
         public IActionResult CreateRole()
@@ -243,16 +243,16 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("AccessAccount");
         }
-        public IActionResult AccessUser(string AccountType)
+        public IActionResult AccessUser(string AccountType, int page)
         {
             ViewBag.AspNetRole = _IAdminDash.AspNetRole();
-            var res = _IAdminTabs.UserAccessData(AccountType);
+            var res = _IAdminTabs.UserAccessData(AccountType, page);
             return View(res);
         }
-        public IActionResult Partners(string searchValue, int Profession)
+        public IActionResult Partners(string searchValue, int Profession, int page)
         {
             ViewBag.Professions = _context.HealthProfessionalTypes.ToList();
-            var res = _IAdminTabs.PartnersData(searchValue, Profession);
+            var res = _IAdminTabs.PartnersData(searchValue, Profession, page);
             return View(res);
         }
         public IActionResult PartnersAddEdit(int VendorId)
@@ -291,9 +291,9 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("Partners");
         }
-        public IActionResult RecordsPatient(string firstname, string lastname, string email, string phone)
+        public IActionResult RecordsPatient(SearchInputs search)
         {
-            var res = _IAdminTabs.PatientHistory(firstname, lastname, email, phone);
+            var res = _IAdminTabs.PatientHistory(search);
             return View("RecordsPatient", res);
         }
         public IActionResult RecordsPatientExplore(int UserId)

@@ -236,16 +236,16 @@ reqtype:focus {
 }
 /*Buttons */
 .Patient {
-    background-color: #218524;
+    background-color: #5fbc61;
 }
 .Business {
     background-color: #0a7cb9;
 }
 .Family {
-    background-color: #f78d14;
+    background-color: #ed9124;
 }
 .Concierge {
-    background-color: #c92140;
+    background-color: #cd697b;
 }
 .txt-Patient {
     color: #5fbc61;
@@ -269,6 +269,10 @@ reqtype:focus {
 .pagination a:hover
  {
     background-color: #0dcaf0 !important;
+    color: #ffffff;
+}
+.pagination .active {
+    background-color: #0dcaf0;
     color: #ffffff;
 }
 /*Scheduling*/

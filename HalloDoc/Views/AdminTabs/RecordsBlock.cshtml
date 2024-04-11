@@ -38,6 +38,7 @@
                 </a>
             </div>
         </div>
+        <input type="hidden" asp-for="CurrentPage" id="CurrentPage" />
     </form>
 
     <table class="table table-responsive my-2">
@@ -74,14 +75,46 @@
             }
         </tbody>
     </table>
+    <nav aria-label="Page navigation example" class="pagenav">
+        <ul class="pagination pagination-container d-flex justify-content-center" id="pagination">
+            @{
+                int i;
+
+                if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage - 1)">&lt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                }
+                @for (i = 1; i <= Model.TotalPages; i++)
+                {
+
+                    <li class="page-item"><a data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                }
+                if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage + 1)">&gt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                }
+            }
+        </ul>
+    </nav>
 </div>
 <script>
-   
     function searchbtn(event) {
         var btnid = event.target.id;
         console.log(btnid);
         if (btnid == "clear") {
             $('#myform').trigger('reset');
+            $('#CurrentPage').val(1);
+        }
+        if (btnid == "search") {
+            $('#CurrentPage').val(1);
         }
         var formData = $('#myform').serialize(); // Serialize form data
         $.ajax({
@@ -91,6 +124,8 @@
             success: function (data) {
                 var bodyContent = $(data).find('tbody').html();
                 $('#patientbody').html(bodyContent);
+                var page = $(data).find('.pagenav').html();
+                $('#pagination').html(page);
             },
             error: function (error) {
                 console.log("Error:", error);
@@ -131,6 +166,14 @@
                 });
             }
         });
+    });
+    $(document).on('click', '.page-link', function (event) {
+        console.log("hhhh");
+        var page = $(this).data('page');
+        console.log(page);
+        $('#CurrentPage').val(page);
+        searchbtn(event);
+
     });
 </script>
 

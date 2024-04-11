@@ -202,8 +202,11 @@
         if (x.innerHTML == "Read More") {
             x.innerHTML = "Read Less";
         }
-        else {
+        else if (x.innerHTML == "Read Less") {
             x.innerHTML = "Read More";
+        }
+        else {
+            x.innerHTML = "Read Less";
         }
         var ids = document.getElementsByClassName(id);
         for (var i = 0; i < ids.length; i++) {

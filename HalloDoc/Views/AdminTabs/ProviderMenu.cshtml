@@ -3,7 +3,7 @@
     ViewData["Title"] = "Providers";
 }
 @using HalloDoc.Entity.Models.ViewModel;
-@model List<PhysiciansData>;
+@model PaginatedViewModel<PhysiciansData>;
 @Html.Partial("_ContactProviderModal.cshtml")
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-5">
     <div class="d-flex align-self-center">
@@ -14,7 +14,7 @@
     <div class="d-flex justify-content-between align-items-center ">
         <div class="searchPatientRegion search m-1">
             <i class="fa fa-search"></i>
-            <select class="form-select" id="SelectRegion" onchange="searchRegion()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
+            <select class="form-select" id="SelectRegion" onchange="searchRegion(event)" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
                 <option value="">All</option>
             </select>
         </div>
@@ -35,7 +35,7 @@
             </tr>
         </thead>
         <tbody id="providerbody">
-            @foreach (var item in Model)
+            @foreach (var item in Model.AdminList)
             {
                 <tr>
                     <td class="table-text px-3 text-center ">
@@ -57,23 +57,60 @@
             }
         </tbody>
     </table>
+    <input type="hidden" asp-for="CurrentPage" id="CurrentPage" />
+    <nav aria-label="Page navigation example" class="pagenav">
+        <ul class="pagination pagination-container d-flex justify-content-center" id="pagination">
+            @{
+                int i;
 
+                if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage - 1)">&lt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                }
+                @for (i = 1; i <= Model.TotalPages; i++)
+                {
+
+                    <li class="page-item"><a data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                }
+                if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage + 1)">&gt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                }
+            }
+        </ul>
+    </nav>
 </div>
 <script>
    function showbtn() {
         $('#saveChangesButton').show(); 
     }
-    function searchRegion() {
+    function searchRegion(event) {
+        var btnid = event.target.id;
+        console.log(btnid);
+        if (btnid == "SelectRegion") {
+            $('#CurrentPage').val(1);
+        }
         var region = $("#SelectRegion").val();
         console.log("Region id: " + region);
+        var page = $('#CurrentPage').val();
         $.ajax({
             type: "GET",
             url: '@Url.Action("ProviderMenu", "AdminTabs")',
-            data: {  Region: region },
+            data: {  Region: region , Page: page},
             success: function (data) {
                 console.log("AJAX success");
                 var bodyContent = $(data).find('tbody').html();
                 $('#providerbody').html(bodyContent);
+                var page = $(data).find('.pagenav').html();
+                $('#pagination').html(page);
             },
             error: function (error) {
                 console.log("Error:", error);
@@ -106,4 +143,13 @@
         document.getElementById('emailIdProvider').value = email;
     }
     document.getElementById('contactprovider').addEventListener('click', setemail);
+
+    $(document).on('click', '.page-link', function (event) {
+        console.log("hhhh");
+        var page = $(this).data('page');
+        console.log(page);
+        $('#CurrentPage').val(page);
+        searchRegion(event);
+
+    });
 </script>

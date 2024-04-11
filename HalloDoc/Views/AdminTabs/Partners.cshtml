@@ -3,7 +3,7 @@
     ViewData["Title"] = "Partners";
 }
 @using HalloDoc.Entity.Models.ViewModel;
-@model List<Partners>;
+@model PaginatedViewModel<Partners>;
 
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-5">
     <div class="d-flex align-self-center">
@@ -20,7 +20,7 @@
             </div>
             <div class="search m-1">
                 <i class="fa fa-search"></i>
-                <select class="form-select mb-3" id="Profession" onchange="handleSearchVendor()" asp-items="@(new SelectList(ViewBag.Professions,"HealthProfessionalId","ProfessionName"))">
+                <select class="form-select mb-3" id="Profession" onchange="handleSearchVendor(event)" asp-items="@(new SelectList(ViewBag.Professions,"HealthProfessionalId","ProfessionName"))">
                     <option value="">All Profession</option>
                 </select>
             </div>
@@ -42,7 +42,7 @@
             </tr>
         </thead>
         <tbody id="vendordata">
-            @foreach (var item in Model)
+            @foreach (var item in Model.AdminList)
             {
                 <tr>
                     <td class="table-text">@item.Profession</td>
@@ -63,6 +63,36 @@
             }
         </tbody>
     </table>
+    <input type="hidden" asp-for="CurrentPage" id="CurrentPage" />
+    <nav aria-label="Page navigation example" class="pagenav">
+        <ul class="pagination pagination-container d-flex justify-content-center" id="pagination">
+            @{
+                int i;
+
+                if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage - 1)">&lt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                }
+                @for (i = 1; i <= Model.TotalPages; i++)
+                {
+
+                    <li class="page-item"><a data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                }
+                if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage + 1)">&gt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                }
+            }
+        </ul>
+    </nav>
 </div>
 
 <script>
@@ -70,30 +100,45 @@
         document.getElementById('searchVendor').addEventListener('keyup', function (evt) {
             if (evt.key === 'Enter') {
                 evt.preventDefault();
-                handleSearchVendor();
+                handleSearchVendor(event);
             }
         });
     });
-    function handleSearchVendor() {
+    function handleSearchVendor(event) {
         var searchValue = $('#searchVendor').val();
         var Profession = $("#Profession").val();
+        var btnid = event.target.id;
+        console.log(btnid);
+        if (btnid == "Profession" || btnid == "searchVendor") {
+            $('#CurrentPage').val(1);
+        }
+        var page = $('#CurrentPage').val();
         console.log("Search value: " + searchValue);
         console.log("Profession id: " + Profession);
         $.ajax({
             type: "GET",
             url: '@Url.Action("Partners", "AdminTabs")',
-            data: { searchValue: searchValue, Profession: Profession },
+            data: { searchValue: searchValue, Profession: Profession , page: page},
             success: function (data) {
                 console.log("AJAX success");
                 var bodyContent = $(data).find('tbody').html();
                 $('#vendordata').html(bodyContent);
+                var page = $(data).find('.pagenav').html();
+                $('#pagination').html(page);
             },
             error: function (error) {
                 console.log("Error:", error);
             }
         });
     }
-   
+    $(document).on('click', '.page-link', function (event) {
+        console.log("hhhh");
+        var page = $(this).data('page');
+        console.log(page);
+        $('#CurrentPage').val(page);
+        handleSearchVendor(event);
+
+    });
     $('.deletebutton').on('click', function () {
         var VendorId = $(this).data("id");
         console.log(VendorId);

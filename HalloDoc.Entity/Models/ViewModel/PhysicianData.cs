@@ -24,12 +24,18 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
         public string? RegionIdList { get; set; }
+        [Required(ErrorMessage = "First name is required")]
         public string FirstName { get; set; } = null!;
         public string? LastName { get; set; }
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
         public string Email { get; set; } = null!;
+        [Compare("Email", ErrorMessage = "Email doesn't match.")]
         public string ConformEmail { get; set; } = null!;
         public string? Mobile { get; set; }
         public string? State { get; set; }
+        [StringLength(6, MinimumLength = 6, ErrorMessage = "It must be of 6 digits")]
+        [RegularExpression(@"([0-9]{6})", ErrorMessage = "It must be of 6 numerics")]
         public string? ZipCode { get; set; }
         public string? Medicallicense { get; set; }
         public string? Photo { get; set; }
@@ -50,7 +56,8 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Modifiedby { get; set; }
         public DateTime? Modifieddate { get; set; }
         public state? Status { get; set; }
-        public string BusinessName { get; set; } = null!;
+        [Required(ErrorMessage = "BusinessName is required")]
+        public string BusinessName { get; set; }
         public string BusinessWebsite { get; set; } = null!;
         public BitArray? Isdeleted { get; set; }
         public int? Roleid { get; set; }

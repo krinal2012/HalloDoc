@@ -148,7 +148,7 @@
             <div class="mb-3 col-lg-6 form-floating">
                 <input asp-for="BusinessName" type="text" class="form-control" placeholder="Business Name" disabled required>
                 <label for="BusinessName" class="form-label">Business Name</label>
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <span asp-validation-for="BusinessName" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
                 <input type="text" asp-for="BusinessWebsite" class="form-control" placeholder="Business Website" disabled>
@@ -181,7 +181,7 @@
                 </a>
             </div>
             <div class="form-floating mb-3">
-                <textarea rows="4" asp-for="AdminNotes" class="input-outline w-100 h-100 fs-6 form-control shadow-none" type="text" disabled required></textarea>
+                <textarea rows="4" asp-for="AdminNotes" class="input-outline w-100 h-100 fs-6 form-control shadow-none" type="text" disabled ></textarea>
                 <label class="inputs-lable fs-6">Admin Notes</label>
                 <span class="invalid-feedback">
                     Please add some text.

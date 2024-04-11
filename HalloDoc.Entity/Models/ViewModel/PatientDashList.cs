@@ -1,4 +1,5 @@
-﻿using static HalloDoc.Entity.Models.Constant;
+﻿using HalloDoc.Entity.DataModels;
+using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Entity.Models.ViewModel
 {
@@ -26,11 +27,16 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Mobile { get; set; }
         public DateTime? createdDate { get; set; }
         public List<PatientDashList> pd { get; set; }
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
+        public int PageSize { get; set; } = 5;
     }
     public class SearchInputs
     {
         public int ReqStatus { get; set; }
         public string PatientName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public int RequestTypeID { get; set; }
         public DateTime? StartDOS { get; set; }
         public DateTime? EndDOS { get; set; }
@@ -38,6 +44,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string Email { get; set; }
         public string Mobile { get; set; }
         public List<SearchRecords> sr { get; set; }
+        public List<User> User { get; set; }
         public int CurrentPage { get; set; } = 1;
         public int TotalPages { get; set; }
         public int PageSize { get; set; } = 5;

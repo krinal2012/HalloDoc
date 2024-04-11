@@ -43,6 +43,16 @@ namespace HalloDoc.Models
             }
             return UserID;
         }
+        public static string? CurrentStatus()
+        {
+            string? Status = _httpContextAccessor.HttpContext.Request.Cookies["Status"];
+            return Status;
+        }
+        public static string? CurrentStatusName()
+        {
+            string? Status = _httpContextAccessor.HttpContext.Request.Cookies["StatusName"];
+            return Status;
+        }
         public static string? AspNetUserId()
         {
             string cookieValue;

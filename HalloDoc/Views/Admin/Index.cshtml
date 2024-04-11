@@ -17,28 +17,52 @@
     
 </div>
 <div class="row mb-5 px-3">
-    <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6 as" data-btn="new" data-id="1">
+    <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6 @{
+                    if(Crredntials.CurrentStatus()=="1"){
+                                @Html.Raw("as")
+}
+}" data-btn="new" data-id="1">
         <i class="fa fa-solid fa-circle-plus me-2" aria-hidden="true"></i><b>New</b>
         <p class="h4">@Model.NewRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-i m-2 py-3 rounded text-start btn6" data-btn="pending" data-id="2">
+    <button class="col-lg col-3 btn btn-i m-2 py-3 rounded text-start btn6 @{
+                    if(Crredntials.CurrentStatus()=="2"){
+                                    @Html.Raw("as")
+}
+}" data-btn="pending" data-id="2">
         <i class="fa fa-user-md me-2" aria-hidden="true"></i><b>Pending</b>
         <p class="h4">@Model.PendingRequest</p>
     </button>
-    <button class=" col-lg col-3 btn btn-outline-success m-2 py-3  rounded text-start btn6" data-btn="active" data-id="3">
+    <button class=" col-lg col-3 btn btn-outline-success m-2 py-3  rounded text-start btn6 @{
+                    if(Crredntials.CurrentStatus()=="3"){
+                                    @Html.Raw("as")
+}
+}" data-btn="active" data-id="3">
         <i class="fa fa-check-square-o me-2" aria-hidden="true"></i><b>Active</b>
         <p class="h4">@Model.ActiveRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-b  py-3 m-2 rounded text-start btn6" data-btn="conclude" data-id="4">
+    <button class="col-lg col-3 btn btn-b  py-3 m-2 rounded text-start btn6 @{
+                    if(Crredntials.CurrentStatus()=="4"){
+                                    @Html.Raw("as")
+}
+}" data-btn="conclude" data-id="4">
         <i class="fa-solid fa-clock-rotate-left me-2" aria-hidden="true"></i>
         <b>Conclude </b>
         <p class="h4">@Model.ConcludeRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-c m-2 py-3  rounded text-start btn6" data-btn="toClose" data-id="5">
+    <button class="col-lg col-3 btn btn-c m-2 py-3  rounded text-start btn6 @{
+                    if(Crredntials.CurrentStatus()=="5"){
+                                    @Html.Raw("as")
+}
+}" data-btn="toClose" data-id="5">
         <i class="fa-solid fa-user-xmark me-2" aria-hidden="true"></i><b>To close </b>
         <p class="h4">@Model.ToCloseRequest</p>
     </button>
-    <button class=" col-lg col-3 btn btn-u m-2 py-3  rounded text-start btn6" data-btn="unpaid" data-id="6">
+    <button class=" col-lg col-3 btn btn-u m-2 py-3  rounded text-start btn6 @{
+                    if(Crredntials.CurrentStatus()=="6"){
+                                    @Html.Raw("as")
+}
+}" data-btn="unpaid" data-id="6">
         <i class="fa-solid fa-circle-dollar-to-slot me-2" aria-hidden="true"></i><b>Unpaid </b>
         <p class="h4">@Model.UnpaidRequest</p>
     </button>
@@ -118,15 +142,17 @@
 @Html.Partial("_RequestSupport.cshtml")
 @Html.Partial("_sendLink.cshtml")
 <script>
-    $(document).ready(function () {
-        $(".row > .btn").click(function () {
-            $(".row > .btn").removeClass("as");
-            $(this).addClass("as");
-        });
-    });
+    //$(document).ready(function () {
+    //    $(".row > .btn").click(function () {
+    //        $(".row > .btn").removeClass("as");
+    //        $(this).addClass("as");
+    //    });
+    //});
+   
+   
 </script>
 <script>   
-    var statusidglobal=1;
+    var statusidglobal= 1;
     var btnnameglobal="new";
     var pageglobal = 1;
     var sortOrderglobal = false;
@@ -134,7 +160,12 @@
 
     $(document).ready(function () {
         console.log("Document ready");
-        $("[data-btn='new'][data-id='1']").click();
+        //$("[data-btn='new'][data-id='1']").click();
+        $("[data-btn=@Crredntials.CurrentStatusName()][data-id=@Crredntials.CurrentStatus()]").click();
+        $(".row > .btn").click(function () {
+            $(".row > .btn").removeClass("as");
+            $(this).addClass("as");
+        });
     });
 
     $(document).on("click", ".btn6", function () {
@@ -148,6 +179,7 @@
         statusidglobal = statusid;
         console.log("Button clicked: " + btnName);
         var statusid = $(this).data("id");
+        
         var page = $(this).data('page');
         $.ajax({
             url: '@Url.Action("GetPartialView", "Admin")',

@@ -4,7 +4,7 @@
 }
 @using HalloDoc.Entity.Models.ViewModel;
 @using static HalloDoc.Entity.Models.Constant;
-@model List<UserAccessData>;
+@model PaginatedViewModel<UserAccessData>;
 
 <div class="d-flex align-items-center container pb-1 mt-4">
     <div class="d-flex align-self-center">
@@ -15,13 +15,13 @@
     <div class="d-flex justify-content-between align-items-center ">
         <div class="searchPatientRegion search m-1">
             <i class="fa fa-search"></i>
-            <select class="form-select" id="SelectRole" onchange="searchRole()" asp-items="@(new SelectList(ViewBag.AspNetRole,"Name","Name"))">
+            <select class="form-select" id="SelectRole" onchange="searchRole(event)" asp-items="@(new SelectList(ViewBag.AspNetRole,"Name","Name"))">
                 <option value="">All</option>
             </select>
         </div>
-         <div>
+        <div>
             <a class="btn btn-info" asp-controller="AdminTabs" asp-action="AddAdminProfile">Create Admin Account</a>
-        <a class="btn btn-info" asp-controller="AdminTabs" asp-action="AddProvider">Create Provider Account</a>
+            <a class="btn btn-info" asp-controller="AdminTabs" asp-action="AddProvider">Create Provider Account</a>
         </div>
     </div>
     <table class="table table-responsive my-2">
@@ -36,7 +36,7 @@
             </tr>
         </thead>
         <tbody id="rolebody">
-            @foreach (var item in Model)
+            @foreach (var item in Model.AdminList)
             {
                 <tr>
                     <td>@item.AccountType</td>
@@ -61,25 +61,71 @@
                 </tr>
 
             }
-            </tbody>
-        </table>
-    </div>
-    <script>
-    function searchRole() {
+        </tbody>
+    </table>
+    <input type="hidden" asp-for="CurrentPage" id="CurrentPage" />
+    <nav aria-label="Page navigation example" class="pagenav">
+        <ul class="pagination pagination-container d-flex justify-content-center" id="pagination">
+            @{
+                int i;
+
+                if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage - 1)">&lt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                }
+                @for (i = 1; i <= Model.TotalPages; i++)
+                {
+
+                    <li class="page-item"><a data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                }
+                if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage + 1)">&gt;</a></li>
+                }
+                else
+                {
+                    <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                }
+            }
+        </ul>
+    </nav>
+</div>
+<script>
+    function searchRole(event) {
         var region = $("#SelectRole").val();
         console.log(region);
+        var btnid = event.target.id;
+        console.log(btnid);
+        if (btnid == "SelectRole") {
+            $('#CurrentPage').val(1);
+        }
+        var page = $('#CurrentPage').val();
         $.ajax({
             type: "GET",
             url: '@Url.Action("AccessUser", "AdminTabs")',
-            data: { AccountType : region },
+            data: { AccountType: region , page : page},
             success: function (data) {
                 console.log("AJAX success");
                 var bodyContent = $(data).find('tbody').html();
                 $('#rolebody').html(bodyContent);
+                var page = $(data).find('.pagenav').html();
+                $('#pagination').html(page);
             },
             error: function (error) {
                 console.log("Error:", error);
             }
         });
     }
-    </script>
+    $(document).on('click', '.page-link', function (event) {
+        console.log("hhhh");
+        var page = $(this).data('page');
+        console.log(page);
+        $('#CurrentPage').val(page);
+        searchRole(event);
+
+    });
+</script>

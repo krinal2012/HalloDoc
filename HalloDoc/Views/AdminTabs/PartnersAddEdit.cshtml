@@ -22,11 +22,11 @@
         <div class="row">
             <div class="mb-3 col-lg-6 form-floating">
                 <input asp-for="VendorName" type="text" class="form-control" placeholder="Business Name" required>
-                <span asp-validation-for="VendorName" class="text-danger"></span>
                 <label class="form-label" for="BusinessName">Business Name</label>
+                <span asp-validation-for="VendorName" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <select class="form-select mb-3" id="Profession" asp-for="Profession" asp-items="@(new SelectList(ViewBag.Professions,"HealthProfessionalId","ProfessionName"))">
+                <select class="form-select mb-3" id="Profession" asp-for="Profession" asp-items="@(new SelectList(ViewBag.Professions,"HealthProfessionalId","ProfessionName"))" required>
                     <option selected>Select Profession</option>
                 </select>
                 <label class="fs-6" for="Profession">Profession</label>
@@ -37,7 +37,8 @@
                 <label class="form-label" for="FaxNo"> Fax Number</label>
             </div>
             <div class="mb-3 col-lg-6 form-floating phone">
-                <input type="tel" asp-for="PhoneNumber" class="form-control shadow-none" id="phone">
+                <input type="tel" asp-for="PhoneNumber" class="form-control shadow-none" id="phone" required>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
                 <input asp-for="BusinessContact" type="text" class="form-control" placeholder="BusinessContact" id="BusinessContact">
@@ -45,9 +46,9 @@
             </div>
             <div class="mb-3 col-lg-6 form-floating">
                 <input asp-for="Email" type="email" class="form-control" placeholder="abc@email.com" id="Email"
-                       aria-describedby="emailHelp">
+                       aria-describedby="emailHelp" required>
                 <label for="email" class="form-label">E-mail</label>
-                <span class="text-danger"></span>
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
                 <input type="text" asp-for="Address" class="form-control" id="Street" placeholder="Street">
@@ -62,7 +63,7 @@
                 <label for="State" class="form-label">State</label>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="Zip" class="form-control" id="Zip-code" placeholder="Zip-code">
+                <input type="text" asp-for="Zip" class="form-control" id="Zip-code" placeholder="Zip-code" required>
                 <label for="Zip-code" class="form-label">Zip-code</label>
                 <span asp-validation-for="Zip" class="text-danger"></span>
             </div>

@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Ocsp;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.Drawing.Printing;
 using static HalloDoc.Entity.Models.Constant;
+using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
 using Region = HalloDoc.Entity.DataModels.Region;
 
 namespace HalloDoc.Repository.Repository
@@ -186,7 +190,7 @@ namespace HalloDoc.Repository.Repository
                 Data.Address1 = AdminProfile.Address1;
                 Data.Address2 = AdminProfile.Address2;
                 Data.City = AdminProfile.City;
-                Data.Mobile = AdminProfile.Mobile;
+                Data.Zip = AdminProfile.ZipCode;
                 Data.ModifiedDate = DateTime.Now;
                 _context.Admins.Update(Data);
                 _context.SaveChanges();
@@ -197,9 +201,10 @@ namespace HalloDoc.Repository.Repository
                 return false;
             }
         }
-        public List<PhysiciansData> PhysicianAll(int region)
+        public PaginatedViewModel<PhysiciansData> PhysicianAll(int region, int page)
         {
-            List<PhysiciansData> data = (from r in _context.Physicians
+            var pagesize = 5;
+            List<PhysiciansData> list = (from r in _context.Physicians
                                          join role in _context.Roles
                                          on r.RoleId equals role.RoleId into roleGroup
                                          from roles in roleGroup.DefaultIfEmpty()
@@ -219,7 +224,17 @@ namespace HalloDoc.Repository.Repository
                                              IsNonDisclosureDoc = r.IsNonDisclosureDoc,
                                              IsNotificationStopped = nof.IsNotificationStopped
                                          }).ToList();
-            return data;
+            int totalItemCount = list.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
+            List<PhysiciansData> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();
+
+            PaginatedViewModel<PhysiciansData> viewModel = new PaginatedViewModel<PhysiciansData>()
+            {
+                AdminList = list1,
+                CurrentPage = page,
+                TotalPages = totalPages,
+            };
+            return viewModel;
         }
         public bool changeNoti(int[] files, int region)
         {
@@ -577,6 +592,23 @@ namespace HalloDoc.Repository.Repository
             return true;
 
         }
+        public PaginatedViewModel<Role> AccessAccount(int page)
+        {
+            var pagesize = 5;
+            var list = _context.Roles.Where(r => r.IsDeleted == new BitArray(1)).ToList();
+            int totalItemCount = list.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
+            List<Role> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();
+
+            PaginatedViewModel<Role> viewModel = new PaginatedViewModel<Role>()
+            {
+                AdminList = list1,
+                CurrentPage = page,
+                TotalPages = totalPages,
+            };
+            return viewModel;
+        }
+        
         public List<Menu> RolebyAccountType(AccountType Account)
         {
             int accounttype = (int)Account;
@@ -661,9 +693,10 @@ namespace HalloDoc.Repository.Repository
             _context.SaveChanges();
             return true;
         }
-        public List<UserAccessData> UserAccessData(string AccountType)
+        public PaginatedViewModel<UserAccessData> UserAccessData(string AccountType, int page)
         {
-            var result = (from aspuser in _context.AspNetUsers
+            var pagesize = 5;
+            var list = (from aspuser in _context.AspNetUsers
                           join admin in _context.Admins
                           on aspuser.Id equals admin.AspNetUserId into AdminGroup
                           from admin in AdminGroup.DefaultIfEmpty()
@@ -683,10 +716,20 @@ namespace HalloDoc.Repository.Repository
                           }).ToList();
             if (AccountType != null)
             {
-                result = result.Where(r => r.AccountType == "All" || r.AccountType == AccountType).ToList();
+                list = list.Where(r => r.AccountType == "All" || r.AccountType == AccountType).ToList();
             }
+            int totalItemCount = list.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
+            List<UserAccessData> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();
 
-            return result;
+            PaginatedViewModel<UserAccessData> viewModel = new PaginatedViewModel<UserAccessData>()
+            {
+                AdminList = list1,
+                CurrentPage = page,
+                TotalPages = totalPages,
+            };
+            return viewModel;
+            
         }
         public List<PhysicianLocation> FindPhysicianLocation()
         {
@@ -702,9 +745,10 @@ namespace HalloDoc.Repository.Repository
             return pl;
 
         }
-        public List<Partners> PartnersData(string searchValue, int Profession)
+        public PaginatedViewModel<Partners> PartnersData(string searchValue, int Profession, int page)
         {
-            var result = (from Hp in _context.HealthProfessionals
+            var pagesize = 5;
+            var list = (from Hp in _context.HealthProfessionals
                           join Hpt in _context.HealthProfessionalTypes
                           on Hp.Profession equals Hpt.HealthProfessionalId into AdminGroup
                           from asp in AdminGroup.DefaultIfEmpty()
@@ -721,7 +765,17 @@ namespace HalloDoc.Repository.Repository
                               PhoneNumber = Hp.PhoneNumber,
                               BusinessNumber = Hp.BusinessContact
                           }).ToList();
-            return result;
+            int totalItemCount = list.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
+            List<Partners> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();
+
+            PaginatedViewModel<Partners> viewModel = new PaginatedViewModel<Partners>()
+            {
+                AdminList = list1,
+                CurrentPage = page,
+                TotalPages = totalPages,
+            };
+            return viewModel;
         }
         public HealthProfessional EditPartners(int VendorId)
         {
@@ -774,16 +828,24 @@ namespace HalloDoc.Repository.Repository
             _context.SaveChanges();
             return true;
         }
-        public List<User> PatientHistory(string fname, string lname, string email, string phone)
+        public SearchInputs PatientHistory(SearchInputs search)
         {
             var His = _context.Users
-                     .Where(pp => (string.IsNullOrEmpty(fname) || pp.FirstName.Contains(fname))
-                               && (string.IsNullOrEmpty(lname) || pp.LastName.Contains(lname))
-                               && (string.IsNullOrEmpty(email) || pp.Email.Contains(email))
-                               && (string.IsNullOrEmpty(phone) || pp.Mobile.Contains(phone)))
+                     .Where(pp => (string.IsNullOrEmpty(search.FirstName) || pp.FirstName.Contains(search.FirstName))
+                               && (string.IsNullOrEmpty(search.LastName) || pp.LastName.Contains(search.LastName))
+                               && (string.IsNullOrEmpty(search.Email) || pp.Email.Contains(search.Email))
+                               && (string.IsNullOrEmpty(search.Mobile) || pp.Mobile.Contains(search.Mobile)))
                      .ToList();
+            SearchInputs data = new SearchInputs();
 
-            return His;
+            int totalItemCount = His.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)search.PageSize);
+            List<User> list1 = His.Skip((search.CurrentPage - 1) * search.PageSize).Take(search.PageSize).ToList();
+
+            data.CurrentPage = search.CurrentPage;
+            data.TotalPages = totalPages;
+            data.User = list1;
+            return data;
         }
         public List<PatientDashList> RecordsPatientExplore(int UserId)
         {
@@ -810,7 +872,7 @@ namespace HalloDoc.Repository.Repository
         }
         public BlockHistory RecordsBlock(BlockHistory formData)
         {
-            var data = (from req in _context.BlockRequests
+            var bh = (from req in _context.BlockRequests
                         join r in _context.Requests on req.RequestId equals r.RequestId
                         where (string.IsNullOrEmpty(formData.PatientName) || r.FirstName.Contains(formData.PatientName))
                            && (formData.createdDate == null || req.CreatedDate.Value.Date == formData.createdDate)
@@ -826,9 +888,15 @@ namespace HalloDoc.Repository.Repository
                             Mobile = req.PhoneNumber,
                             Notes = req.Reason
                         }).ToList();
-            BlockHistory bh = new BlockHistory();
-            bh.pd = data;
-            return bh;
+            BlockHistory data = new BlockHistory();
+            int totalItemCount = bh.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)formData.PageSize);
+            List<PatientDashList> list1 = bh.Skip((formData.CurrentPage - 1) * formData.PageSize).Take(formData.PageSize).ToList();
+
+            data.CurrentPage = formData.CurrentPage;
+            data.TotalPages = totalPages;
+            data.pd = list1;
+            return data;
         }
         public bool UnBlock(int reqId)
         {
@@ -888,17 +956,15 @@ namespace HalloDoc.Repository.Repository
                                            }).ToList();
 
             SearchInputs data = new SearchInputs();
-            
 
             int totalItemCount = allData.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)rm.PageSize);
             List<SearchRecords> list1 = allData.Skip((rm.CurrentPage - 1) * rm.PageSize).Take(rm.PageSize).ToList();
 
-
             data.CurrentPage = rm.CurrentPage;
             data.TotalPages = totalPages;
-            
             data.sr = list1;
+
             for (int i = 0; i < data.sr.Count; i++)
             {
                 if (data.sr[i].Status == (status)9)

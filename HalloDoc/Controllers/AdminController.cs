@@ -11,6 +11,7 @@ using OfficeOpenXml;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Cryptography;
 using System.Web.Helpers;
+using static HalloDoc.Entity.Models.Constant;
 using static HalloDoc.Repository.Repository.JWTService;
 
 namespace HalloDoc.Controllers
@@ -40,6 +41,9 @@ namespace HalloDoc.Controllers
         }
         public IActionResult GetPartialView(string btnName, int statusid, string searchValue, string sortColumn, string sortOrder, int pagesize = 5, int requesttype = -1, int Region = -1, int page = 1)
         {
+            Response.Cookies.Delete("Status");
+            Response.Cookies.Append("Status", statusid.ToString());
+            Response.Cookies.Append("StatusName", btnName);
             var partialview = "_" + btnName;
             var result = _IAdminDash.NewRequestData(statusid, searchValue, page, pagesize, Region, sortColumn, sortOrder, requesttype);
             return PartialView(partialview, result);

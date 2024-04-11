@@ -25,7 +25,8 @@ namespace HalloDoc.Entity.Models.ViewModel
     public class PaginatedViewModel<T>
     {
         public List<T> AdminList { get; set; }
-        public int CurrentPage { get; set; }
+        public int CurrentPage { get; set; } = 1;
+        public int PageSize { get; set; } = 5;
         public int TotalPages { get; set; }
         public string sortColumn { get; set; } = "RequestedDate";
         public bool sortOrder { get; set; } = false;
@@ -62,7 +63,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
         public required string Email { get; set; }
-        [Compare("Email", ErrorMessage = "Password doesn't match.")]
+        [Compare("Email", ErrorMessage = "Email doesn't match.")]
         public string ConformEmail { get; set; }
         public string Mobile { get; set; }
         public string? Address1 { get; set; }
