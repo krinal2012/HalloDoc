@@ -94,7 +94,7 @@ namespace HalloDoc.Repository.Repository
             Admin.City = admindata.City;
             Admin.Zip = admindata.ZipCode;
             Admin.CreatedDate = DateTime.Now;
-            //Admin.CreatedBy = AdminId;
+            Admin.CreatedBy = Aspnetuser.Id;
             _context.Admins.Add(Admin);
             _context.SaveChanges();
 
@@ -263,7 +263,27 @@ namespace HalloDoc.Repository.Repository
         }
         public bool ContactProviderMail(string Email, string Message)
         {
-            _emailConfig.SendMail(Email, "Message from admin", Message);
+            var subject = "Message from admin";
+            bool sent = _emailConfig.SendMail(Email, subject, Message).Result;
+            EmailLog em = new EmailLog
+            {
+                EmailTemplate = Message,
+                SubjectName = subject,
+                EmailId = Email,
+                CreateDate = DateTime.Now,
+                SentDate = DateTime.Now,
+                IsEmailSent = new BitArray(1),
+                SentTries = 1,
+                Action = 7, // action 7 for Message from admin
+                RoleId = 2, // role 2 for admin
+            };
+
+            if (sent)
+            {
+                em.IsEmailSent[0] = true;
+            };
+            _context.EmailLogs.Add(em);
+            _context.SaveChanges();
             return true;
         }
         public PhysiciansData ViewProviderProfile(int PhysicianId)
@@ -608,12 +628,11 @@ namespace HalloDoc.Repository.Repository
             };
             return viewModel;
         }
-        
         public List<Menu> RolebyAccountType(AccountType Account)
         {
             int accounttype = (int)Account;
             var result = _context.Menus
-                      .Where(req => accounttype == 4 || req.AccountType == accounttype)
+                      .Where(req => accounttype == 0 || req.AccountType == accounttype)
                       .ToList();
             return result;
         }
@@ -697,23 +716,23 @@ namespace HalloDoc.Repository.Repository
         {
             var pagesize = 5;
             var list = (from aspuser in _context.AspNetUsers
-                          join admin in _context.Admins
-                          on aspuser.Id equals admin.AspNetUserId into AdminGroup
-                          from admin in AdminGroup.DefaultIfEmpty()
-                          join physician in _context.Physicians
-                          on aspuser.Id equals physician.AspNetUserId into PhyGroup
-                          from physician in PhyGroup.DefaultIfEmpty()
-                          where (admin != null || physician != null) && (admin.IsDeleted == new BitArray(1) || physician.IsDeleted == new BitArray(1))
-                          select new UserAccessData
-                          {
-                              Id = admin != null ? admin.AdminId : (physician != null ? physician.PhysicianId : 0),
-                              AccountType = admin != null ? "Admin" : (physician != null ? "Physician" : null),
-                              AccountPOC = admin != null ? admin.FirstName + " " + admin.LastName : (physician != null ? physician.FirstName + " " + physician.LastName : null),
-                              Status = (int)(admin != null ? admin.Status : (physician != null ? physician.Status : null)),
-                              Phone = admin != null ? admin.Mobile : (physician != null ? physician.Mobile : null),
-                              OpenReq = _context.Requests.Count(r => r.PhysicianId == physician.PhysicianId),
-                              isAdmin = admin != null
-                          }).ToList();
+                        join admin in _context.Admins
+                        on aspuser.Id equals admin.AspNetUserId into AdminGroup
+                        from admin in AdminGroup.DefaultIfEmpty()
+                        join physician in _context.Physicians
+                        on aspuser.Id equals physician.AspNetUserId into PhyGroup
+                        from physician in PhyGroup.DefaultIfEmpty()
+                        where (admin != null || physician != null) && (admin.IsDeleted == new BitArray(1) || physician.IsDeleted == new BitArray(1))
+                        select new UserAccessData
+                        {
+                            Id = admin != null ? admin.AdminId : (physician != null ? physician.PhysicianId : 0),
+                            AccountType = admin != null ? "Admin" : (physician != null ? "Physician" : null),
+                            AccountPOC = admin != null ? admin.FirstName + " " + admin.LastName : (physician != null ? physician.FirstName + " " + physician.LastName : null),
+                            Status = (int)(admin != null ? admin.Status : (physician != null ? physician.Status : null)),
+                            Phone = admin != null ? admin.Mobile : (physician != null ? physician.Mobile : null),
+                            OpenReq = _context.Requests.Count(r => r.PhysicianId == physician.PhysicianId),
+                            isAdmin = admin != null
+                        }).ToList();
             if (AccountType != null)
             {
                 list = list.Where(r => r.AccountType == "All" || r.AccountType == AccountType).ToList();
@@ -729,7 +748,7 @@ namespace HalloDoc.Repository.Repository
                 TotalPages = totalPages,
             };
             return viewModel;
-            
+
         }
         public List<PhysicianLocation> FindPhysicianLocation()
         {
@@ -749,22 +768,22 @@ namespace HalloDoc.Repository.Repository
         {
             var pagesize = 5;
             var list = (from Hp in _context.HealthProfessionals
-                          join Hpt in _context.HealthProfessionalTypes
-                          on Hp.Profession equals Hpt.HealthProfessionalId into AdminGroup
-                          from asp in AdminGroup.DefaultIfEmpty()
-                          where (searchValue == null || Hp.VendorName.Contains(searchValue))
-                             && (Profession == 0 || Hp.Profession == Profession)
-                             && (Hp.IsDeleted == new BitArray(1))
-                          select new Partners
-                          {
-                              VendorId = Hp.VendorId,
-                              Profession = asp.ProfessionName,
-                              Business = Hp.VendorName,
-                              Email = Hp.Email,
-                              FaxNumber = Hp.FaxNumber,
-                              PhoneNumber = Hp.PhoneNumber,
-                              BusinessNumber = Hp.BusinessContact
-                          }).ToList();
+                        join Hpt in _context.HealthProfessionalTypes
+                        on Hp.Profession equals Hpt.HealthProfessionalId into AdminGroup
+                        from asp in AdminGroup.DefaultIfEmpty()
+                        where (searchValue == null || Hp.VendorName.Contains(searchValue))
+                           && (Profession == 0 || Hp.Profession == Profession)
+                           && (Hp.IsDeleted == new BitArray(1))
+                        select new Partners
+                        {
+                            VendorId = Hp.VendorId,
+                            Profession = asp.ProfessionName,
+                            Business = Hp.VendorName,
+                            Email = Hp.Email,
+                            FaxNumber = Hp.FaxNumber,
+                            PhoneNumber = Hp.PhoneNumber,
+                            BusinessNumber = Hp.BusinessContact
+                        }).ToList();
             int totalItemCount = list.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
             List<Partners> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();
@@ -873,21 +892,21 @@ namespace HalloDoc.Repository.Repository
         public BlockHistory RecordsBlock(BlockHistory formData)
         {
             var bh = (from req in _context.BlockRequests
-                        join r in _context.Requests on req.RequestId equals r.RequestId
-                        where (string.IsNullOrEmpty(formData.PatientName) || r.FirstName.Contains(formData.PatientName))
-                           && (formData.createdDate == null || req.CreatedDate.Value.Date == formData.createdDate)
-                           && (string.IsNullOrEmpty(formData.Email) || req.Email.Contains(formData.Email))
-                           && (string.IsNullOrEmpty(formData.Mobile) || req.PhoneNumber.Contains(formData.Mobile))
-                        select new PatientDashList
-                        {
-                            PatientName = r.FirstName,
-                            Email = req.Email,
-                            createdDate = (DateTime)req.CreatedDate,
-                            IsActive = req.IsActive[0],
-                            RequestId = Convert.ToInt32(req.RequestId),
-                            Mobile = req.PhoneNumber,
-                            Notes = req.Reason
-                        }).ToList();
+                      join r in _context.Requests on req.RequestId equals r.RequestId
+                      where (string.IsNullOrEmpty(formData.PatientName) || r.FirstName.Contains(formData.PatientName))
+                         && (formData.createdDate == null || req.CreatedDate.Value.Date == formData.createdDate)
+                         && (string.IsNullOrEmpty(formData.Email) || req.Email.Contains(formData.Email))
+                         && (string.IsNullOrEmpty(formData.Mobile) || req.PhoneNumber.Contains(formData.Mobile))
+                      select new PatientDashList
+                      {
+                          PatientName = r.FirstName,
+                          Email = req.Email,
+                          createdDate = (DateTime)req.CreatedDate,
+                          IsActive = req.IsActive[0],
+                          RequestId = Convert.ToInt32(req.RequestId),
+                          Mobile = req.PhoneNumber,
+                          Notes = req.Reason
+                      }).ToList();
             BlockHistory data = new BlockHistory();
             int totalItemCount = bh.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)formData.PageSize);
@@ -927,7 +946,7 @@ namespace HalloDoc.Repository.Repository
                                            join nts in _context.RequestNotes
                                            on req.RequestId equals nts.RequestId into ntsgrp
                                            from nt in ntsgrp.DefaultIfEmpty()
-                                           where   req.IsDeleted == new BitArray(1) && (rm.ReqStatus == 0 ||  req.Status == rm.ReqStatus) &&
+                                           where req.IsDeleted == new BitArray(1) && (rm.ReqStatus == 0 || req.Status == rm.ReqStatus) &&
                                                     (rm.RequestTypeID == 0 || req.RequestTypeId == rm.RequestTypeID) &&
                                                     (!rm.StartDOS.HasValue || req.CreatedDate.Date >= rm.StartDOS.Value.Date) &&
                                                     (!rm.EndDOS.HasValue || req.CreatedDate.Date <= rm.EndDOS.Value.Date) &&
@@ -981,7 +1000,7 @@ namespace HalloDoc.Repository.Repository
                     allData[i].CancelByPhyNotes = res.Notes;
                 }
             }
-           
+
             return data;
         }
         public bool RecordsDelete(int reqId)
@@ -992,7 +1011,73 @@ namespace HalloDoc.Repository.Repository
             _context.SaveChanges();
             return true;
         }
+        public SearchInputs RecordsEmailLog(SearchInputs rm)
+        {
+            List<EmailLogRecords> allData = (from em in _context.EmailLogs
+                                             join req in _context.Requests
+                                             on em.RequestId equals req.RequestId into Group
+                                             from rc in Group.DefaultIfEmpty()
+                                             where (rm.Role == 0 || em.RoleId == rm.Role) &&
+                                                   (!rm.StartDOS.HasValue || em.CreateDate.Date == rm.StartDOS.Value.Date) &&
+                                                   (!rm.EndDOS.HasValue || em.SentDate == rm.EndDOS.Value.Date) &&
+                                                   (rm.FirstName.IsNullOrEmpty() || (rc.FirstName).ToLower().Contains(rm.FirstName.ToLower())) &&
+                                                   (rm.Email.IsNullOrEmpty() || em.EmailId.ToLower().Contains(rm.Email.ToLower()))
+                                             select new EmailLogRecords
+                                             {
+                                                 
+                                                 Recipient = _context.AspNetUsers.Where(req=>req.Email==em.EmailId).Select(req=>req.UserName).FirstOrDefault(),
+                                                 ConfirmationNumber = em.ConfirmationNumber,
+                                                 CreateDate = em.CreateDate,
+                                                 SentDate = (DateTime)em.SentDate,
+                                                 RoleId = (AccountType)em.RoleId,
+                                                 EmailId = em.EmailId,
+                                                 IsEmailSent = (em.IsEmailSent == new BitArray(0) ? "No" : "Yes"),
+                                                 SentTries = em.SentTries,
+                                                 Action = (EmailAction)em.Action,
+
+                                             }).ToList();
+            SearchInputs data = new SearchInputs();
+            int totalItemCount = allData.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)rm.PageSize);
+            List<EmailLogRecords> list1 = allData.Skip((rm.CurrentPage - 1) * rm.PageSize).Take(rm.PageSize).ToList();
+            data.CurrentPage = rm.CurrentPage;
+            data.TotalPages = totalPages;
+            data.el = list1;
+            return data;
+        }
+        public SearchInputs RecordsSMSLog(SearchInputs rm)
+        {
+            List<EmailLogRecords> allData = (from em in _context.Smslogs
+                                             join req in _context.Requests
+                                             on em.RequestId equals req.RequestId into Group
+                                             from rc in Group.DefaultIfEmpty()
+                                             where (rm.Role == 0 || em.RoleId == rm.Role) &&
+                                                   (!rm.StartDOS.HasValue || em.CreateDate.Date == rm.StartDOS.Value.Date) &&
+                                                   (!rm.EndDOS.HasValue || em.SentDate == rm.EndDOS.Value.Date) &&
+                                                   (rm.FirstName.IsNullOrEmpty() || (rc.FirstName).ToLower().Contains(rm.FirstName.ToLower())) &&
+                                                   (rm.Mobile.IsNullOrEmpty() || em.MobileNumber.ToLower().Contains(rm.Mobile.ToLower()))
+                                             select new EmailLogRecords
+                                             {
+                                                 Recipient = rc.FirstName,
+                                                 ConfirmationNumber = em.ConfirmationNumber,
+                                                 CreateDate = em.CreateDate,
+                                                 SentDate = (DateTime)em.SentDate,
+                                                 RoleId = (AccountType)em.RoleId,
+                                                 Mobile = em.MobileNumber,
+                                                 IsEmailSent = (em.IsSmssent == new BitArray(0) ? "No" : "Yes"),
+                                                 SentTries = em.SentTries,
+                                                 Action = (EmailAction)em.Action,
+
+                                             }).ToList();
+            SearchInputs data = new SearchInputs();
+            int totalItemCount = allData.Count();
+            int totalPages = (int)Math.Ceiling(totalItemCount / (double)rm.PageSize);
+            List<EmailLogRecords> list1 = allData.Skip((rm.CurrentPage - 1) * rm.PageSize).Take(rm.PageSize).ToList();
+            data.CurrentPage = rm.CurrentPage;
+            data.TotalPages = totalPages;
+            data.el = list1;
+            return data;
+        }
 
     }
 }
-                                                     

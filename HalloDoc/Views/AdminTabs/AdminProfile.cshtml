@@ -178,29 +178,29 @@
         });
     });
     $('.submit-all').click(function () {
-        var physicianData = {}; // This will hold all the form data
+        var admindata = {}; // This will hold all the form data
         $('form').each(function () {
             var formData = $(this).serializeArray();
             formData.forEach(function (item) {
-                if (physicianData[item.name]) {
-                    if (!Array.isArray(physicianData[item.name])) {
-                        physicianData[item.name] = [physicianData[item.name]];
+                if (admindata[item.name]) {
+                    if (!Array.isArray(admindata[item.name])) {
+                        admindata[item.name] = [admindata[item.name]];
                     }
-                    physicianData[item.name].push(item.value);
+                    admindata[item.name].push(item.value);
                 } else {
-                    physicianData[item.name] = item.value;
+                    admindata[item.name] = item.value;
                 }
             });
         });
         var checkboxes = [];
-        $('input[name="boardcheck"]:checked').each(function () {
+        $('input[name="RegionIds"]:checked').each(function () {
             checkboxes.push(this.value);
         });
-        console.log(physicianData);
+        console.log(admindata);
         $.ajax({
             type: 'POST',
             url: '@Url.Action("AddAdminAccount", "AdminTabs")', 
-            data: { AdminProfile: physicianData, checkboxes: checkboxes },
+            data: { admindata: admindata, checkboxes: checkboxes },
             success: function (response) {
                 console.log('Data sent successfully', response);
             },

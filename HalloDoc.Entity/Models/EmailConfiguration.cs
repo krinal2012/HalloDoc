@@ -1,4 +1,6 @@
 ﻿using MimeKit;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace HalloDoc.Entity.Models
 {
@@ -96,6 +98,31 @@ namespace HalloDoc.Entity.Models
         {
             byte[] encoded = Convert.FromBase64String(decodeMe);
             return System.Text.Encoding.UTF8.GetString(encoded);
+        }
+        public async Task<bool> SendSMS(string receiverPhoneNumber, string message)
+        {
+            string accountSid = "AC09c996ef33c00e604b6cdc2985e48969";
+            string authToken = "8f40b61e748139a83d6789d896e95104";
+            string twilioPhoneNumber = "+12513698731";
+
+            TwilioClient.Init(accountSid, authToken);
+
+            try
+            {
+                var smsMessage = MessageResource.Create(
+                    body: message,
+                    from: new Twilio.Types.PhoneNumber(twilioPhoneNumber),
+                    to: new Twilio.Types.PhoneNumber(receiverPhoneNumber)
+                );
+
+                Console.WriteLine("SMS sent successfully. SID: " + smsMessage.Sid);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while sending the SMS: " + ex.Message);
+            }
+            return false;
         }
     }
 }

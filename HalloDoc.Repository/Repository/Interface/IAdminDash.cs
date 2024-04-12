@@ -44,5 +44,6 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool SendLink(sendAgreement sendAgreement);
         public bool CreateReq(viewPatientReq viewPatientReq, string UserId);
         public List<AdminList> Export(string status);
+        public bool SendMessage(string? Message);
     }
 }

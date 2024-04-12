@@ -4,10 +4,10 @@
     {
         public enum AccountType
         {
+            All=0,
             Patient =1,
             Admin=2,
             Physician=3,
-            All=4
         }
         public enum RequestTypes
         {
@@ -34,6 +34,16 @@
         {
             Active = 1,
             Pending = 2,
+        }
+        public enum EmailAction
+        {
+            SendOrder = 1,
+            Request,
+            SendLink,
+            SendAgreement,
+            Forgot,
+            NewRegistration,
+            contact
         }
     }
 }

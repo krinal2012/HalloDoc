@@ -5,6 +5,7 @@ using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -57,8 +58,31 @@ namespace HalloDoc.Repository.Repository
         public bool SendResetLink(String Email)
         {
             var agreementUrl = "https://localhost:7151/Home/ResetPass?Email=" + Email;
-            _emailConfig.SendMail(Email, "Reset your password", $"To reset your password <a href='{agreementUrl}'>Click here..</a>");
+            var subject = "Reset your password";
+            var EmailTemplate = $"To reset your password <a href='{agreementUrl}'>Click here..</a>";
+            bool sent = _emailConfig.SendMail(Email, subject, EmailTemplate).Result;
+            EmailLog em = new EmailLog
+            {
+
+                EmailTemplate = EmailTemplate,
+                SubjectName = subject,
+                EmailId = Email,
+                CreateDate = DateTime.Now,
+                SentDate = DateTime.Now,
+                IsEmailSent = new BitArray(1),
+                SentTries = 1,
+                Action = 5, // action 5 for send link of reset request
+                RoleId = 2, // role 2 for admin
+            };
+
+            if (sent)
+            {
+                em.IsEmailSent[0] = true;
+            };
+            _context.EmailLogs.Add(em);
+            _context.SaveChanges();
             return true;
+
         }
     }
 }

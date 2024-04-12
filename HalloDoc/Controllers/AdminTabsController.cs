@@ -6,6 +6,9 @@ using HalloDoc.Models;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
+using System.Web.Helpers;
+using Twilio.TwiML.Messaging;
+using Twilio.TwiML.Voice;
 using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Controllers
@@ -114,9 +117,31 @@ namespace HalloDoc.Controllers
             return RedirectToAction("ProviderMenu");
         }
         [HttpPost]
-        public IActionResult ContactProviderMail(string Email, string Message)
+        public IActionResult ContactProviderMail(string Email, string Message, int radio)
         {
-            bool res = _IAdminTabs.ContactProviderMail(Email, Message);
+            bool result = false;
+            bool sms = false;
+            if (radio == 1)
+            {
+                sms = _IAdminDash.SendMessage(Message);
+            }
+            else if (radio == 2)
+            {
+                result = _IAdminTabs.ContactProviderMail(Email, Message); 
+            }
+            else
+            {
+                result = _IAdminTabs.ContactProviderMail(Email, Message);
+                sms = _IAdminDash.SendMessage(Message);
+            }
+            if (result)
+            {
+                _notyf.Success("Email sent Successfully.");
+            }
+            if (sms)
+            {
+                _notyf.Success("Message sent Successfully.");
+            }
             return RedirectToAction("ProviderMenu");
         }
         public IActionResult EditProvider(int PhysicianId)
@@ -326,5 +351,16 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("RecordsSearch");
         }
+        public IActionResult RecordsEmailLog(SearchInputs search)
+        {
+            var res = _IAdminTabs.RecordsEmailLog(search);
+            return View(res);
+        }
+        public IActionResult RecordsSMSLog(SearchInputs search)
+        {
+            var res = _IAdminTabs.RecordsSMSLog(search);
+            return View(res);
+        }
+
     }
 }

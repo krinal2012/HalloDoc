@@ -18,6 +18,8 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Cryptography;
 using System.Diagnostics.Metrics;
 using Hallodoc.Entity.Models.ViewModel;
+using Twilio.TwiML.Messaging;
+using Twilio.TwiML.Voice;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -42,7 +44,7 @@ namespace HalloDoc.Repository.Repository
                 UnpaidRequest = _context.Requests.Where(r => r.Status == 9).Count()
             };
         }
-        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize,int? Region, string sortColumn, string sortOrder, int? requesttype)
+        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize, int? Region, string sortColumn, string sortOrder, int? requesttype)
         {
             List<int> id = new List<int>();
             if (statusid == 1) { id.Add(1); }
@@ -51,7 +53,7 @@ namespace HalloDoc.Repository.Repository
             if (statusid == 4) { id.Add(6); }
             if (statusid == 5) id.AddRange(new int[] { 3, 7, 8 });
             if (statusid == 6) { id.Add(9); }
-        
+
             var list = (from req in _context.Requests
                         join reqClient in _context.RequestClients
                         on req.RequestId equals reqClient.RequestId into reqClientGroup
@@ -68,9 +70,9 @@ namespace HalloDoc.Repository.Repository
                                rc.Email.Contains(searchValue) || rc.PhoneNumber.Contains(searchValue) ||
                                rc.Address.Contains(searchValue) || rc.Notes.Contains(searchValue) ||
                                p.FirstName.Contains(searchValue) || p.LastName.Contains(searchValue) ||
-                               rg.Name.Contains(searchValue)) 
-                               && (Region == -1 || rc.RegionId == Region) 
-                               && (requesttype == -1 || req.RequestTypeId ==requesttype)
+                               rg.Name.Contains(searchValue))
+                               && (Region == -1 || rc.RegionId == Region)
+                               && (requesttype == -1 || req.RequestTypeId == requesttype)
                         orderby req.CreatedDate descending
                         select new AdminList
                         {
@@ -120,7 +122,7 @@ namespace HalloDoc.Repository.Repository
             int totalItemCount = list.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
             List<AdminList> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();
-           
+
             PaginatedViewModel<AdminList> viewModel = new PaginatedViewModel<AdminList>()
             {
                 AdminList = list1,
@@ -135,19 +137,19 @@ namespace HalloDoc.Repository.Repository
                         _context.RequestClients
                        .Where(req => req.Request.RequestId == RequestID)
                        .Select(req => new ViewCaseModel()
-                        {
+                       {
                            Status = status,
-                            RequestId = RequestID,
-                            RequestTypeId = RequestTypeId,
-                            ConfNo = req.Address.Substring(0, 2) + req.IntDate.ToString() + req.StrMonth + req.IntYear.ToString() + req.LastName.Substring(0, 2) + req.FirstName.Substring(0, 2) + "002",
-                            Symptoms = req.Notes,
-                            FirstName = req.FirstName,
-                            LastName = req.LastName,
-                            DOB = new DateTime((int)req.IntYear, Convert.ToInt32(req.StrMonth.Trim()), (int)req.IntDate),
-                            Mobile = req.PhoneNumber,
-                            Email = req.Email,
-                            Address = req.Address
-                        }).FirstOrDefault();
+                           RequestId = RequestID,
+                           RequestTypeId = RequestTypeId,
+                           ConfNo = req.Address.Substring(0, 2) + req.IntDate.ToString() + req.StrMonth + req.IntYear.ToString() + req.LastName.Substring(0, 2) + req.FirstName.Substring(0, 2) + "002",
+                           Symptoms = req.Notes,
+                           FirstName = req.FirstName,
+                           LastName = req.LastName,
+                           DOB = new DateTime((int)req.IntYear, Convert.ToInt32(req.StrMonth.Trim()), (int)req.IntDate),
+                           Mobile = req.PhoneNumber,
+                           Email = req.Email,
+                           Address = req.Address
+                       }).FirstOrDefault();
             return list;
         }
         public ViewCaseModel EditViewCaseData(int RequestID, int RequestTypeId, ViewCaseModel vp)
@@ -244,8 +246,8 @@ namespace HalloDoc.Repository.Repository
                                from py in pyGroup.DefaultIfEmpty()
                                join p in _context.Physicians on rs.TransToPhysicianId equals p.PhysicianId into pGroup
                                from p in pGroup.DefaultIfEmpty()
-                               //join a in _context.Admins on rs.AdminId equals a.AdminId into aGroup
-                               //from a in aGroup.DefaultIfEmpty()
+                                   //join a in _context.Admins on rs.AdminId equals a.AdminId into aGroup
+                                   //from a in aGroup.DefaultIfEmpty()
                                where rs.RequestId == RequestId && rs.Status == 2
                                select new TransferNotesData
                                {
@@ -259,7 +261,7 @@ namespace HalloDoc.Repository.Repository
                                    Createddate = rs.CreatedDate,
                                    Requeststatuslogid = rs.RequestStatusLogId,
                                    Transtoadmin = rs.TransToAdmin,
-                                   Transtophysicianid = rs.TransToPhysicianId   
+                                   Transtophysicianid = rs.TransToPhysicianId
                                }).ToList();
             var cancelbyprovider = _context.RequestStatusLogs.Where(E => E.RequestId == RequestId && (E.TransToAdmin != null));
             var cancel = _context.RequestStatusLogs.Where(E => E.RequestId == RequestId && (E.Status == 7 || E.Status == 3));
@@ -286,7 +288,7 @@ namespace HalloDoc.Repository.Repository
                 transfer.Add(new TransferNotesData
                 {
                     TransPhysician = item.TransPhysician,
-                   // Admin = item.Admin,
+                    // Admin = item.Admin,
                     Physician = item.Physician,
                     Requestid = item.Requestid,
                     Notes = item.Notes ?? "-",
@@ -472,7 +474,7 @@ namespace HalloDoc.Repository.Repository
                                          FirstName = rc.FirstName,
                                          LastName = rc.LastName,
                                          ConfirmationNumber = rc.Request.ConfirmationNumber
-                                        
+
                                      }).FirstOrDefault();
             items.RequestId = requestid;
             List<RequestWiseFile> list = _context.RequestWiseFiles
@@ -528,18 +530,18 @@ namespace HalloDoc.Repository.Repository
         }
         public async Task<bool> SendFileEmail(string ids, int Requestid, string email)
         {
-          
+
             List<int> priceList = ids.Split(',').Select(int.Parse).ToList();
             List<string> files = new();
             foreach (int price in priceList)
             {
                 if (price > 0)
                 {
-                    var data =  _context.RequestWiseFiles.Where(e => e.RequestWiseFileId == price).FirstOrDefault();
+                    var data = _context.RequestWiseFiles.Where(e => e.RequestWiseFileId == price).FirstOrDefault();
                     files.Add(Directory.GetCurrentDirectory() + "\\wwwroot\\Upload\\" + data.FileName);
                 }
             }
-            if  ( await _emailConfig.SendMailAsync(email, "All Document Of Your Request ", "Heeyy Kindly Check your Attachments", files))
+            if (await _emailConfig.SendMailAsync(email, "All Document Of Your Request ", "Heeyy Kindly Check your Attachments", files))
             {
                 return true;
             }
@@ -614,9 +616,33 @@ namespace HalloDoc.Repository.Repository
                 };
                 _context.OrderDetails.Add(od);
                 _context.SaveChanges();
-                _emailConfig.SendMail(od.Email, "Order details",
-                    "<h3>Hear is the details of order </h3> <p>" + Notes + "</p> ");
-            return true;
+
+                var subject = "Order details";
+                var EmailTemplate = "Order details: <h3>Hear is the details of order </h3> <p>" + Notes + "</p> ";
+                bool sent = _emailConfig.SendMail(od.Email, subject, EmailTemplate).Result;
+
+                EmailLog em = new EmailLog
+                {
+                    RequestId = Requestid,
+                    EmailTemplate = EmailTemplate,
+                    SubjectName = subject,
+                    EmailId = od.Email,
+                    ConfirmationNumber = _context.Requests.Where(req => req.RequestId == Requestid).Select(req => req.ConfirmationNumber).FirstOrDefault(),
+                    CreateDate = DateTime.Now,
+                    SentDate = DateTime.Now,
+                    IsEmailSent = new BitArray(1),
+                    SentTries = 1,
+                    Action = 1,// action 1 for orders
+                    RoleId = 2,// role 2 for admin
+                };
+
+                if (sent)
+                {
+                    em.IsEmailSent[0] = true;
+                };
+                _context.EmailLogs.Add(em);
+                _context.SaveChanges();
+                return true;
             }
             catch (Exception)
             {
@@ -653,8 +679,33 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SendAgreement(sendAgreement sendAgreement)
         {
-            var agreementUrl = "https://localhost:7151/AgreementPage/Index?RequestID=" ;
-            _emailConfig.SendMail(sendAgreement.Email, "Agreement for your request", $"Agreement for your request <a href='{agreementUrl}'>Agree/Disagree</a>");
+            var agreementUrl = "https://localhost:7151/AgreementPage/Index?RequestID=" + sendAgreement.RequestId;
+            var subject = "Agreement for your request";
+            var EmailTemplate = $"Agreement for your request <a href='{agreementUrl}'>Agree/Disagree</a> ";
+            bool sent = _emailConfig.SendMail(sendAgreement.Email, subject, EmailTemplate).Result;
+
+            EmailLog em = new EmailLog
+            {
+                RequestId = sendAgreement.RequestId,
+                EmailTemplate = EmailTemplate,
+                SubjectName = subject,
+                EmailId = sendAgreement.Email,
+                ConfirmationNumber = _context.Requests.Where(req => req.RequestId == sendAgreement.RequestId).Select(req => req.ConfirmationNumber).FirstOrDefault(),
+                CreateDate = DateTime.Now,
+                SentDate = DateTime.Now,
+                IsEmailSent = new BitArray(1),
+                SentTries = 1,
+                Action = 4, // action 4 for send agreement
+                RoleId = 2, // role 2 for admin
+            };
+
+            if (sent)
+            {
+                em.IsEmailSent[0] = true;
+            };
+            _context.EmailLogs.Add(em);
+            _context.SaveChanges();
+
             return true;
         }
         public bool SendAgreement_accept(int RequestID)
@@ -722,7 +773,7 @@ namespace HalloDoc.Repository.Repository
             list.documents = list1;
             return list;
         }
-        public bool EditCloseCase( ViewCaseModel vp, int RequestID)
+        public bool EditCloseCase(ViewCaseModel vp, int RequestID)
         {
             var userToUpdate = _context.RequestClients.FirstOrDefault(x => x.RequestId == RequestID); ;
             if (userToUpdate != null)
@@ -790,7 +841,7 @@ namespace HalloDoc.Repository.Repository
                                  HR = subEn.Hr,
                                  RR = subEn.Rr,
                                  Bp = subEn.BloodPressureSystolic,
-                                 Bpd= subEn.BloodPressureDiastolic,
+                                 Bpd = subEn.BloodPressureDiastolic,
                                  O2 = subEn.O2,
                                  Pain = subEn.Pain,
                                  Heent = subEn.Heent,
@@ -864,14 +915,37 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SendLink(sendAgreement sendAgreement)
         {
+
             var agreementUrl = "https://localhost:7151/PatientForm/Index?RequestID=" + sendAgreement.RequestId;
-            _emailConfig.SendMail(sendAgreement.Email, "Submit Request Page", $"Link for submitting a new request : <a href='{agreementUrl}'>click here..</a>");
+            var subject = "Submit Request Page";
+            var EmailTemplate = $"Link for submitting a new request : <a href='{agreementUrl}'>click here..</a>";
+            bool sent = _emailConfig.SendMail(sendAgreement.Email, subject, EmailTemplate).Result;
+            EmailLog em = new EmailLog
+            {
+                EmailTemplate = EmailTemplate,
+                SubjectName = subject,
+                EmailId = sendAgreement.Email,
+                ConfirmationNumber = _context.Requests.Where(req => req.RequestId == sendAgreement.RequestId).Select(req => req.ConfirmationNumber).FirstOrDefault(),
+                CreateDate = DateTime.Now,
+                SentDate = DateTime.Now,
+                IsEmailSent = new BitArray(1),
+                SentTries = 1,
+                Action = 3, // action 3 for send link of submit request
+                RoleId = 2, // role 2 for admin
+            };
+
+            if (sent)
+            {
+                em.IsEmailSent[0] = true;
+            };
+            _context.EmailLogs.Add(em);
+            _context.SaveChanges();
             return true;
         }
         public bool CreateReq(viewPatientReq viewPatientReq, string UserId)
         {
             var admin = _context.Admins.Where(x => x.AdminId.ToString() == UserId).FirstOrDefault();
-            
+
             var Request = new Entity.DataModels.Request();
             var Requestclient = new RequestClient();
             var RequestNotes = new RequestNote();
@@ -942,8 +1016,32 @@ namespace HalloDoc.Repository.Repository
                                        }).ToList();
             return allData;
         }
+        public bool SendMessage(string? Message)
+        {
+            string contact = "+919016239500";
+            bool sms = _emailConfig.SendSMS(contact, Message).Result;
+            Smslog em = new Smslog
+            {
+                Smstemplate = Message,
+                MobileNumber = contact,
+                CreateDate = DateTime.Now,
+                SentDate = DateTime.Now,
+                IsSmssent = new BitArray(1),
+                SentTries = 1,
+                Action = 3, // action 3 for send link of submit request
+                RoleId = 2, // role 2 for admin
+            };
+
+            if (sms)
+            {
+                em.IsSmssent[0] = true;
+            };
+            _context.Smslogs.Add(em);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }
 
-   
+
 

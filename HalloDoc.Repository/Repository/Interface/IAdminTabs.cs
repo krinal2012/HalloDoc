@@ -41,6 +41,9 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool UnBlock(int reqId);
         public SearchInputs RecordsSearch(SearchInputs search);
         public bool RecordsDelete(int reqId);
+        public SearchInputs RecordsEmailLog(SearchInputs search);
+        public SearchInputs RecordsSMSLog(SearchInputs search);
+
 
     }
 }

@@ -261,7 +261,8 @@ namespace HalloDoc.Controllers
             sendAgreement sendAgreement = new()
             {
                 FirstName = FirstName,
-                Email = Email
+                Email = Email,
+
             };
 
             if (_IAdminDash.SendLink(sendAgreement))
@@ -332,6 +333,15 @@ namespace HalloDoc.Controllers
 
                 return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             }
+        }
+        public IActionResult RequestSupport(string? Message)
+        {
+            if (_IAdminDash.SendMessage(Message))
+            {
+                _notyf.Success("Message Send Successfully..!");
+            }
+            return RedirectToAction("Index", "Admin");
+
         }
     }
 }

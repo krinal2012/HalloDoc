@@ -38,12 +38,14 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int RequestTypeID { get; set; }
+        public int Role { get; set; }
         public DateTime? StartDOS { get; set; }
         public DateTime? EndDOS { get; set; }
         public string PhyName { get; set; }
         public string Email { get; set; }
         public string Mobile { get; set; }
         public List<SearchRecords> sr { get; set; }
+        public List<EmailLogRecords> el { get; set; }
         public List<User> User { get; set; }
         public int CurrentPage { get; set; } = 1;
         public int TotalPages { get; set; }
