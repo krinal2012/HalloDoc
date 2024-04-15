@@ -1,7 +1,6 @@
-﻿using Hallodoc.Entity.Models.ViewModel;
+﻿using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
-using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;

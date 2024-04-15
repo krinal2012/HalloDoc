@@ -1,8 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using Hallodoc.Entity.Models.ViewModel;
+using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
-using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Models;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
@@ -59,6 +58,7 @@ namespace HalloDoc.Controllers
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             var result = _IAdminDash.EditViewCaseData(RequestId, RequestTypeId, vp);
+            _notyf.Success("Data Edited Successfully..!");
             return View(result);
         }
         public IActionResult viewNotes(int RequestId)
@@ -262,9 +262,7 @@ namespace HalloDoc.Controllers
             {
                 FirstName = FirstName,
                 Email = Email,
-
             };
-
             if (_IAdminDash.SendLink(sendAgreement))
             {
                 _notyf.Success("Mail Send  Successfully..!");

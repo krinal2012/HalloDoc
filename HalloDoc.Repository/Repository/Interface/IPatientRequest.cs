@@ -1,4 +1,4 @@
-﻿using Hallodoc.Entity.Models.ViewModel;
+﻿using HalloDoc.Entity.Models.ViewModel;
 
 namespace HalloDoc.Repository.Repository.Interface
 {

@@ -52,6 +52,7 @@ namespace HalloDoc.Entity.Models.ViewModel
     }
     public class AdminProfile
     {
+        [Required(ErrorMessage = "UserName is required")]
         public string UserName { get; set; }
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
@@ -63,11 +64,14 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
         public required string Email { get; set; }
+        [Required(ErrorMessage = "ConfirmEmail is required")]
         [Compare("Email", ErrorMessage = "Email doesn't match.")]
         public string ConformEmail { get; set; }
         public string Mobile { get; set; }
+        [Required(ErrorMessage = "Address is required")]
         public string? Address1 { get; set; }
         public string? Address2 { get; set; }
+        [Required(ErrorMessage = "City is required")]
         public string? City { get; set; }
         public string? State { get; set; }
         [StringLength(6, MinimumLength = 6, ErrorMessage = "It must be of 6 digits")]

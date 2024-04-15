@@ -51,6 +51,8 @@
 
         </div>
         <input type="hidden" asp-for="CurrentPage" id="CurrentPage" />
+        <input type="hidden" asp-for="SortColumn" id="SortColumn" />
+        <input type="hidden" asp-for="SortOrder" id="SortOrder" />
     </form>
     <div class="table-responsive recordFont">
         <table class="table table-responsive my-2">
@@ -60,7 +62,7 @@
                     <th class="text-center">Action</th>
                     <th class="text-center">Role Name</th>
                     <th class="text-center">Email ID</th>
-                    <th class="text-center">Created date</th>
+                    <th class="text-center">Created Date <span class="sortbtn" data-value="CreatedDate"><i class="fa fa-sort"></i> </span> </th>
                     <th class="text-center">Sent date</th>
                     <th class="text-center">Sent</th>
                     <th class="text-center">Sent Tries</th>
@@ -154,6 +156,32 @@
 
     });
 
+    var sortOrderglobal = false;
+    var sortColumnglobal = "CreatedDate";
+    $(".sortbtn").on("click", function (e) {
+        var sortColumn = $(this).data("value");
+        var sortOrder = sortOrderglobal;
+        if (sortColumn == sortColumnglobal) {
+            if (sortOrder == true) {
+                sortOrderglobal = false;
+            }
+            else {
+                sortOrderglobal = true;
+            }
+        }
+        else {
+            sortColumnglobal = sortColumn;
+            if (sortOrder == true) {
+                sortOrderglobal = false;
+            }
+            else {
+                sortOrderglobal = true;
+            }
+        }
+        $('#SortOrder').val(sortOrderglobal);
+        $('#SortColumn').val(sortColumnglobal);
+        searchbtn(event);
+    });
 </script>
 
 

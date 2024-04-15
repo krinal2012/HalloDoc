@@ -1,11 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
     Layout = "_AdminDashboardLayout";
     ViewData["Title"] = "View Case";
 }
 @using HalloDoc.Entity.Models.ViewModel;
+@using static HalloDoc.Entity.Models.Constant;
 @model AdminProfile;
 
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
@@ -32,15 +30,14 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input asp-for="Status" type="text" class="form-control" placeholder="Status" value="Active" disabled>
+                <select asp-for="Status" type="text" class="form-control" placeholder="Status" asp-items="@(new SelectList(Enum.GetNames(typeof(state))))" disabled></select>
                 <label for="Status" class="form-label">Status </label>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <select class="form-select" id="role" disabled>
-                   @* <option>Options</option>*@
-                    <option>1</option>
+                <select asp-for="Role" class="form-select" id="role" placeholder="role" asp-items="@(new SelectList(ViewBag.Role, "RoleId", "Name"))" disabled>
                 </select>
-                <label for="role">Role</label>
+                <label for="role" class="form-label">Role</label>
+                
             </div>
         </div>
         <div class="d-flex justify-content-end">
@@ -106,16 +103,18 @@
         <input type="hidden" asp-for="AdminId" />
         <div class="row">
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="Address1" class="form-control" placeholder="Address1" disabled>
-            <label for="Address1" class="form-label">Address 1</label>
+                <input type="text" asp-for="Address1" class="form-control" placeholder="Address1" disabled required>
+                <label for="Address1" class="form-label">Address 1</label>
+                <span asp-validation-for="Address1" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
                 <input type="text" asp-for="Address2" class="form-control" placeholder="Address2" disabled>
                 <label for="Address2" class="form-label">Address 2</label>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="City" class="form-control" placeholder="City" disabled>
+                <input type="text" asp-for="City" class="form-control" placeholder="City" disabled required>
                 <label for="City" class="form-label">City</label>
+                <span asp-validation-for="City" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
                 <input type="text" asp-for="State" class="form-control" placeholder="State" disabled>

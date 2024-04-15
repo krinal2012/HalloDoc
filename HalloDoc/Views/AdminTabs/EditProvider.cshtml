@@ -34,7 +34,7 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <select asp-for="Status" type="text" class="form-control" placeholder="Status" disabled asp-items="@new SelectList(Enum.GetNames(typeof(state)))"></select>
+                <select asp-for="Status" type="text" class="form-control" placeholder="Status" asp-items="@(new SelectList(Enum.GetNames(typeof(state))))" disabled></select>
                 <label for="Status" class="form-label">Status </label>
             </div>
             <div class="mb-3 col-lg-6 form-floating">

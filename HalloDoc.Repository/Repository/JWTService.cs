@@ -31,6 +31,8 @@ namespace HalloDoc.Repository.Repository
                 new Claim("FirstName", userinfo.FirstName),
                 new Claim("UserId", userinfo.UserId.ToString()),
                 new Claim("Username", userinfo.Username.ToString()),
+                new Claim("Role", userinfo.Role.ToString()),
+                new Claim("RoleID", userinfo.RoleID.ToString()),
                 new Claim("AspNetUserId", userinfo.AspNetUserId)
                 };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]));

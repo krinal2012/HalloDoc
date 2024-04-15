@@ -1,22 +1,25 @@
 ﻿using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
+using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hallodoc.Controllers
+namespace HalloDoc.Controllers
 {
     //[CustomAuthorize("1")]
     public class DashboardController : Controller
     {
         private readonly HelloDocContext _context;
         private readonly IPatientDash _PatientDash;
+        private readonly IAdminTabs _IAdminTabs;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public DashboardController(HelloDocContext context, IPatientDash PatientDash, IHttpContextAccessor httpContextAccessor)
+        public DashboardController(HelloDocContext context, IPatientDash PatientDash, IHttpContextAccessor httpContextAccessor, IAdminTabs iAdminTabs)
         {
             _context = context;
             _PatientDash = PatientDash;
             _httpContextAccessor = httpContextAccessor;
+            _IAdminTabs = iAdminTabs;
         }
         public IActionResult Index(string sortColumn, string sortOrder, int pagesize = 5, int page = 1)
         {       
@@ -54,6 +57,12 @@ namespace Hallodoc.Controllers
             int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
             _PatientDash.EditProfile(id, vp);
             return View();
+        }
+        public IActionResult EditRole(string roleid)
+        {
+            int Roleid = Int32.Parse(roleid);
+            var result = _IAdminTabs.ViewEditRole(Roleid);
+            return View(result);
         }
     }
 }

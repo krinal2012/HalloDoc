@@ -119,19 +119,19 @@
             </div>
            
             <div class="text-secondary requestType">
-                <button class="me-2 bg-white border-0 reqtype" data-id="-1">
+                <button class="me-2 btn shadow-none reqtype allbtn" data-id="-1">
                     <i class="fa fa-circle" aria-hidden="true"></i> All
                 </button>
-                <button class="me-2 bg-white border-0 reqtype" data-id="2">
+                <button class="me-2 btn shadow-none reqtype" data-id="2">
                     <i class="fa fa-circle text-success" aria-hidden="true"></i> Patient
                 </button>
-                <button class="me-2 bg-white border-0 reqtype" data-id="3">
+                <button class="me-2 btn shadow-none reqtype" data-id="3">
                     <i class="fa fa-circle text-warning" aria-hidden="true"></i> Family/Friend
                 </button>
-                <button class="me-2 bg-white border-0 reqtype" data-id="1">
+                <button class="me-2 btn shadow-none reqtype" data-id="1">
                     <i class="fa fa-circle text-primary" aria-hidden="true"></i> Business
                 </button>
-                <button class="me-2 bg-white border-0 reqtype" data-id="4">
+                <button class="me-2 btn shadow-none reqtype" data-id="4">
                     <i class="fa fa-circle text-danger" aria-hidden="true"></i> Concierge
                 </button>
             </div>
@@ -187,6 +187,10 @@
             data: { searchValue: searchValue, btnName: btnName, statusid: statusid, Region: region, requesttype: requesttype },
             success: function (data) {
                 $("#btnContent").html(data);
+                $('#SelectedRegion').val('');
+                $(".reqtype").removeClass("border");
+                $(".allbtn").addClass("border");
+                $('#searchInput').val('');
                 console.log("data added");
             },
             error: function () {
@@ -214,6 +218,10 @@
         var region = $("#SelectedRegion").val();
         var pagesize = $('#pagesizedropdown').val();
         var requesttype = $(this).data("id");
+        if ($(this).hasClass('reqtype')) {
+            $(".reqtype").removeClass("border");
+            $(this).addClass("border");
+        }
         console.log("Button: " + statusidglobal +" " + btnnameglobal);
         console.log("Search value: " + searchValue);
         console.log("Region id: " + region);
@@ -225,7 +233,8 @@
             data: { searchValue: searchValue, statusid: statusidglobal, btnName: btnnameglobal, Region: region, requesttype: requesttype, pagesize: pagesize },
             success: function (data) {
                 console.log("AJAX success");               
-                $("#btnContent").html(data);                
+                $("#btnContent").html(data);   
+                
             },
             error: function (error) {
                 console.log("Error:", error);

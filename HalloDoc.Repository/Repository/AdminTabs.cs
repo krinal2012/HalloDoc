@@ -60,7 +60,7 @@ namespace HalloDoc.Repository.Repository
             return v;
 
         }
-        public bool AddAdminAccount(AdminProfile admindata, int[] checkboxes)
+        public bool AddAdminAccount(AdminProfile admindata)
         {
             var Aspnetuser = new AspNetUser();
             var AspNetUserRoles = new AspNetUserRole();
@@ -84,7 +84,7 @@ namespace HalloDoc.Repository.Repository
             Admin.FirstName = admindata.FirstName;
             Admin.LastName = admindata.LastName;
             Admin.Status = 1;
-            //Admin.RoleId = admindata.Role;
+            Admin.RoleId = Int32.Parse(admindata.Role);
             Admin.Email = admindata.Email;
             Admin.Mobile = admindata.Mobile;
             Admin.IsDeleted = new BitArray(1);
@@ -117,6 +117,11 @@ namespace HalloDoc.Repository.Repository
         public List<Role> RolePhyscian()
         {
             var role = _context.Roles.Where(r => r.AccountType == 3).ToList();
+            return (role);
+        }
+        public List<Role> RoleAdmin()
+        {
+            var role = _context.Roles.Where(r => r.AccountType == 2).ToList();
             return (role);
         }
         public bool ProfilePassword(string Password, int UserId)
@@ -907,6 +912,12 @@ namespace HalloDoc.Repository.Repository
                           Mobile = req.PhoneNumber,
                           Notes = req.Reason
                       }).ToList();
+            switch (formData.SortColumn)
+            {
+                case "CreatedDate":
+                    bh = formData.SortOrder == "false" ? bh.OrderByDescending(x => x.createdDate).ToList() : bh.OrderBy(x => x.createdDate).ToList();
+                    break;
+            }
             BlockHistory data = new BlockHistory();
             int totalItemCount = bh.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)formData.PageSize);
@@ -1036,6 +1047,12 @@ namespace HalloDoc.Repository.Repository
                                                  Action = (EmailAction)em.Action,
 
                                              }).ToList();
+            switch (rm.SortColumn)
+            {
+                case "CreatedDate":
+                    allData = rm.SortOrder == "false" ? allData.OrderByDescending(x => x.CreateDate).ToList() : allData.OrderBy(x => x.CreateDate).ToList();
+                    break;
+            }
             SearchInputs data = new SearchInputs();
             int totalItemCount = allData.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)rm.PageSize);
@@ -1069,6 +1086,12 @@ namespace HalloDoc.Repository.Repository
                                                  Action = (EmailAction)em.Action,
 
                                              }).ToList();
+            switch (rm.SortColumn)
+            {
+                case "CreatedDate":
+                    allData = rm.SortOrder == "false" ? allData.OrderByDescending(x => x.CreateDate).ToList() : allData.OrderBy(x => x.CreateDate).ToList();
+                    break;
+            }
             SearchInputs data = new SearchInputs();
             int totalItemCount = allData.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)rm.PageSize);

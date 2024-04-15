@@ -9,8 +9,6 @@ using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
 using AspNetCoreHero.ToastNotification.Abstractions;
-using HalloDoc.Repository.Repository;
-using Hallodoc.Entity.Models.ViewModel;
 
 namespace HellodocMVC.Controllers
 {

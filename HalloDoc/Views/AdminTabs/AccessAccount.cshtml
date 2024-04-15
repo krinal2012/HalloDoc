@@ -32,7 +32,7 @@
                     <td class="table-text">@item.Name</td>
                     <td class="table-text"> @Enum.GetName(typeof(AccountType),item.AccountType)</td>
                     <td class="table-text text-center">
-                        <a class="btn btn-sm  btn-outline-info" asp-action="EditRole" asp-controller="AdminTabs" asp-route-RoleId="@item.RoleId">
+                        <a class="btn btn-sm btn-outline-info " data-roleid="@item.RoleId" asp-controller="AdminDash" asp-action="EditRole" asp-route-roleid="@item.RoleId">
                             Edit
                         </a>
                         <a class="btn btn-sm  btn-outline-info deleterolebutton" data-roleid="@item.RoleId" >
@@ -113,6 +113,23 @@
 
         });
     });
+
+    //$('.editrolebutton').on('click', function () {
+    //    var roleid = $(this).data("roleid");
+    //            $.ajax({
+    //                method: "POST",
+    //        url: "/AdminTabs/EditRole?roleid=" + roleid,
+    //                success: function (result) {
+    //                    console.log(result);
+                       
+    //                },
+
+    //                error: function () {
+    //                    console.log("error");
+    //                }
+    //            });
+    //});
+
     $(document).on('click', '.page-link', function (event) {
         console.log("hhhh");
         var page = $(this).data('page');

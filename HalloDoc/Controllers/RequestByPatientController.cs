@@ -1,4 +1,4 @@
-﻿using Hallodoc.Entity.Models.ViewModel;
+﻿using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Repository.Repository.Interface;
@@ -40,7 +40,5 @@ namespace HellodocMVC.Controllers
             _PatientDash.elseRequset(viewFamilyReq);
             return RedirectToAction("Index", "Dashboard");
         }       
-              
-        
     }
 }

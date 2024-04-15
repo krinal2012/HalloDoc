@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace Hallodoc.Entity.Models.ViewModel
+namespace HalloDoc.Entity.Models.ViewModel
 {
     public class viewPatientReq
     {

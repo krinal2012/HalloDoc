@@ -26,6 +26,7 @@
         <div class="mb-3 col-lg-6 form-floating">
             <input asp-for="Role" type="text" class="form-control" placeholder="Status"  required/>
             <label for="Status" class="form-label">Role Name </label>
+            <span asp-validation-for="Role" class="text-danger"></span>
         </div>
         <div class="mb-3 col-lg-6 form-floating">
             <select asp-for="AccountType" class="form-select" placeholder="Account" id="AccountType" onchange="rolemenu()">  
@@ -38,7 +39,14 @@
             <label for="Account" class="form-label">Account Type</label>
         </div>
         <input type="hidden" asp-for="files" id="menus"/>
-        <div class="response px-3 mx-3 py-2"></div>
+        <div class="response px-3 mx-3 py-2"> </div>
+        @if (TempData["Errormessage"] != null)
+        {
+            <div class="alert text-start alert-info alert-dismissible fade show" role="alert">
+                <strong>Heyy</strong> @TempData["Errormessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
         <div class="d-flex justify-content-end">    
             <buttin type="submit" class="btn btn-info me-2" onclick="saveedit()">Save</buttin>
             <button type="reset" class="btn btn-outline-info">Cancel</button>

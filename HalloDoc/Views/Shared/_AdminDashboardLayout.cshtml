@@ -1,4 +1,5 @@
-﻿
+﻿@using HalloDoc.Repository.Repository.Interface
+@inject ILogin loginRepository
 @{
     string path = Context.Request.Path;
 }
@@ -40,7 +41,7 @@
                 <span class="dNone"> Welcome Admin                   
                     </span>
                 <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" asp-action="Logout" asp-controller="AdminHome">
-                    Log Out
+                    Logout
                 </a>
                 <a class=" text-info text-decoration-none dBlock" asp-action="Logout" asp-controller="Login">
                     <i class="fa fa-sign-out fa-2x border border-info rounded p-2 m-1"></i>
@@ -64,9 +65,12 @@
                         <li class="nav-item">
                             <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/ProviderLocation") ? "activeNav" : "")" asp-action="ProviderLocation" asp-controller="AdminTabs">ProviderLocation</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-2 text-dark @(path.EndsWith ("/AdminTabs/AdminProfile") ? "activeNav" : "")" asp-action="AdminProfile" asp-controller="AdminTabs">My Profile</a>
-                        </li>
+                        @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "MyProfile"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link px-2 text-dark @(path.EndsWith ("/AdminTabs/AdminProfile") ? "activeNav" : "")" asp-action="AdminProfile" asp-controller="AdminTabs">My Profile</a>
+                            </li>
+                        }
                         <li class="nav-item dropdown ">
                             <a class="nav-link dropdown px-2 text-dark @(path.StartsWith ("/AdminTabs/Providers") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                  Providers

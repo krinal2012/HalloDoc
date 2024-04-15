@@ -1,0 +1,171 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_AdminDashboardLayout";
+    ViewData["Title"] = "View Case";
+}
+@using HalloDoc.Entity.Models.ViewModel;
+@using static HalloDoc.Entity.Models.Constant;
+@model AdminProfile;
+
+<div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
+    <div class="d-flex align-self-center">
+        <h3 class="">Add Admin Account</h3>
+    </div>
+    <div class=" btn d-flex justify-content-end">
+        <button class="btn border border-info text-info shadow-none backButton">
+            <i class="fa fa-angle-left pe-1 text-info"> </i> Back
+        </button>
+    </div>
+</div>
+<div class="bg-white reqform p-3 container ">
+    <form class="bg-white sbox" id="mainform">
+        <p class="h5 p-1"><b>Account Information</b></p>
+        <div class="row">
+            <div class="mb-3 col-lg-6 form-floating">
+                <input asp-for="UserName" type="text" class="form-control" placeholder="User Name" required>
+                <label for="UserName" class="form-label">User Name</label>
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input asp-for="Password" type="text" class="form-control" placeholder="Password" required>
+                <label for="Password" class="form-label">Password </label>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <select asp-for="Status" type="text" class="form-select" placeholder="Status" asp-items="@(new SelectList(Enum.GetNames(typeof(state))))"></select>
+                <label for="Status" class="form-label">Status </label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <select asp-for="Role" class="form-select" id="role" placeholder="role" asp-items="@(new SelectList(ViewBag.Role, "RoleId", "Name"))">
+                </select>
+                <label for="role" class="form-label">Role</label>
+            </div>
+        </div>
+    
+        <p class="h5 p-1"><b>Administrator Information</b></p>
+        <input type="hidden" asp-for="AdminId" />
+        <div class="row">
+            <div class="mb-3 col-lg-6 form-floating">
+                <input asp-for="FirstName" type="text" class="form-control" placeholder="First Name"  required>
+                <label for="FirstName" class="form-label">First Name</label>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="LastName" class="form-control" placeholder="last Name" >
+                <label for="LastName" class="form-label">Last Name</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="email" asp-for="Email" class="form-control" placeholder="abc@email.com"
+                       aria-describedby="emailHelp"  required>
+                <label for="email" class="form-label">E-mail</label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="email" asp-for="ConformEmail" class="form-control" placeholder="abc@email.com"
+                       aria-describedby="emailHelp"  required>
+                <label for="email" class="form-label">Confirm E-mail</label>
+                <span asp-validation-for="ConformEmail" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating phone">
+                <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone" >
+            </div>
+            <input asp-for="RegionIdList" type="hidden" id="regionids" />
+            @foreach (var items in ViewBag.AssignCase)
+            {
+                @if (Model != null && Model.RegionIds.Count > 0 && Model.RegionIds.Exists(id => id.RegionId == items.RegionId))
+                {
+                    <div class="form-check col">
+                        <input class="form-check-input" type="checkbox" name="RegionIds" value="@items.RegionId"  checked>
+                        <label class="form-check-label" for="flexCheckDisabled"> @items.Name </label>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-check col">
+                        <input class="form-check-input" type="checkbox" value="@items.RegionId" name="RegionIds" >
+                        <label class="form-check-label" for="flexCheckDisabled"> @items.Name </label>
+                    </div>
+                }
+            }
+
+
+        </div>
+     
+      <p class="h5 p-1"><b>Mailing & Billing Information</b></p>
+        <input type="hidden" asp-for="AdminId" />
+        <div class="row">
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="Address1" class="form-control" placeholder="Address1"  required>
+                <label for="Address1" class="form-label">Address 1</label>
+                <span asp-validation-for="Address1" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="Address2" class="form-control" placeholder="Address2" >
+                <label for="Address2" class="form-label">Address 2</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="City" class="form-control" placeholder="City"  required>
+                <label for="City" class="form-label">City</label>
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="State" class="form-control" placeholder="State" >
+                <label for="State" class="form-label">State</label>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating">
+                <input type="text" asp-for="ZipCode" class="form-control" placeholder="Zip-code" >
+                <label for="Zip-code" class="form-label">Zip-code</label>
+                <span asp-validation-for="ZipCode" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-lg-6 form-floating phone">
+                <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone1" >
+            </div>
+        </div>
+    
+    <div class=" d-flex justify-content-end">
+        <button type="submit" class=" btn btn-success text-white rounded px-3 me-2 submitall add">Add Account</button>
+    </div>
+    </form>
+</div>
+
+<script>
+   
+    // Event listener for the "Back" button
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('backButton')) {
+            history.back();
+        }
+    });
+
+    $('#mainform').on('submit', function (e) {
+        event.preventDefault();
+        var admindata = $('#mainform').serialize();
+        var clonedForm = $(this).clone();
+        if (!$('#mainform')[0].checkValidity()) {
+            return;
+        }
+        let checkboxes = document.querySelectorAll('input[name="RegionIds"]:checked');
+        let RegionIdList = [];
+        checkboxes.forEach((checkbox) => {
+            RegionIdList.push(checkbox.value);
+        });
+        document.querySelector('#regionids').value = RegionIdList.join(',');
+        console.log(admindata);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("AddAdminAccount", "AdminTabs")',
+            data: admindata  ,
+            success: function (response) {
+                console.log('Data sent successfully', response);
+            },
+            error: function (error) {
+                console.log('Error sending data', error);
+            }
+        });
+    });
+</script>
+
+
+

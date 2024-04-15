@@ -4,7 +4,7 @@
 }
 @using HalloDoc.Entity.Models.ViewModel;
 @model BlockHistory;
-<div class=" container-fluid ">
+<div class=" container-fluid m-3">
     <h3><b>Block History</b></h3>
 </div>
 <div class="bg-white reqform container-fluid p-3 mx-2">
@@ -16,6 +16,7 @@
         <div class="mb-3 col-lg-3 form-floating">
             <input type="date" asp-for="createdDate" class="form-control" id="createdDate">
             <label class="form-label" for="Date">Created Date</label>
+         
         </div>
         <div class="mb-3 col-lg-3 form-floating">
             <input type="text" asp-for="Email" class="form-control" placeholder="abc@email.com"
@@ -39,6 +40,8 @@
             </div>
         </div>
         <input type="hidden" asp-for="CurrentPage" id="CurrentPage" />
+        <input type="hidden" asp-for="SortColumn" id="SortColumn" />
+        <input type="hidden" asp-for="SortOrder" id="SortOrder" />
     </form>
 
     <table class="table table-responsive my-2">
@@ -47,7 +50,7 @@
                 <th>Patient Name</th>
                 <th>Phone Number</th>
                 <th>Email</th>
-                <th>Created Date</th>
+                <th>Created Date <span class="sortbtn" data-value="CreatedDate"><i class="fa fa-sort"></i> </span> </th>
                 <th>Notes</th>
                 <th>Is Active</th>
                 <th class="text-center">Actions</th>
@@ -173,7 +176,33 @@
         console.log(page);
         $('#CurrentPage').val(page);
         searchbtn(event);
+    });
 
+    var sortOrderglobal = false;
+    var sortColumnglobal = "CreatedDate";
+    $(".sortbtn").on("click", function (e) {
+        var sortColumn = $(this).data("value");
+        var sortOrder = sortOrderglobal;
+        if (sortColumn == sortColumnglobal) {
+            if (sortOrder == true) {
+                sortOrderglobal = false;
+            }
+            else {
+                sortOrderglobal = true;
+            }
+        }
+        else {
+            sortColumnglobal = sortColumn;
+            if (sortOrder == true) {
+                sortOrderglobal = false;
+            }
+            else {
+                sortOrderglobal = true;
+            }
+        }
+        $('#SortOrder').val(sortOrderglobal);
+        $('#SortColumn').val(sortColumnglobal);
+        searchbtn(event);
     });
 </script>
 

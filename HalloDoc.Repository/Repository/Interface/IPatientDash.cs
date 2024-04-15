@@ -1,5 +1,4 @@
-﻿using Hallodoc.Entity.Models.ViewModel;
-using HalloDoc.Entity.Models.ViewModel;
+﻿using HalloDoc.Entity.Models.ViewModel;
 using Microsoft.AspNetCore.Http;
 
 namespace HalloDoc.Repository.Repository.Interface

@@ -2,24 +2,11 @@
 using HalloDoc.Repository.Repository.Interface;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Entity.DataModels;
-using static HalloDoc.Entity.Models.Constant;
-using System.Globalization;
-using System.Web.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Collections;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Net.Mail;
-using System.Net;
-using Microsoft.Extensions.Configuration;
 using HalloDoc.Entity.Models;
-using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Asn1.Ocsp;
-using System.Security.Cryptography;
-using System.Diagnostics.Metrics;
-using Hallodoc.Entity.Models.ViewModel;
-using Twilio.TwiML.Messaging;
-using Twilio.TwiML.Voice;
 
 namespace HalloDoc.Repository.Repository
 {

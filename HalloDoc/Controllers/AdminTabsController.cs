@@ -3,9 +3,11 @@ using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Models;
+using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
+using System.Data;
 using System.Web.Helpers;
 using Twilio.TwiML.Messaging;
 using Twilio.TwiML.Voice;
@@ -20,7 +22,7 @@ namespace HalloDoc.Controllers
         private readonly IAdminDash _IAdminDash;
         private readonly HelloDocContext _context;
         private readonly INotyfService _notyf;
-        public AdminTabsController(IAdminDash IAdminDash, HelloDocContext context, INotyfService notyf, 
+        public AdminTabsController(IAdminDash IAdminDash, HelloDocContext context, INotyfService notyf,
             IHttpContextAccessor httpContextAccessor, IAdminTabs IAdminTabs)
         {
             _IAdminDash = IAdminDash;
@@ -36,25 +38,27 @@ namespace HalloDoc.Controllers
         }
         public IActionResult AdminProfile(string UserId)
         {
-            if(UserId == null)
+            if (UserId == null)
             {
                 var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
                 UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
             }
             ViewData["Heading"] = "My Profile";
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-           var result = _IAdminTabs.ViewAdminProfile(UserId);
+            ViewBag.Role = _IAdminTabs.RoleAdmin();
+            var result = _IAdminTabs.ViewAdminProfile(UserId);
             return View(result);
         }
         public IActionResult AddAdminProfile()
         {
             ViewData["Heading"] = "Add Admin Account";
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            return View("AdminProfile");
+            ViewBag.Role = _IAdminTabs.RoleAdmin();
+            return View("AddAdminProfile");
         }
-        public IActionResult AddAdminAccount(AdminProfile admindata, int[] checkboxes)
+        public IActionResult AddAdminAccount(AdminProfile admindata)
         {
-           bool res = _IAdminTabs.AddAdminAccount(admindata, checkboxes);
+            bool res = _IAdminTabs.AddAdminAccount(admindata);
             return RedirectToAction("AdminProfile");
         }
         public IActionResult ProfilePassword(string Password)
@@ -87,7 +91,7 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult EditBillingInfo(AdminProfile AdminProfile)
         {
-            if ( _IAdminTabs.EditBillingInfo(AdminProfile))
+            if (_IAdminTabs.EditBillingInfo(AdminProfile))
             {
                 _notyf.Success("Information changed Successfully...");
             }
@@ -97,13 +101,13 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("AdminProfile");
         }
-        public IActionResult ProviderMenu(int page, int region=-1 )
+        public IActionResult ProviderMenu(int page, int region = -1)
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             var res = _IAdminTabs.PhysicianAll(region, page);
             return View(res);
         }
-        public IActionResult changeNoti(int[] files, int region=-1)
+        public IActionResult changeNoti(int[] files, int region = -1)
         {
             //bool res = _IAdminTabs.changeNoti(files);
             if (_IAdminTabs.changeNoti(files, region))
@@ -127,7 +131,7 @@ namespace HalloDoc.Controllers
             }
             else if (radio == 2)
             {
-                result = _IAdminTabs.ContactProviderMail(Email, Message); 
+                result = _IAdminTabs.ContactProviderMail(Email, Message);
             }
             else
             {
@@ -159,7 +163,7 @@ namespace HalloDoc.Controllers
             ViewBag.Role = _IAdminTabs.RolePhyscian();
             return View("EditProvider");
         }
-        public IActionResult EditPassword(int PhysicianId,string Password)
+        public IActionResult EditPassword(int PhysicianId, string Password)
         {
             if (_IAdminTabs.EditPassword(Password, PhysicianId))
             {
@@ -169,7 +173,7 @@ namespace HalloDoc.Controllers
             {
                 _notyf.Error("Password not Changed...");
             }
-            return RedirectToAction("EditProvider", new { PhysicianId= PhysicianId });
+            return RedirectToAction("EditProvider", new { PhysicianId = PhysicianId });
         }
         public IActionResult EditAdministrator(PhysiciansData physiciansData)
         {
@@ -234,11 +238,7 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-        public IActionResult EditRole(int RoleId)
-        {
-            var result = _IAdminTabs.ViewEditRole(RoleId);
-            return View(result);
-        }
+
         public IActionResult RolebyAccountType(AccountType Account)
         {
             var v = _IAdminTabs.RolebyAccountType(Account);
@@ -248,8 +248,16 @@ namespace HalloDoc.Controllers
         {
             var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
             var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "AspNetUserId").Value;
-            var v = _IAdminTabs.SaveCreateRole(roles,UserId);
-            _notyf.Success("Role Created Successfully");
+            if (roles.menus != null)
+            {
+                var v = _IAdminTabs.SaveCreateRole(roles, UserId);
+                _notyf.Success("Role Created Successfully");
+            }
+            else
+            {
+                TempData["Errormessage"] = "Please Select one of the role!!";
+                return View("CreateRole");
+            }
             ModelState.Clear();
             return View("CreateRole");
         }
@@ -257,12 +265,12 @@ namespace HalloDoc.Controllers
         {
             var v = _IAdminTabs.SaveEditRole(roles);
             _notyf.Success("Role Edited Successfully");
-            return RedirectToAction("EditRole" , new { RoleId = roles.RoleId});
+            return RedirectToAction("EditRole", new { RoleId = roles.RoleId });
         }
         public IActionResult DeleteRole(int RoleId)
         {
             bool res = _IAdminTabs.DeleteRole(RoleId);
-            if(res==true)
+            if (res == true)
             {
                 _notyf.Success("Role Deleted..");
             }
@@ -292,12 +300,12 @@ namespace HalloDoc.Controllers
             }
             ViewBag.Professions = _context.HealthProfessionalTypes.ToList();
             var result = _IAdminTabs.EditPartners(VendorId);
-            return View("PartnersAddEdit",result);
+            return View("PartnersAddEdit", result);
         }
         public IActionResult EditPartnersData(HealthProfessional hp)
         {
             var result = _IAdminTabs.EditPartnersData(hp);
-            if (result==true)
+            if (result == true)
             {
                 _notyf.Success("Data edited Successfully...");
             }
@@ -323,7 +331,7 @@ namespace HalloDoc.Controllers
         }
         public IActionResult RecordsPatientExplore(int UserId)
         {
-            var res= _IAdminTabs.RecordsPatientExplore(UserId);
+            var res = _IAdminTabs.RecordsPatientExplore(UserId);
             return View(res);
         }
         public IActionResult RecordsBlock(BlockHistory Formdata)
@@ -334,7 +342,7 @@ namespace HalloDoc.Controllers
         public IActionResult UnBlock(int reqId)
         {
             bool res = _IAdminTabs.UnBlock(reqId);
-            return RedirectToAction("RecordsBlock"); 
+            return RedirectToAction("RecordsBlock");
         }
         public IActionResult RecordsSearch(SearchInputs search)
         {
@@ -361,6 +369,11 @@ namespace HalloDoc.Controllers
             var res = _IAdminTabs.RecordsSMSLog(search);
             return View(res);
         }
-
+        public IActionResult EditRole(string roleid)
+        {
+            int Roleid = Int32.Parse(roleid);
+            var result = _IAdminTabs.ViewEditRole(Roleid);
+            return View(result);
+        }
     }
 }

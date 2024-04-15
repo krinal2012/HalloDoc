@@ -33,19 +33,23 @@ namespace HalloDoc.Repository.Repository
                 admin.LastName = admin.LastName ?? string.Empty;
                 admin.Role = datarole.Name;
                 admin.AspNetUserId = user.Id;
+            
                 if (admin.Role == "Admin")
                 {
                     var admindata = _context.Admins.FirstOrDefault(u => u.AspNetUserId == user.Id);
                     admin.UserId = admindata.AdminId;
+                    admin.RoleID = (int)admindata.RoleId;
                 }
                 else if (admin.Role == "Patient")
                 {
                     var admindata = _context.Users.FirstOrDefault(u => u.AspNetUserId == user.Id);
                     admin.UserId = admindata.UserId;
+                   
                 }
                 else
                 {
                     var admindata = _context.Physicians.FirstOrDefault(u => u.AspNetUserId == user.Id);
+                    admin.RoleID = (int)admindata.RoleId;
                     //admin.UserId = admindata.Physicianid;
                 }
                 return admin;
@@ -83,6 +87,20 @@ namespace HalloDoc.Repository.Repository
             _context.SaveChanges();
             return true;
 
+        }
+
+        public bool isAccessGranted(int roleId, string menuName)
+        {
+            // Get the list of menu IDs associated with the role
+            IQueryable<int> menuIds = _context.RoleMenus
+                                            .Where(e => e.RoleId == roleId)
+                                            .Select(e => e.MenuId);
+
+            // Check if any menu with the given name exists in the list of menu IDs
+            bool accessGranted = _context.Menus
+                                         .Any(e => menuIds.Contains(e.MenuId) && e.Name == menuName);
+
+            return accessGranted;
         }
     }
 }
