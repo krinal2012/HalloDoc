@@ -238,7 +238,6 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-
         public IActionResult RolebyAccountType(AccountType Account)
         {
             var v = _IAdminTabs.RolebyAccountType(Account);
@@ -248,7 +247,7 @@ namespace HalloDoc.Controllers
         {
             var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
             var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "AspNetUserId").Value;
-            if (roles.menus != null)
+            if (roles.files != null)
             {
                 var v = _IAdminTabs.SaveCreateRole(roles, UserId);
                 _notyf.Success("Role Created Successfully");

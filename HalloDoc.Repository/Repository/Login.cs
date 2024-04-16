@@ -50,7 +50,7 @@ namespace HalloDoc.Repository.Repository
                 {
                     var admindata = _context.Physicians.FirstOrDefault(u => u.AspNetUserId == user.Id);
                     admin.RoleID = (int)admindata.RoleId;
-                    //admin.UserId = admindata.Physicianid;
+                    admin.UserId = admindata.PhysicianId;
                 }
                 return admin;
             }

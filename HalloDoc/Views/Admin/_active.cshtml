@@ -89,7 +89,6 @@
                                 <i class="fa fa-list"></i> View Notes</a></li>
                             <li><a class="dropdown-item" onclick="location.href='@Url.Action("SendOrders", "Admin",new {RequestId=item.RequestId})'">
                                 <i class="fa fa-shopping-cart"></i> Orders </a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fa fa-id-badge"></i>  Doctors Note</a></li>
                             <li><a class="dropdown-item" asp-action="EncounterForm" asp-controller="Admin" asp-route-RequestId="@item.RequestId"><i class="fa-regular fa-rectangle-list"></i> Encounter</a></li>
                         </ul>
                     </td>

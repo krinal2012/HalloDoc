@@ -66,7 +66,7 @@
                     console.log(response);
                     var select = "";
                     for (var i = 0; i < response.length; i++) {
-                        select += '<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" value="' + response[i].manuId + '"><label class="form-check-label">' + response[i].name + '</label></div>'
+                        select += '<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" value="' + response[i].menuId + '"><label class="form-check-label">' + response[i].name + '</label></div>'
                     }
                     $(".response").html(select);
                 },

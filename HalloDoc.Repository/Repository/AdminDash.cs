@@ -19,19 +19,26 @@ namespace HalloDoc.Repository.Repository
             _context = context;
             _emailConfig = emailConfig;
         }
-        public CountStatusWiseRequestModel CountRequestData()
+        public CountStatusWiseRequestModel CountRequestData(int phyid)
         {
+            var baseQuery = _context.Requests.Where(r => r.IsDeleted == new BitArray(1));
+
+            if (phyid >= 0)
+            {
+                baseQuery = baseQuery.Where(r => r.PhysicianId == phyid);
+            }
+
             return new CountStatusWiseRequestModel
             {
-                NewRequest = _context.Requests.Where(r => r.Status == 1).Count(),
-                PendingRequest = _context.Requests.Where(r => r.Status == 2).Count(),
-                ActiveRequest = _context.Requests.Where(r => (r.Status == 4 || r.Status == 5)).Count(),
-                ConcludeRequest = _context.Requests.Where(r => r.Status == 6).Count(),
-                ToCloseRequest = _context.Requests.Where(r => (r.Status == 3 || r.Status == 7 || r.Status == 8)).Count(),
-                UnpaidRequest = _context.Requests.Where(r => r.Status == 9).Count()
+                NewRequest = baseQuery.Where(r => r.Status == 1).Count(),
+                PendingRequest = baseQuery.Where(r => r.Status == 2).Count(),
+                ActiveRequest = baseQuery.Where(r => (r.Status == 4 || r.Status == 5)).Count(),
+                ConcludeRequest = baseQuery.Where(r => r.Status == 6).Count(),
+                ToCloseRequest = baseQuery.Where(r => (r.Status == 3 || r.Status == 7 || r.Status == 8)).Count(),
+                UnpaidRequest = baseQuery.Where(r => r.Status == 9).Count()
             };
         }
-        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize, int? Region, string sortColumn, string sortOrder, int? requesttype)
+        public PaginatedViewModel<AdminList> NewRequestData(int userid,int statusid, string? searchValue, int page, int pagesize, int? Region, string sortColumn, string sortOrder, int? requesttype)
         {
             List<int> id = new List<int>();
             if (statusid == 1) { id.Add(1); }
@@ -60,6 +67,7 @@ namespace HalloDoc.Repository.Repository
                                rg.Name.Contains(searchValue))
                                && (Region == -1 || rc.RegionId == Region)
                                && (requesttype == -1 || req.RequestTypeId == requesttype)
+                               && (userid == -1 || req.PhysicianId == userid)
                         orderby req.CreatedDate descending
                         select new AdminList
                         {
@@ -193,7 +201,7 @@ namespace HalloDoc.Repository.Repository
         {
             var request = _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
             request.PhysicianId = PhysicianId;
-            request.Status = 2;
+            request.Status = 1;
             _context.Requests.Update(request);
             _context.SaveChanges();
 
@@ -202,7 +210,7 @@ namespace HalloDoc.Repository.Repository
             rsl.PhysicianId = PhysicianId;
             rsl.Notes = Notes;
             rsl.CreatedDate = DateTime.Now;
-            rsl.Status = 2;
+            rsl.Status = 1;
             _context.RequestStatusLogs.Add(rsl);
             _context.SaveChanges();
         }

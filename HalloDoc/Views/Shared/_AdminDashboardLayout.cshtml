@@ -38,7 +38,7 @@
                  class=" my-1" />
 
             <div class="position-absolute top-0 end-0 d-flex btn btn-sm align-items-center">
-                <span class="dNone"> Welcome Admin                   
+                <span class="dNone"> Welcome @Crredntials.UserName()                   
                     </span>
                 <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" asp-action="Logout" asp-controller="AdminHome">
                     Logout
@@ -58,61 +58,117 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                        <li class="nav-item">
-                            <a class="nav-link px-2 text-dark  @(path.StartsWith ("/Admin/") ? "activeNav" : "")" aria-current="page" asp-action="Index" asp-controller="Admin">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/ProviderLocation") ? "activeNav" : "")" asp-action="ProviderLocation" asp-controller="AdminTabs">ProviderLocation</a>
-                        </li>
+                         @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Dashboard"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link px-2 text-dark  @(path.StartsWith ("/Admin/") ? "activeNav" : "")" aria-current="page" asp-action="Index" asp-controller="Admin">Dashboard</a>
+                            </li>
+                        }
+                         @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "ProviderLocation"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/ProviderLocation") ? "activeNav" : "")" asp-action="ProviderLocation" asp-controller="AdminTabs">ProviderLocation</a>
+                            </li>
+                        }
                         @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "MyProfile"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link px-2 text-dark @(path.EndsWith ("/AdminTabs/AdminProfile") ? "activeNav" : "")" asp-action="AdminProfile" asp-controller="AdminTabs">My Profile</a>
                             </li>
                         }
-                        <li class="nav-item dropdown ">
-                            <a class="nav-link dropdown px-2 text-dark @(path.StartsWith ("/AdminTabs/Providers") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                 Providers
-                            </a>
-                            <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item NavDropdown" asp-action="ProviderMenu" asp-controller="AdminTabs">Provider</a>
-                                <a class="dropdown-item NavDropdown" asp-action="Index" asp-controller="Scheduling">Scheduling</a>
-                                <a class="dropdown-item NavDropdown" href="#"> Invoicing</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/Partners") ? "activeNav" : "")" asp-action="Partners" asp-controller="AdminTabs">Partners</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link dropdown px-2 text-dark @(path.StartsWith("/AdminTabs/Access") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Access
-                            </a>
-                            <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item NavDropdown" asp-action="AccessAccount" asp-controller="AdminTabs">Account Access</a>
-                                <a class="dropdown-item NavDropdown" asp-action="AccessUser" asp-controller="AdminTabs">User Access</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link dropdown px-2 text-dark @(path.StartsWith("/AdminTabs/Records") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Records
-                            </a>
-                            <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item NavDropdown" asp-action="RecordsSearch" asp-controller="AdminTabs">Search Records</a>
-                                <a class="dropdown-item NavDropdown" asp-action="RecordsEmailLog" asp-controller="AdminTabs"> Email logs
+                        @if (Crredntials.Role()=="Admin")
+                        {
+                            <li class="nav-item dropdown ">
+                                <a class="nav-link dropdown px-2 text-dark @(path.StartsWith ("/AdminTabs/Providers") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Providers
                                 </a>
-                                <a class="dropdown-item NavDropdown" asp-action="RecordsSMSLog" asp-controller="AdminTabs">
-                                    SMS logs
+                                <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
+                                     @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Provider"))
+                                    {
+                                        <a class="dropdown-item NavDropdown" asp-action="ProviderMenu" asp-controller="AdminTabs">Provider</a>
+                                    }
+                                    @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Scheduling"))
+                                    {
+                                        <a class="dropdown-item NavDropdown" asp-action="Index" asp-controller="Scheduling">Scheduling</a>
+                                    }
+                                    @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Invoicing"))
+                                    {
+                                        <a class="dropdown-item NavDropdown" href="#"> Invoicing</a>
+                                    }
+                                </div>
+                            </li>
+                        }
+                        @if (Crredntials.Role() == "Physician")
+                        {
+                            @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "MySchedule"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link px-2 text-dark" asp-action="Index" asp-controller="Scheduling">My Schedule</a>
+                                </li>
+                            }
+                            @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Invoicing"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link px-2 text-dark" >Invoicing</a>
+                                </li>
+                            }
+                        }
+                        @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "VendorsInfo"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/Partners") ? "activeNav" : "")" asp-action="Partners" asp-controller="AdminTabs">Partners</a>
+                            </li>
+                        }
+                        @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Role"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link dropdown px-2 text-dark @(path.StartsWith("/AdminTabs/Access") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Access
                                 </a>
-                                <a class="dropdown-item NavDropdown" asp-action="RecordsPatient" asp-controller="AdminTabs">
-                                    Patient Records
+                                <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item NavDropdown" asp-action="AccessAccount" asp-controller="AdminTabs">Account Access</a>
+                                    <a class="dropdown-item NavDropdown" asp-action="AccessUser" asp-controller="AdminTabs">User Access</a>
+                                </div>
+                            </li>
+                        }
+                        @if (Crredntials.Role() == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link dropdown px-2 text-dark @(path.StartsWith("/AdminTabs/Records") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Records
                                 </a>
-                                <a class="dropdown-item NavDropdown" asp-action="RecordsBlock" asp-controller="AdminTabs">
-                                    Blocked History
-                                </a>
-                            </div>
-                        </li>
-                      
+                                <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
+                                    @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "History"))
+                                    {
+                                        <a class="dropdown-item NavDropdown" asp-action="RecordsSearch" asp-controller="AdminTabs">Search Records</a>
+                                    }
+                                    @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "EmailLogs"))
+                                    {
+                                        <a class="dropdown-item NavDropdown" asp-action="RecordsEmailLog" asp-controller="AdminTabs">
+                                            Email logs
+                                        </a>
+                                    }
+                                    @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "SMSLogs"))
+                                    {
+                                        <a class="dropdown-item NavDropdown" asp-action="RecordsSMSLog" asp-controller="AdminTabs">
+                                            SMS logs
+                                        </a>
+                                    }
+                                    @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "PatientRecords"))
+                                    {
+                                        <a class="dropdown-item NavDropdown" asp-action="RecordsPatient" asp-controller="AdminTabs">
+                                            Patient Records
+                                        </a>
+                                    }
+                                    @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "BlockedHistory"))
+                                    {
+                                        <a class="dropdown-item NavDropdown" asp-action="RecordsBlock" asp-controller="AdminTabs">
+                                            Blocked History
+                                        </a>
+                                    }
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

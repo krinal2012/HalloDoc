@@ -1,6 +1,8 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@using HalloDoc.Repository.Repository.Interface
+@inject ILogin loginRepository
 @using static HalloDoc.Entity.Models.Constant;
 @using HalloDoc.Entity.Models.ViewModel;
 @model CountStatusWiseRequestModel
@@ -13,59 +15,65 @@
     @Html.Partial("_TransferCase.cshtml")
     @Html.Partial("_BlockCase.cshtml")
     @Html.Partial("_AssignCase.cshtml")
-   
-    
+
+
 </div>
 <div class="row mb-5 px-3">
-    <button class="col-lg col-3 btn btn-p m-2 py-3 rounded text-start btn6 @{
+    <button class="col-lg-2 col-3 btn btn-p m-2 py-3 rounded text-start btn6 @{
                     if(Crredntials.CurrentStatus()=="1"){
-                                @Html.Raw("as")
-}
-}" data-btn="new" data-id="1">
+                                            @Html.Raw("as")
+        }
+        }" data-btn="new" data-id="1">
         <i class="fa fa-solid fa-circle-plus me-2" aria-hidden="true"></i><b>New</b>
         <p class="h4">@Model.NewRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-i m-2 py-3 rounded text-start btn6 @{
+    <button class="col-lg-2 col-3 btn btn-i m-2 py-3 rounded text-start btn6 @{
                     if(Crredntials.CurrentStatus()=="2"){
-                                    @Html.Raw("as")
-}
-}" data-btn="pending" data-id="2">
+                                                @Html.Raw("as")
+    }
+    }" data-btn="pending" data-id="2">
         <i class="fa fa-user-md me-2" aria-hidden="true"></i><b>Pending</b>
         <p class="h4">@Model.PendingRequest</p>
     </button>
-    <button class=" col-lg col-3 btn btn-outline-success m-2 py-3  rounded text-start btn6 @{
+    <button class=" col-lg-2 col-3 btn btn-outline-success m-2 py-3  rounded text-start btn6 @{
                     if(Crredntials.CurrentStatus()=="3"){
-                                    @Html.Raw("as")
-}
-}" data-btn="active" data-id="3">
+                                                @Html.Raw("as")
+    }
+    }" data-btn="active" data-id="3">
         <i class="fa fa-check-square-o me-2" aria-hidden="true"></i><b>Active</b>
         <p class="h4">@Model.ActiveRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-b  py-3 m-2 rounded text-start btn6 @{
+    <button class="col-lg-2 col-3 btn btn-b  py-3 m-2 rounded text-start btn6 @{
                     if(Crredntials.CurrentStatus()=="4"){
-                                    @Html.Raw("as")
-}
-}" data-btn="conclude" data-id="4">
+                                                @Html.Raw("as")
+    }
+    }" data-btn="conclude" data-id="4">
         <i class="fa-solid fa-clock-rotate-left me-2" aria-hidden="true"></i>
         <b>Conclude </b>
         <p class="h4">@Model.ConcludeRequest</p>
     </button>
-    <button class="col-lg col-3 btn btn-c m-2 py-3  rounded text-start btn6 @{
-                    if(Crredntials.CurrentStatus()=="5"){
-                                    @Html.Raw("as")
-}
-}" data-btn="toClose" data-id="5">
-        <i class="fa-solid fa-user-xmark me-2" aria-hidden="true"></i><b>To close </b>
-        <p class="h4">@Model.ToCloseRequest</p>
-    </button>
-    <button class=" col-lg col-3 btn btn-u m-2 py-3  rounded text-start btn6 @{
+    @if (Crredntials.Role() == "Admin")
+    {
+        <button class="col-lg col-3 btn btn-c m-2 py-3  rounded text-start btn6
+                @{
+                    if(Crredntials.CurrentStatus()=="5")
+                    {
+                        @Html.Raw("as")
+                    }
+                }" data-btn="toClose" data-id="5">
+            <i class="fa-solid fa-user-xmark me-2" aria-hidden="true"></i><b>To close </b>
+            <p class="h4">@Model.ToCloseRequest</p>
+        </button>
+        <button class=" col-lg col-3 btn btn-u m-2 py-3  rounded text-start btn6 @{
                     if(Crredntials.CurrentStatus()=="6"){
-                                    @Html.Raw("as")
-}
-}" data-btn="unpaid" data-id="6">
-        <i class="fa-solid fa-circle-dollar-to-slot me-2" aria-hidden="true"></i><b>Unpaid </b>
-        <p class="h4">@Model.UnpaidRequest</p>
-    </button>
+                                                    @Html.Raw("as")
+                    }
+                    }" data-btn="unpaid" data-id="6">
+            <i class="fa-solid fa-circle-dollar-to-slot me-2" aria-hidden="true"></i><b>Unpaid </b>
+            <p class="h4">@Model.UnpaidRequest</p>
+        </button>
+    }
+
 </div>
 
 <div class=" d-flex justify-content-between m-2 searchBar">
@@ -79,18 +87,22 @@
             <i class="fa fa-file-pen"></i>
             <span class="dNone">Create Request</span>
         </a>
-        <button type="button" class="btn btn-info" onclick="Export(null)">
-            <i class="fa-solid fa-share"></i>
-            <span class="dNone"> Export</span>
-        </button>
-        <button type="button" class="btn btn-info" onclick="Export('1,2,3,4,5,6,7,8,9,10,11')">
-            <i class="fa-solid fa-share-from-square"></i>
-            <span class="dNone">Export All</span>
-        </button>
-        <a type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#RequestSupport">
-            <i class="fa-solid fa-user-nurse"></i>
-            <span class="dNone">Request DIY Support</span>
-        </a>
+        @if(Crredntials.Role()=="Admin")
+        {
+            <button type="button" class="btn btn-info" onclick="Export(null)">
+                <i class="fa-solid fa-share"></i>
+                <span class="dNone"> Export</span>
+            </button>
+            <button type="button" class="btn btn-info" onclick="Export('1,2,3,4,5,6,7,8,9,10,11')">
+                <i class="fa-solid fa-share-from-square"></i>
+                <span class="dNone">Export All</span>
+            </button>
+            <a type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#RequestSupport">
+                <i class="fa-solid fa-user-nurse"></i>
+                <span class="dNone">Request DIY Support</span>
+            </a>
+        }
+        
     </div>
 </div>
 <div class="  align-items-center m-2 bg-white p-2">
@@ -101,12 +113,15 @@
                     <i class="fa fa-search bg-white " id="searchButton"></i>
                     <input type="text" class="form-control" placeholder="Search Patients" id="searchInput">
                 </div>
-                <div class="search m-1">
-                    <i class="fa fa-search"></i>
-                    <select class="form-select mb-3" id="SelectedRegion" onchange="handleSearchClick()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
-                        <option value="">Search Region</option>
-                    </select>
-                </div>
+                 @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "History"))
+                {
+                    <div class="search m-1">
+                        <i class="fa fa-search"></i>
+                        <select class="form-select mb-3" id="SelectedRegion" onchange="handleSearchClick()" name="Region" asp-items="@(new SelectList(ViewBag.AssignCase,"RegionId","Name"))">
+                            <option value="">Search Region</option>
+                        </select>
+                    </div>
+                }
                 <div class="search m-1">
                     <span class="pagesize m-1">Page Size</span>
                     <select class="form-select pagesizeselect p-2 me-3" onchange="handleSearchClick()" name="PageSize" data-allow-clear="true" tabindex="-1" id="pagesizedropdown" data-control="select2" data-placeholder="Select Level">
@@ -117,7 +132,7 @@
                     </select>
                 </div>
             </div>
-           
+
             <div class="text-secondary requestType">
                 <button class="me-2 btn shadow-none reqtype allbtn" data-id="-1">
                     <i class="fa fa-circle" aria-hidden="true"></i> All
@@ -148,12 +163,12 @@
     //        $(this).addClass("as");
     //    });
     //});
-   
-   
+
+
 </script>
-<script>   
-    var statusidglobal= 1;
-    var btnnameglobal="new";
+<script>
+    var statusidglobal = 1;
+    var btnnameglobal = "new";
     var pageglobal = 1;
     var sortOrderglobal = false;
     var sortColumnglobal = "RequestedDate";
@@ -179,7 +194,7 @@
         statusidglobal = statusid;
         console.log("Button clicked: " + btnName);
         var statusid = $(this).data("id");
-        
+
         var page = $(this).data('page');
         $.ajax({
             url: '@Url.Action("GetPartialView", "Admin")',
@@ -222,19 +237,19 @@
             $(".reqtype").removeClass("border");
             $(this).addClass("border");
         }
-        console.log("Button: " + statusidglobal +" " + btnnameglobal);
+        console.log("Button: " + statusidglobal + " " + btnnameglobal);
         console.log("Search value: " + searchValue);
         console.log("Region id: " + region);
-        console.log("Request type id: " +requesttype);
+        console.log("Request type id: " + requesttype);
         console.log(pagesize)
         $.ajax({
             type: "GET",
             url: '@Url.Action("GetPartialView", "Admin")',
             data: { searchValue: searchValue, statusid: statusidglobal, btnName: btnnameglobal, Region: region, requesttype: requesttype, pagesize: pagesize },
             success: function (data) {
-                console.log("AJAX success");               
-                $("#btnContent").html(data);   
-                
+                console.log("AJAX success");
+                $("#btnContent").html(data);
+
             },
             error: function (error) {
                 console.log("Error:", error);
@@ -242,9 +257,8 @@
         });
     }
     function Export(status) {
-        if(status == null)
-        {
-            status= statusidglobal;
+        if (status == null) {
+            status = statusidglobal;
         }
         console.log(status);
         $.ajax({
@@ -280,7 +294,7 @@
             },
             buttonsStyling: false
         });
-        swalWithBootstrapButtons.fire({      
+        swalWithBootstrapButtons.fire({
             icon: "warning",
             title: "Confirmation for clear case",
             text: "Are you sure you want to clear this request? Once clear this request then you are not able to see this request.",
@@ -301,7 +315,7 @@
                     error: function () {
                         alert("Error");
                     }
-                });                
+                });
             }
             else if (result.isDenied) {
                 Swal.fire("Denied", "", "");

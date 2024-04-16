@@ -73,16 +73,28 @@
                         </button>
                        
                         <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase">
-                                    <i class="bi bi-journals"></i> Assign Case
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" data-bs-toggle="modal" onclick="Canclecaseid('@item.RequestId','@item.PatientName')" data-bs-target=" #Cancelcase">
-                                    <i class="bi bi-x-circle">
-                                </i> Cancel Case</a>
-                            </li>
+                            @if (Crredntials.Role() == "Physician")
+                            {
+                                <li>
+                                    <a class="dropdown-item" >
+                                        <i class="bi bi-journal-check"></i> Accept
+                                    </a>
+                                </li>
+                            }
+                            @if (Crredntials.Role() == "Admin")
+                            {
+                                <li>
+                                    <a class="dropdown-item" data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase">
+                                        <i class="bi bi-journals"></i> Assign Case
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" data-bs-toggle="modal" onclick="Canclecaseid('@item.RequestId','@item.PatientName')" data-bs-target=" #Cancelcase">
+                                        <i class="bi bi-x-circle">
+                                        </i> Cancel Case
+                                    </a>
+                                </li>
+                            }
                             <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId, status=1})'">
                                 <i class="bi bi-journal-text"></i> View Case</a>
                             </li>
@@ -90,11 +102,14 @@
                                 <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
                                 <i class="fa fa-list"></i> View Notes</a>
                             </li>
-                            <li>
-                                <a class="dropdown-item" onclick="Blockcaseid('@item.RequestId','@item.PatientName')" data-bs-toggle="modal" data-bs-target="#Blockcase">
-                                <i class="bi bi-ban"></i> Block Patient</a>
-                            </li >
-
+                            @if (Crredntials.Role() == "Admin")
+                            {
+                                <li>
+                                    <a class="dropdown-item" onclick="Blockcaseid('@item.RequestId','@item.PatientName')" data-bs-toggle="modal" data-bs-target="#Blockcase">
+                                        <i class="bi bi-ban"></i> Block Patient
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </td>
                 </tr>

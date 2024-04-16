@@ -82,10 +82,10 @@ namespace HalloDoc.Repository.Repository
         }
         public class CustomAuthorize : Attribute, IAuthorizationFilter
         {
-            private readonly string _role;
+            private readonly List<string> _role;
             public CustomAuthorize(string role = "")
             {
-                _role = role;
+                _role = role.Split(",").ToList();
             }
             public void OnAuthorization(AuthorizationFilterContext context)
             {
@@ -93,14 +93,14 @@ namespace HalloDoc.Repository.Repository
 
                 if (jwtService == null)
                 {
-                    if (_role == "Admin")
-                    {
+                    //if (_role == "Admin")
+                    //{
                         context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "AdminHome", action = "Login" }));
-                    }
-                    else if (_role == "Patient")
-                    {
-                       context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Login" }));
-                    }
+                    //}
+                    //else if (_role == "Patient")
+                    //{
+                    //   context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Login" }));
+                    //}
                     return;
                 }
 
@@ -109,14 +109,14 @@ namespace HalloDoc.Repository.Repository
 
                 if (token == null || !jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
                 {
-                    if (_role == "Patient")
-                    {
-                        context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Login" }));
-                    }
-                    else if (_role == "Admin")
-                    {
+                    //if (_role == "Patient")
+                    //{
+                    //    context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Login" }));
+                    //}
+                    //else if (_role == "Admin")
+                    //{
                         context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "AdminHome", action = "Login" }));
-                    }
+                    //}
                     return;
                 }
 
@@ -124,21 +124,34 @@ namespace HalloDoc.Repository.Repository
 
                 if (roleClaim == null)
                 {
-                    if (_role == "Patient")
-                    {
-                        context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Login" }));
-                    }
-                    else if (_role == "Admin")
-                    {
+                    //if (_role == "Patient")
+                    //{
+                    //    context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Login" }));
+                    //}
+                    //else if (_role == "Admin")
+                    //{
                         context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "AdminHome", action = "Login" }));
-                    }
+                    //}
                     return;
                 }
-
-                if (string.IsNullOrWhiteSpace(_role) || roleClaim.Value != _role)
+                var flag = false;
+                foreach (var role in _role)
+                {
+                    if (string.IsNullOrWhiteSpace(role) || roleClaim.Value != role)
+                    {
+                        flag = false;
+                    }
+                    else
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
                 {
                     context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "AccessDenied" }));
                 }
+
             }
         }
     }

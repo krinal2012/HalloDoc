@@ -68,8 +68,8 @@
                     <td><small>@item.Notes</small></td>
                     <td>
                         <button class="btn border border-white text-white my-2">
-                    <small>Patient</small>
-                    </button>
+                            <small>Patient</small>
+                        </button>
                         <button class="btn border border-white text-white my-2">
                             <small>Provider</small>
                         </button>
@@ -82,23 +82,36 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'">
-                                <i class="bi bi-journal-text"></i> View Case</a></li>
-                            <li>
-                                <a class="dropdown-item" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId" >
-                                <i class="fa-solid fa-upload"></i> View Uploads</a></li>
-                            <li>
-                                <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
-                                    <i class="fa fa-list"></i> View Notes</a></li>
-                            <li>
-                                <a class="dropdown-item" data-bs-toggle="modal" onclick="Transfercaseid(@item.RequestId)" data-bs-target=" #Transfer">
-                                <i class="bi bi-journals"></i> Transfer </a></li>
-                            <li>
-                                <a class="dropdown-item" onclick="ClearSwal(@item.RequestId)">
-                                 <i class="bi bi-ban"></i> Clear Case</a>
+                                    <i class="bi bi-journal-text"></i> View Case
+                                </a>
                             </li>
                             <li>
+                                <a class="dropdown-item" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId">
+                                    <i class="fa-solid fa-upload"></i> View Uploads
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
+                                    <i class="fa fa-list"></i> View Notes
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" data-bs-toggle="modal" onclick="Transfercaseid(@item.RequestId)" data-bs-target=" #Transfer">
+                                    <i class="bi bi-journals"></i> Transfer
+                                </a>
+                            </li>
+                            @if (Crredntials.Role() == "Admin")
+                            {
+                                <li>
+                                    <a class="dropdown-item" onclick="ClearSwal(@item.RequestId)">
+                                        <i class="bi bi-ban"></i> Clear Case
+                                    </a>
+                                </li>
+                            }
+                            <li>
                                 <a class="dropdown-item" onclick="SendAgreement(@item.RequestId)">
-                                <i class="fa fa-paper-plane"></i> Send Agreement</a>
+                                    <i class="fa fa-paper-plane"></i> Send Agreement
+                                </a>
                             </li>
                         </ul>
                     </td>
@@ -223,7 +236,7 @@
     </ul>
 </nav>
 <script>
-   
+
     function Transfercaseid(id) {
         var RequestId = id;
         console.log(RequestId);
@@ -233,7 +246,7 @@
         console.log(requestid);
         //document.getElementById("SendAgreement_phone").value = patientPhoneNumber;
         //document.getElementById("SendAgreement_email").value = email;
-      
+
         $.ajax({
             url: '@Url.Action("SendAgreementModal", "Admin")',
             data: { requestid: requestid },

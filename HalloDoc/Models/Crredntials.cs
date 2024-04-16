@@ -10,7 +10,7 @@ namespace HalloDoc.Models
         {
             _httpContextAccessor = new HttpContextAccessor();
         }
-        public static string? role()
+        public static string? Role()
         {
             string cookieValue;
             string role = null;

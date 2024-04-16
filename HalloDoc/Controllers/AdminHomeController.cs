@@ -31,6 +31,14 @@ namespace HalloDoc.Controllers
                 Response.Cookies.Append("jwt", jwttoken);
                 Response.Cookies.Append("Status", "1");
                 Response.Cookies.Append("StatusName", "new");
+                if (u.Role == "Patient")
+                {
+                    return RedirectToAction("Index", "DashBoard");
+                }
+                else if (u.Role == "Physician")
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
                 return RedirectToAction("Index", "Admin");
             }
             else

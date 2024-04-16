@@ -15,8 +15,8 @@ using static HalloDoc.Repository.Repository.JWTService;
 
 namespace HalloDoc.Controllers
 {
-    //  [CheckProviderAccess("Admin")]
-    [CustomAuthorize("Admin")]
+   
+    //[CustomAuthorize("Admin")]
     public class AdminController : Controller
     {
         private readonly IAdminDash _IAdminDash;
@@ -30,12 +30,16 @@ namespace HalloDoc.Controllers
             _notyf = notyf;
             _httpContextAccessor = httpContextAccessor;
         }
-        //[CheckAdminAccess]
+        [CustomAuthorize("Admin,Physician")]
         public IActionResult Index()
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             ViewBag.CaseReason = _IAdminDash.CaseReason();
-            CountStatusWiseRequestModel count = _IAdminDash.CountRequestData();
+            CountStatusWiseRequestModel count = _IAdminDash.CountRequestData(-1);
+            if (Crredntials.Role() == "Physician")
+            {
+                count = _IAdminDash.CountRequestData(Convert.ToInt32(Crredntials.UserID()));
+            }
             return View(count);
         }
         public IActionResult GetPartialView(string btnName, int statusid, string searchValue, string sortColumn, string sortOrder, int pagesize = 5, int requesttype = -1, int Region = -1, int page = 1)
@@ -44,7 +48,12 @@ namespace HalloDoc.Controllers
             Response.Cookies.Append("Status", statusid.ToString());
             Response.Cookies.Append("StatusName", btnName);
             var partialview = "_" + btnName;
-            var result = _IAdminDash.NewRequestData(statusid, searchValue, page, pagesize, Region, sortColumn, sortOrder, requesttype);
+            var userid = -1;
+            if(Crredntials.Role()=="Physician")
+            {
+                userid = Int32.Parse(Crredntials.UserID());
+            }
+            var result = _IAdminDash.NewRequestData(userid,statusid, searchValue, page, pagesize, Region, sortColumn, sortOrder, requesttype);
             return PartialView(partialview, result);
         }
         public IActionResult viewCase(int RequestId, int RequestTypeId, int status)

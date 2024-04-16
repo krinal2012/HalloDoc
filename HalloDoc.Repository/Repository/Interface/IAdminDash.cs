@@ -6,8 +6,8 @@ namespace HalloDoc.Repository.Repository.Interface
 {
     public interface IAdminDash
     {
-        public CountStatusWiseRequestModel CountRequestData();
-        public PaginatedViewModel<AdminList> NewRequestData(int statusid, string? searchValue, int page, int pagesize, int? Region, string sortColumn, string sortOrder, int? requesttype);
+        public CountStatusWiseRequestModel CountRequestData(int phyid);
+        public PaginatedViewModel<AdminList> NewRequestData(int userid,int statusid, string? searchValue, int page, int pagesize, int? Region, string sortColumn, string sortOrder, int? requesttype);
         public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId, int status);
         public ViewCaseModel EditViewCaseData(int RequestID, int RequestTypeId, ViewCaseModel vp);
         public List<Physician> ProviderbyRegion(int Regionid);
