@@ -20,6 +20,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string Notes { get; set; }
         public string Email { get; set; }
         public int RequestClientId { get; set; }
+        public int Status { get; set; }
        
     }
     public class PaginatedViewModel<T>

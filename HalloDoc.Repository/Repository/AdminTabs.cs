@@ -12,6 +12,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing.Printing;
+using System.Web.Helpers;
+using Twilio.TwiML.Messaging;
 using static HalloDoc.Entity.Models.Constant;
 using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
 using Region = HalloDoc.Entity.DataModels.Region;
@@ -1100,6 +1102,39 @@ namespace HalloDoc.Repository.Repository
             data.TotalPages = totalPages;
             data.el = list1;
             return data;
+        }
+        public bool ContactAdmin(int ProviderId, string Notes)
+        {
+            try
+            {
+                var res = _context.Physicians.FirstOrDefault(e => e.PhysicianId == ProviderId);
+                bool sent = _emailConfig.SendMail(res.Email, "Request For Profile Changes", Notes).Result;
+                EmailLog em = new EmailLog
+                {
+                    EmailTemplate = Notes,
+                    SubjectName = Notes,
+                    EmailId = res.Email,
+                    CreateDate = DateTime.Now,
+                    SentDate = DateTime.Now,
+                    IsEmailSent = new BitArray(1),
+                    SentTries = 1,
+                    Action = 2, // action 2 for Request from admin
+                    RoleId = 3, // role 2 for admin
+                };
+
+                if (sent)
+                {
+                    em.IsEmailSent[0] = true;
+                };
+                _context.EmailLogs.Add(em);
+                _context.SaveChanges();
+                return true;
+                
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
     }

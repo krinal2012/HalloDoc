@@ -11,11 +11,14 @@
     ViewData["Title"] = "Dashboard";
 }
 <div>
+    @Html.Partial("_EncounterTOC.cshtml")
+    @Html.Partial("_TransToAdmin.cshtml")
+    @Html.Partial("_AcceptRequest.cshtml")
     @Html.Partial("_CancleCase.cshtml")
     @Html.Partial("_TransferCase.cshtml")
     @Html.Partial("_BlockCase.cshtml")
     @Html.Partial("_AssignCase.cshtml")
-
+  
 
 </div>
 <div class="row mb-5 px-3">
@@ -156,6 +159,7 @@
 <div id="btnContent"></div>
 @Html.Partial("_RequestSupport.cshtml")
 @Html.Partial("_sendLink.cshtml")
+
 <script>
     //$(document).ready(function () {
     //    $(".row > .btn").click(function () {

@@ -13,6 +13,8 @@ namespace HalloDoc.Repository.Repository.Interface
         public List<Physician> ProviderbyRegion(int Regionid);
         public List<Region> AssignCase();
         public List<AspNetRole> AspNetRole();
+        public bool AcceptCase(int RequestId, string Notes, int PhysicianId);
+        public bool TransferCase(int RequestId, string Notes, int PhysicianId);
         public void AssignCaseInfo(int RequestId, int PhysicianId, string Notes);
         public void TransferCaseInfo(int RequestId, int PhysicianId, string Notes);
         public viewNotesData viewNotesData(int RequestId);
@@ -43,5 +45,9 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool CreateReq(viewPatientReq viewPatientReq, string UserId);
         public List<AdminList> Export(string status);
         public bool SendMessage(string? Message);
+        public bool Housecall(int RequestId);
+        public bool Consult(int RequestId);
+        public bool ConcludeCare(int RequestId, string Notes);
+       
     }
 }

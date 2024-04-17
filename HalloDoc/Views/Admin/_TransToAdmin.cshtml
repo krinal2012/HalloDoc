@@ -1,0 +1,30 @@
+﻿<div class="modal fade" id="TransAdmin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header  bg-info text-white">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Transfer Request</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method=post asp-action="RejectCase" asp-controller="Admin" class="needs-validation" novalidate>
+                <input type="hidden" value=" " id="RequestID_ModelTransferCase" name="RequestId" />
+                <div class="modal-body">
+                    <h6>
+                        This request will be transferred to admin.
+                    </h6>
+
+                    <div class="form-floating mb-3">
+                        <textarea rows="4" name="Notes" class="input-outline w-100 h-100 fs-6 form-control shadow-none" type="text" required></textarea>
+                        <label class="inputs-lable fs-6" for="changenote">Notes</label>
+                        <span class="invalid-feedback">
+                            Description
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class=" btn btn-info text-white">Submit</button>
+                    <a class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

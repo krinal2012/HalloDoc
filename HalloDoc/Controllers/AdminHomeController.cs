@@ -37,9 +37,11 @@ namespace HalloDoc.Controllers
                 }
                 else if (u.Role == "Physician")
                 {
-                    return RedirectToAction("Index", "Admin");
+                    return Redirect("~/Physician/DashBoard");
+                    //return RedirectToAction("Index", "Admin");
                 }
-                return RedirectToAction("Index", "Admin");
+                return Redirect("~/Admin/DashBoard");
+                //return RedirectToAction("Index", "Admin");
             }
             else
             {

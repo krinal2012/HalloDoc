@@ -16,11 +16,13 @@
                 </th>
                 <th></th>
                 <th scope="col" class=" d-flex justify-content-between">Date Of Birth<span class="sortbtn" data-value="DOB"><i class="fa fa-sort"></i></span></th>
-                <th scope="col" class="">Physician Name<span class="sortbtn" data-value="Physician"><i class="fa fa-sort"></i></span></th>
-                <th scope="col" class="d-flex justify-content-between">Date of Service<span class="sortbtn" data-value="DOS"><i class="fa fa-sort"></i></span></th>
+                @if (Crredntials.Role() == "Admin")
+                {
+                    <th scope="col" class="">Physician Name<span class="sortbtn" data-value="Physician"><i class="fa fa-sort"></i></span></th>
+                    <th scope="col" class="d-flex justify-content-between">Date of Service<span class="sortbtn" data-value="DOS"><i class="fa fa-sort"></i></span></th>
+                }
                 <th scope="col">Phone</th>
                 <th scope="col" class="d-flex justify-content-between">Address<span class="sortbtn" data-value="Address"><i class="fa fa-sort"></i></span></th>
-                <th scope="col">Chat with</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -37,8 +39,11 @@
                     <td>
                         <small>@item.DOB.ToString("MMM d , yyyy")</small>
                     </td>
-                    <td><small>@item.ProviderName</small></td>
-                    <td><small>@item.RequestedDate.ToString("MMM d , yyyy")</small></td>
+                    @if (Crredntials.Role() == "Admin")
+                    {
+                        <td><small>@item.ProviderName</small></td>
+                        <td><small>@item.RequestedDate.ToString("MMM d , yyyy")</small></td>
+                    }
                     <td>
                         <button class="btn border border-white text-white mt-2">
                             <i class="fa-solid fa-phone pe-2"></i>
@@ -63,19 +68,19 @@
                     </td>
                     <td><small>@item.Address</small></td>
                     <td>
-                        <button class="btn border border-white text-white my-2">
-                    <small>Patient</small>
-                    </button>
-                        <button class="btn border border-white text-white my-2">
-                            <small>Provider</small>
-                        </button>
-                    </td>
-                    <td>
                         <button class="btn border border-white text-white my-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <small>Actions</small>
                         </button>
 
                         <ul class="dropdown-menu">
+                            @if (Crredntials.Role() == "Physician")
+                            {
+                                <li>
+                                    <a class="dropdown-item" onclick="location.href='@Url.Action("ConcludeCare", "Admin",new {RequestId=item.RequestId})'">
+                                        <i class="fa fa-shopping-cart"></i> Conclude Care
+                                    </a>
+                                </li>
+                            }
                             <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'">
                                 <i class="bi bi-journal-text"></i> View Case</a></li>
                             <li>
@@ -84,12 +89,16 @@
                             <li>
                                 <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
                                 <i class="fa fa-list"></i> View Notes</a></li>
+                            @if(Crredntials.Role()=="Admin")
+                            {
+                                <li>
+                                    <a class="dropdown-item" onclick="location.href='@Url.Action("SendOrders", "Admin",new {RequestId=item.RequestId})'">
+                                        <i class="fa fa-shopping-cart"></i> Orders
+                                    </a>
+                                </li>
+                            }
                             <li>
-                                <a class="dropdown-item" onclick="location.href='@Url.Action("SendOrders", "Admin",new {RequestId=item.RequestId})'">
-                                <i class="fa fa-shopping-cart"></i> Orders</a></li>
-                            <li><a class="dropdown-item" href="#">
-                                <i class="fa fa-id-badge"></i> Doctor's Note</a></li>
-                            <li><a class="dropdown-item" href="#">
+                                <a class="dropdown-item" asp-action="EncounterForm" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
                                 <i class="fa-regular fa-rectangle-list"></i> Encounter</a></li>
                         </ul>
                     </td>

@@ -38,7 +38,7 @@
                  class=" my-1" />
 
             <div class="position-absolute top-0 end-0 d-flex btn btn-sm align-items-center">
-                <span class="dNone"> Welcome @Crredntials.UserName()                   
+                <span class="dNone"> Welcome @Crredntials.UserName()
                     </span>
                 <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" asp-action="Logout" asp-controller="AdminHome">
                     Logout
@@ -58,13 +58,13 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                         @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Dashboard"))
+                        @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Dashboard"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link px-2 text-dark  @(path.StartsWith ("/Admin/") ? "activeNav" : "")" aria-current="page" asp-action="Index" asp-controller="Admin">Dashboard</a>
                             </li>
                         }
-                         @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "ProviderLocation"))
+                        @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "ProviderLocation"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/ProviderLocation") ? "activeNav" : "")" asp-action="ProviderLocation" asp-controller="AdminTabs">ProviderLocation</a>
@@ -72,18 +72,27 @@
                         }
                         @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "MyProfile"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link px-2 text-dark @(path.EndsWith ("/AdminTabs/AdminProfile") ? "activeNav" : "")" asp-action="AdminProfile" asp-controller="AdminTabs">My Profile</a>
-                            </li>
+                            @if (Crredntials.Role() == "Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link px-2 text-dark @(path.EndsWith ("/AdminTabs/AdminProfile") ? "activeNav" : "")" asp-action="AdminProfile" asp-controller="AdminTabs">My Profile</a>
+                                </li>
+                            }
+                            @if (Crredntials.Role() == "Physician")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link px-2 text-dark @(path.EndsWith ("/AdminTabs/EditProvider") ? "activeNav" : "")" asp-action="ProviderProfile" asp-controller="AdminTabs" asp-route-PhysicianId="@Crredntials.UserID()">My Profile</a>
+                                </li>
+                            }
                         }
-                        @if (Crredntials.Role()=="Admin")
+                        @if (Crredntials.Role() == "Admin")
                         {
                             <li class="nav-item dropdown ">
                                 <a class="nav-link dropdown px-2 text-dark @(path.StartsWith ("/AdminTabs/Providers") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Providers
                                 </a>
                                 <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
-                                     @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Provider"))
+                                    @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Provider"))
                                     {
                                         <a class="dropdown-item NavDropdown" asp-action="ProviderMenu" asp-controller="AdminTabs">Provider</a>
                                     }
@@ -109,7 +118,7 @@
                             @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Invoicing"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link px-2 text-dark" >Invoicing</a>
+                                    <a class="nav-link px-2 text-dark">Invoicing</a>
                                 </li>
                             }
                         }
@@ -192,7 +201,7 @@
             </ul>
         </div>
     </div>
-    <main role="main" class="container-fluid pb-3">     
+    <main role="main" class="container-fluid pb-3">
         @RenderBody()
     </main>
     <footer class="child fixed-bottom p-3 foot text-center">

@@ -44,7 +44,6 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool RecordsDelete(int reqId);
         public SearchInputs RecordsEmailLog(SearchInputs search);
         public SearchInputs RecordsSMSLog(SearchInputs search);
-
-
+        public bool ContactAdmin(int ProviderId, string Notes);
     }
 }

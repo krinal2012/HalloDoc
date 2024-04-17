@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using System.Collections;
 using HalloDoc.Entity.Models;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Utilities;
+using Twilio.Http;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -38,7 +40,7 @@ namespace HalloDoc.Repository.Repository
                 UnpaidRequest = baseQuery.Where(r => r.Status == 9).Count()
             };
         }
-        public PaginatedViewModel<AdminList> NewRequestData(int userid,int statusid, string? searchValue, int page, int pagesize, int? Region, string sortColumn, string sortOrder, int? requesttype)
+        public PaginatedViewModel<AdminList> NewRequestData(int userid, int statusid, string? searchValue, int page, int pagesize, int? Region, string sortColumn, string sortOrder, int? requesttype)
         {
             List<int> id = new List<int>();
             if (statusid == 1) { id.Add(1); }
@@ -84,6 +86,7 @@ namespace HalloDoc.Repository.Repository
                             Address = rc.Address,
                             Notes = rc.Notes,
                             RequestClientId = rc.RequestClientId,
+                            Status = req.Status,
                             // ProviderID = req.Physicianid,
                             RequestorPhoneNumber = req.PhoneNumber
                         }).ToList();
@@ -197,11 +200,52 @@ namespace HalloDoc.Repository.Repository
             var data = _context.AspNetRoles.ToList();
             return (data);
         }
+        public bool AcceptCase(int RequestId, string Notes, int PhysicianId)
+        {
+            var request = _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
+            request.PhysicianId = PhysicianId;
+            request.Status = 2;
+            request.ModifiedDate = DateTime.Now;
+            _context.Requests.Update(request);
+            _context.SaveChanges();
+
+            RequestStatusLog rsl = new RequestStatusLog();
+            rsl.RequestId = RequestId;
+            rsl.PhysicianId = PhysicianId;
+            rsl.Notes = Notes;
+            rsl.CreatedDate = DateTime.Now;
+            rsl.Status = 2;
+            _context.RequestStatusLogs.Add(rsl);
+            _context.SaveChanges();
+            return true;
+        }
+        public bool TransferCase(int RequestId, string Notes, int PhysicianId)
+        {
+            var request = _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
+            request.PhysicianId = null;
+            request.Status = 1;
+            request.ModifiedDate = DateTime.Now;
+            _context.Requests.Update(request);
+            _context.SaveChanges();
+
+            RequestStatusLog rsl = new RequestStatusLog();
+            rsl.RequestId = RequestId;
+            rsl.PhysicianId = PhysicianId;
+            rsl.Notes = Notes;
+            rsl.CreatedDate = DateTime.Now;
+            rsl.Status = 1;
+            rsl.TransToAdmin = new BitArray(1);
+            rsl.TransToAdmin[0] = true;
+            _context.RequestStatusLogs.Add(rsl);
+            _context.SaveChanges();
+            return true;
+        }
         public void AssignCaseInfo(int RequestId, int PhysicianId, string Notes)
         {
             var request = _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
             request.PhysicianId = PhysicianId;
             request.Status = 1;
+            request.ModifiedDate = DateTime.Now;
             _context.Requests.Update(request);
             _context.SaveChanges();
 
@@ -825,7 +869,7 @@ namespace HalloDoc.Repository.Repository
                                  LastName = rc.LastName,
                                  Location = rc.Address,
                                  DOB = new DateTime((int)rc.IntYear, Convert.ToInt32(rc.StrMonth.Trim()), (int)rc.IntDate),
-                                 //DOS = (DateTime)subEn.DateOfService,
+                                 // DOS = (DateTime)subEn.date,
                                  Mobile = rc.PhoneNumber,
                                  Email = rc.Email,
                                  Injury = subEn.HistoryOfPresentIllnessOrInjury,
@@ -1034,6 +1078,57 @@ namespace HalloDoc.Repository.Repository
             _context.Smslogs.Add(em);
             _context.SaveChanges();
             return true;
+        }
+        public bool Housecall(int RequestId)
+        {
+            var request = _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
+            request.Status = 5;
+            request.ModifiedDate = DateTime.Now;
+            _context.Requests.Update(request);
+            _context.SaveChanges();
+
+            RequestStatusLog rsl = new RequestStatusLog();
+            rsl.RequestId = RequestId;
+            rsl.CreatedDate = DateTime.Now;
+            rsl.Status = 5;
+            _context.RequestStatusLogs.Add(rsl);
+            _context.SaveChanges();
+            return true;
+        }
+        public bool Consult(int RequestId)
+        {
+            var request = _context.Requests.FirstOrDefault(req => req.RequestId == RequestId);
+            request.Status = 6;
+            request.ModifiedDate = DateTime.Now;
+            _context.Requests.Update(request);
+            _context.SaveChanges();
+
+            RequestStatusLog rsl = new RequestStatusLog();
+            rsl.RequestId = RequestId;
+            rsl.CreatedDate = DateTime.Now;
+            rsl.Status = 6;
+            _context.RequestStatusLogs.Add(rsl);
+            _context.SaveChanges();
+            return true;
+        }
+        public bool ConcludeCare(int RequestId, string Notes)
+        {
+                var requestData = _context.Requests.FirstOrDefault(e => e.RequestId == RequestId);
+                requestData.Status = 8;
+                requestData.ModifiedDate = DateTime.Now;
+                _context.Requests.Update(requestData);
+                _context.SaveChanges();
+
+                RequestStatusLog rsl = new RequestStatusLog
+                {
+                    RequestId = RequestId,
+                    Notes = Notes,
+                    Status = 8,
+                    CreatedDate = DateTime.Now
+                };
+                _context.RequestStatusLogs.Add(rsl);
+                _context.SaveChanges();
+                return true;
         }
     }
 }

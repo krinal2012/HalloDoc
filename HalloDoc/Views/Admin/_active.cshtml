@@ -16,13 +16,19 @@
                 </th>
                 <th></th>
                 <th scope="col" class=" d-flex justify-content-between">Date Of Birth<span class="sortbtn" data-value="DOB"><i class="fa fa-sort"></i></span></th>
-                <th scope="col" class="">Requestor<span class="sortbtn" data-value="Requestor"><i class="fa fa-sort"></i></span></th>
-                <th scope="col" class="">Physician Name<span class="sortbtn" data-value="Physician"><i class="fa fa-sort"></i></span></th>
-                <th scope="col" class="d-flex justify-content-between">Date of Service<span class="sortbtn" data-value="DOS"><i class="fa fa-sort"></i></span></th>
+                @if (Crredntials.Role() == "Admin")
+                {
+                    <th scope="col" class="">Requestor<span class="sortbtn" data-value="Requestor"><i class="fa fa-sort"></i></span></th>
+                    <th scope="col" class="">Physician Name<span class="sortbtn" data-value="Physician"><i class="fa fa-sort"></i></span></th>
+                    <th scope="col" class="d-flex justify-content-between">Date of Service<span class="sortbtn" data-value="DOS"><i class="fa fa-sort"></i></span></th>
+                }
                 <th scope="col">Phone</th>
                 <th scope="col" class="d-flex justify-content-between">Address<span class="sortbtn" data-value="Address"><i class="fa fa-sort"></i></span></th>
                 <th scope="col">Note</th>
-                <th scope="col">Chat with</th>
+                @if (Crredntials.Role() == "Physician")
+                {
+                    <th scope="col">Status</th>
+                }
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -39,9 +45,12 @@
                     <td>
                         <small>@item.DOB.ToString("MMM d , yyyy")</small>
                     </td>
-                    <td><small>@item.Requestor</small></td>
-                    <td><small>@item.ProviderName</small></td>
-                    <td><small>@item.RequestedDate.ToString("MMM d , yyyy")</small></td>
+                    @if (Crredntials.Role() == "Admin")
+                    {
+                        <td><small>@item.Requestor</small></td>
+                        <td><small>@item.ProviderName</small></td>
+                        <td><small>@item.RequestedDate.ToString("MMM d , yyyy")</small></td>
+                    }
                     <td>
                         <button class="btn border border-white text-white mt-2">
                             <i class="fa-solid fa-phone pe-2"></i>
@@ -66,30 +75,56 @@
                     </td>
                     <td><small>@item.Address</small></td>
                     <td><small>@item.Notes</small></td>
-                    <td>
-                        <button class="btn border border-white text-white my-2">
-                            <small>Patient</small>
-                        </button>
-                        <button class="btn border border-white text-white my-2">
-                            <small>Provider</small>
-                        </button>
-                    </td>
+                    @if (Crredntials.Role() == "Physician")
+                    {
+                        <td>
+                            @if (item.Status == 5)
+                            {
+                                <a class="btn border border-white text-white mt-2" asp-action="Consult" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
+                                    Housecall
+                                </a>
+                            }
+                        </td>
+                    }
                     <td>
                         <button class="btn border border-white text-white my-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <small>Actions</small>
                         </button>
 
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'">
-                                    <i class="bi bi-journal-text"></i> View Case</a>
+                            <li>
+                                <a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'">
+                                    <i class="bi bi-journal-text"></i> View Case
+                                </a>
                             </li>
-                            <li><a class="dropdown-item" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId">
-                                <i class="fa-solid fa-upload"></i> View Uploads</a></li>
-                            <li><a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
-                                <i class="fa fa-list"></i> View Notes</a></li>
-                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("SendOrders", "Admin",new {RequestId=item.RequestId})'">
-                                <i class="fa fa-shopping-cart"></i> Orders </a></li>
-                            <li><a class="dropdown-item" asp-action="EncounterForm" asp-controller="Admin" asp-route-RequestId="@item.RequestId"><i class="fa-regular fa-rectangle-list"></i> Encounter</a></li>
+                            <li>
+                                <a class="dropdown-item" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId">
+                                    <i class="fa-solid fa-upload"></i> View Uploads
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
+                                    <i class="fa fa-list"></i> View Notes
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" onclick="location.href='@Url.Action("SendOrders", "Admin",new {RequestId=item.RequestId})'">
+                                    <i class="fa fa-shopping-cart"></i> Orders
+                                </a>
+                            </li>
+                            @if (item.Status == 4 && Crredntials.Role() == "Physician")
+                            {
+                                <li><a class="dropdown-item" data-bs-toggle="modal" onclick="Encounterid(@item.RequestId)" data-bs-target=" #EncounterTOC"><i class="fa-regular fa-rectangle-list"></i> Encounter</a></li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a class="dropdown-item" asp-action="EncounterForm" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
+                                        <i class="fa-regular fa-rectangle-list"></i> Encounter
+                                    </a>
+                                </li>
+                            }
+
                         </ul>
                     </td>
                 </tr>
@@ -127,7 +162,7 @@
                 <div class="accordion-body container-fluid">
                     <p> <i class="fa fa-envelope border border-info rounded-pill p-1 me-2"></i> Email : @item.Email</p>
                     <p> <i class="fa fa-phone border  border-info rounded-pill p-1 me-2"></i> Patient : @item.PatientPhoneNumber</p>
-                   
+
                     <div class="row">
                         <div class="col-6 mb-3">
                             <button class="btn btn-success text-white rounded-pill 2px w-100">
@@ -141,22 +176,22 @@
                         </div>
 
                         <div class="col-6 mb-3">
-                            <button class="btn btn-success text-white rounded-pill 2px w-100" >
+                            <button class="btn btn-success text-white rounded-pill 2px w-100">
                                 <small>View Uploads</small>
                             </button>
                         </div>
                         <div class="col-6 mb-3">
-                            <button class="btn btn-success text-white rounded-pill 2px w-100" >
+                            <button class="btn btn-success text-white rounded-pill 2px w-100">
                                 <small>Encounter</small>
                             </button>
                         </div>
                         <div class="col-6 mb-3">
-                            <button class="btn btn-warning text-white rounded-pill 2px w-100" >
+                            <button class="btn btn-warning text-white rounded-pill 2px w-100">
                                 <small>Orders</small>
                             </button>
                         </div>
                         <div class="col-6 mb-3">
-                            <button class="btn btn-info text-white rounded-pill 2px w-100" >
+                            <button class="btn btn-info text-white rounded-pill 2px w-100">
                                 <small>House call</small>
                             </button>
                         </div>
@@ -212,6 +247,12 @@
     </ul>
 </nav>
 <script>
+    function Encounterid(id) {
+        var RequestId = id;
+        console.log(RequestId);
+        document.getElementById('RequestID_ModelAssignCase').value = RequestId;
+    }
+
     var reqtypeElements = document.getElementsByClassName('sortbtn');
     for (var i = 0; i < reqtypeElements.length; i++) {
         reqtypeElements[i].addEventListener('click', sort);

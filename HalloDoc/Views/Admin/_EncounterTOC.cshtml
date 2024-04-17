@@ -1,0 +1,64 @@
+﻿<div class="modal fade" id="EncounterTOC" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-white bg-info" id="staticBackdropLabel">Select Type of Care</h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body align-self-center">
+                <input type="hidden" value=" " id="RequestID_Encounter" name="RequestId" />
+                <button id="Housecall" type="button" class="btn btn-outline-info">Housecall</button>
+                <button id="Consult" type="button" class="btn btn-outline-info">Consult</button>
+            </div>
+            <div class="modal-footer">
+                <button id="Save" type="button" class="btn btn-outline-info">Save</button>
+                <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+   
+    let Housecall = false;
+    let Consult = false;
+
+    $('#Housecall').on('click', function () {
+        Housecall = true;
+        Consult = false;
+    })
+    $('#Consult').on('click', function () {
+        Consult = true;
+        Housecall = false;
+    })
+    $('#Save').on('click', function () {
+        var RequestId = $("#RequestID_Encounter").val();
+        if (Housecall == true) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Housecall", "Admin")',
+                data: { RequestId: RequestId },
+                cache: false,
+                success: function (response) {
+                    location.reload();
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        }
+        else if (Consult == true) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Consult", "Admin")',
+                data: { RequestId: RequestId },
+                cache: false,
+                success: function (response) {
+                    location.reload();
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        }
+    })
+</script>

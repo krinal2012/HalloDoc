@@ -1,0 +1,50 @@
+﻿<div class="modal fade" id="AcceptRequest" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header  bg-info text-white">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Accept Request</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method=post asp-action="AcceptCase" asp-controller="Admin" class="needs-validation" novalidate>
+                <input type="hidden" value=" " id="RequestID_ModelAcceptCase" name="RequestId" />
+                <div class="modal-body">
+                    <h6>For accepting this Patient Request click on 
+                        Accept button and for transfer case to admin click on Reject button.</h6>
+                
+                    <div class="form-floating mb-3">
+                        <textarea rows="4" name="Notes" class="input-outline w-100 h-100 fs-6 form-control shadow-none" type="text" required></textarea>
+                        <label class="inputs-lable fs-6" for="changenote">Notes</label>
+                        <span class="invalid-feedback">
+                            Please choose a Reason.
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class=" btn btn-info text-white">Confirm</button>
+                    <a class="btn btn-outline-danger" onclick="RejectCase()">Reject</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function RejectCase() {
+        var RequestId = $("#RequestID_ModelAcceptCase").val();
+        var Notes = $("#notes").val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RejectCase", "Admin")',
+            data: { RequestId: RequestId, Notes: Notes },
+            cache: false,
+            success: function (response) {
+                console.log('Data sent successfully', response);
+                location.reload();
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+</script>

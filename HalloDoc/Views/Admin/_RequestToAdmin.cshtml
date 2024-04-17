@@ -1,0 +1,29 @@
+﻿﻿﻿<div class="modal fade" id="RequestToAdmin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header  bg-info text-white">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Request To Admininistrator</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method=post asp-action="ContactAdmin" asp-controller="AdminTabs" class="needs-validation" novalidate>
+                <input type="hidden" value="" id="RequestID_RequestToAdmin" name="PhysicianId" />
+                <div class="modal-body">
+                    <h3 class="modal-title fs-5">
+                        Need to send message to edit.
+                    </h3>
+                    <div class="form-floating mb-3">
+                        <textarea rows="4" name="Notes" class="input-outline w-100 h-100 fs-6 form-control shadow-none" type="text" required></textarea>
+                        <label class="inputs-lable fs-6" for="changenote">Message</label>
+                        <span class="invalid-feedback">
+                            Please add text.
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class=" btn btn-info text-white">Send</button>
+                    <a class="btn btn-outline-info" data-bs-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

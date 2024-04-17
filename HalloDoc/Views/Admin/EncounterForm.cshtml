@@ -179,7 +179,10 @@
         </div>
         <div class="row px-3 d-flex justify-content-end">
             <button type="submit" class="col-1 btn btn-info text-white rounded mx-2 p-2">Save</button>
-            <button class="col-1 btn btn-success text-white rounded mx-2 p-2" asp-action="EncounterFinalize" asp-controller="Admin" >Finalize</button>
+            @if(Crredntials.Role()=="Physician")
+            {
+                <button class="col-1 btn btn-success text-white rounded mx-2 p-2" asp-action="EncounterFinalize" asp-controller="Admin">Finalize</button>
+            }
             <button class="col-1 btn btn-outline-info rounded mx-2 p-2" asp-action="Index" asp-controller="Admin">Cancel</button>
         </div>
     </form>

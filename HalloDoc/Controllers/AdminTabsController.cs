@@ -150,12 +150,21 @@ namespace HalloDoc.Controllers
         }
         public IActionResult EditProvider(int PhysicianId)
         {
-            ViewData["Heading"] = "Edit";
+            ViewData["Heading"] = "Edit Physician Account";
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             ViewBag.Role = _IAdminTabs.RolePhyscian();
             var result = _IAdminTabs.ViewProviderProfile(PhysicianId);
             return View(result);
         }
+        public IActionResult ProviderProfile(int PhysicianId)
+        {
+            ViewData["Heading"] = "My Profile";
+            ViewBag.AssignCase = _IAdminDash.AssignCase();
+            ViewBag.Role = _IAdminTabs.RolePhyscian();
+            var result = _IAdminTabs.ViewProviderProfile(PhysicianId);
+            return View("EditProvider", result);
+        }
+        
         public IActionResult AddProvider()
         {
             ViewData["Heading"] = "Add";
@@ -223,6 +232,7 @@ namespace HalloDoc.Controllers
             bool res = _IAdminTabs.AddProviderAccount(physicianData, checkboxes, UserId);
             return RedirectToAction("ProviderMenu");
         }
+
         public IActionResult DeleteProvider(int PhysicianId)
         {
             bool res = _IAdminTabs.DeleteProvider(PhysicianId);
@@ -373,6 +383,19 @@ namespace HalloDoc.Controllers
             int Roleid = Int32.Parse(roleid);
             var result = _IAdminTabs.ViewEditRole(Roleid);
             return View(result);
+        }
+        public IActionResult ContactAdmin(string Notes)
+        {
+            bool Contact = _IAdminTabs.ContactAdmin(Convert.ToInt32(Crredntials.UserID()), Notes);
+            if (Contact)
+            {
+                _notyf.Success("Mail Send Succesfully");
+            }
+            else
+            {
+                _notyf.Error("Mail Not Send Succesfully");
+            }
+            return RedirectToAction("ProviderProfile", new { PhysicianId = Convert.ToInt32(Crredntials.UserID()) });
         }
     }
 }

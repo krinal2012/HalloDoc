@@ -12,6 +12,8 @@ using System.Security.Cryptography;
 using System.Web.Helpers;
 using static HalloDoc.Entity.Models.Constant;
 using static HalloDoc.Repository.Repository.JWTService;
+using Org.BouncyCastle.Utilities;
+using Twilio.Http;
 
 namespace HalloDoc.Controllers
 {
@@ -31,6 +33,8 @@ namespace HalloDoc.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
         [CustomAuthorize("Admin,Physician")]
+        [Route("Physician/DashBoard")]
+        [Route("Admin/DashBoard")]
         public IActionResult Index()
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
@@ -55,6 +59,91 @@ namespace HalloDoc.Controllers
             }
             var result = _IAdminDash.NewRequestData(userid,statusid, searchValue, page, pagesize, Region, sortColumn, sortOrder, requesttype);
             return PartialView(partialview, result);
+        }
+        public IActionResult SendLink(string FirstName, string Email)
+        {
+            sendAgreement sendAgreement = new()
+            {
+                FirstName = FirstName,
+                Email = Email,
+            };
+            if (_IAdminDash.SendLink(sendAgreement))
+            {
+                _notyf.Success("Mail Send  Successfully..!");
+            }
+            return RedirectToAction("Index", "Admin");
+        }
+        public IActionResult CreateRequest()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult CreateRequest(viewPatientReq viewPatientReq)
+        {
+            var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
+            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
+
+            bool result = _IAdminDash.CreateReq(viewPatientReq, UserId);
+            if (result)
+            {
+                _notyf.Success("Request Created.");
+            }
+            else
+            {
+                _notyf.Error("there is some errors...");
+            }
+            return RedirectToAction("Index", "Admin");
+        }
+        public IActionResult Export(string status)
+        {
+            var requestData = _IAdminDash.Export(status);
+
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("RequestData");
+
+                worksheet.Cells[1, 1].Value = "Name";
+                worksheet.Cells[1, 2].Value = "Requestor";
+                worksheet.Cells[1, 3].Value = "Request Date";
+                worksheet.Cells[1, 4].Value = "Phone";
+                worksheet.Cells[1, 5].Value = "Address";
+                worksheet.Cells[1, 6].Value = "Notes";
+                worksheet.Cells[1, 7].Value = "Physician";
+                worksheet.Cells[1, 8].Value = "Birth Date";
+                worksheet.Cells[1, 9].Value = "RequestTypeId";
+                worksheet.Cells[1, 10].Value = "Email";
+                worksheet.Cells[1, 11].Value = "RequestId";
+
+                for (int i = 0; i < requestData.Count; i++)
+                {
+                    worksheet.Cells[i + 2, 1].Value = requestData[i].PatientName;
+                    worksheet.Cells[i + 2, 2].Value = requestData[i].Requestor;
+                    worksheet.Cells[i + 2, 3].Value = requestData[i].RequestedDate;
+                    worksheet.Cells[i + 2, 4].Value = requestData[i].PatientPhoneNumber;
+                    worksheet.Cells[i + 2, 5].Value = requestData[i].Address;
+                    worksheet.Cells[i + 2, 6].Value = requestData[i].Notes;
+                    worksheet.Cells[i + 2, 7].Value = requestData[i].ProviderName;
+                    worksheet.Cells[i + 2, 8].Value = requestData[i].DOB;
+                    worksheet.Cells[i + 2, 9].Value = requestData[i].RequestTypeId;
+                    worksheet.Cells[i + 2, 10].Value = requestData[i].Email;
+                    worksheet.Cells[i + 2, 11].Value = requestData[i].RequestId;
+                }
+
+                byte[] excelBytes = package.GetAsByteArray();
+
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+        }
+        public IActionResult RequestSupport(string? Message)
+        {
+            if (_IAdminDash.SendMessage(Message))
+            {
+                _notyf.Success("Message Send Successfully..!");
+            }
+            return RedirectToAction("Index", "Admin");
+
         }
         public IActionResult viewCase(int RequestId, int RequestTypeId, int status)
         {
@@ -103,6 +192,32 @@ namespace HalloDoc.Controllers
         {
             var v = _IAdminDash.ProviderbyRegion(Regionid);
             return Json(v);
+        }
+        public IActionResult AcceptCase(int RequestId, string Notes)
+        {
+            int phyid = Int32.Parse(Crredntials.UserID());
+            if ( _IAdminDash.AcceptCase(RequestId, Notes, phyid))
+            {
+                _notyf.Success("Case Accepted...");
+            }
+            else
+            {
+                _notyf.Success("Case Not Accepted...");
+            }
+            return Redirect("~/Physician/DashBoard");
+        }
+        public IActionResult RejectCase(int RequestId, string Notes)
+        {
+            int phyid = Int32.Parse(Crredntials.UserID());
+            if (_IAdminDash.TransferCase(RequestId, Notes, phyid))
+            {
+                _notyf.Success("Case Rejected...");
+            }
+            else
+            {
+                _notyf.Success("Case Not Rejected...");
+            }
+            return Redirect("~/Physician/DashBoard");
         }
         [HttpPost]
         public IActionResult AssignCase(int RequestId, int PhysicianId, string Notes)
@@ -216,7 +331,7 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("Index", "Admin");
         }
-        public async Task<IActionResult> CloseCase(int RequestId)
+        public IActionResult CloseCase(int RequestId)
         {
             ViewCaseModel vc = _IAdminDash.CloseCaseData(RequestId);
             return View("../Admin/CloseCase", vc);
@@ -265,90 +380,51 @@ namespace HalloDoc.Controllers
             bool result = _IAdminDash.Finalizeform(ve);
             return RedirectToAction("Index", "Admin");
         }
-        public IActionResult SendLink(string FirstName, string Email)
+        public IActionResult Housecall (int RequestId)
         {
-            sendAgreement sendAgreement = new()
+            if (_IAdminDash.Housecall(RequestId))
             {
-                FirstName = FirstName,
-                Email = Email,
-            };
-            if (_IAdminDash.SendLink(sendAgreement))
-            {
-                _notyf.Success("Mail Send  Successfully..!");
-            }
-            return RedirectToAction("Index", "Admin");
-        }
-        public IActionResult CreateRequest()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult CreateRequest(viewPatientReq viewPatientReq)
-        {
-            var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
-            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
-
-            bool result = _IAdminDash.CreateReq(viewPatientReq, UserId);
-            if (result)
-            {
-                _notyf.Success("Request Created.");
+                _notyf.Success("Case Accepted...");
             }
             else
             {
-                _notyf.Error("there is some errors...");
+                _notyf.Error("Case Not Accepted...");
             }
-            return RedirectToAction("Index", "Admin");
+            return Redirect("~/Physician/DashBoard");
         }
-        public IActionResult Export(string status)
+        public IActionResult Consult(int RequestId)
         {
-            var requestData = _IAdminDash.Export(status);
-
-            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-
-            using (ExcelPackage package = new ExcelPackage())
+            if (_IAdminDash.Consult(RequestId))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("RequestData");
-
-                worksheet.Cells[1, 1].Value = "Name";
-                worksheet.Cells[1, 2].Value = "Requestor";
-                worksheet.Cells[1, 3].Value = "Request Date";
-                worksheet.Cells[1, 4].Value = "Phone";
-                worksheet.Cells[1, 5].Value = "Address";
-                worksheet.Cells[1, 6].Value = "Notes";
-                worksheet.Cells[1, 7].Value = "Physician";
-                worksheet.Cells[1, 8].Value = "Birth Date";
-                worksheet.Cells[1, 9].Value = "RequestTypeId";
-                worksheet.Cells[1, 10].Value = "Email";
-                worksheet.Cells[1, 11].Value = "RequestId";
-
-                for (int i = 0; i < requestData.Count; i++)
-                {
-                    worksheet.Cells[i + 2, 1].Value = requestData[i].PatientName;
-                    worksheet.Cells[i + 2, 2].Value = requestData[i].Requestor;
-                    worksheet.Cells[i + 2, 3].Value = requestData[i].RequestedDate;
-                    worksheet.Cells[i + 2, 4].Value = requestData[i].PatientPhoneNumber;
-                    worksheet.Cells[i + 2, 5].Value = requestData[i].Address;
-                    worksheet.Cells[i + 2, 6].Value = requestData[i].Notes;
-                    worksheet.Cells[i + 2, 7].Value = requestData[i].ProviderName;
-                    worksheet.Cells[i + 2, 8].Value = requestData[i].DOB;
-                    worksheet.Cells[i + 2, 9].Value = requestData[i].RequestTypeId;
-                    worksheet.Cells[i + 2, 10].Value = requestData[i].Email;
-                    worksheet.Cells[i + 2, 11].Value = requestData[i].RequestId;
-                }
-
-                byte[] excelBytes = package.GetAsByteArray();
-
-                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                _notyf.Success("Case is in conclude state...");
             }
+            else
+            {
+                _notyf.Error("Error...");
+            }
+            return Redirect("~/Physician/DashBoard");
         }
-        public IActionResult RequestSupport(string? Message)
+        public IActionResult ConcludeCare(int RequestId)
         {
-            if (_IAdminDash.SendMessage(Message))
+            var v = _IAdminDash.ViewUploadsInfo(RequestId);
+            return View("../Admin/ConcludeCare", v);
+        }
+        public IActionResult ConcludeCareUploads(viewDocument vp, int userid, IFormFile UploadFile)
+        {
+            var v = _IAdminDash.ViewUploadPost(vp, userid, UploadFile);
+            return ConcludeCare(vp.RequestId);
+        }
+        public IActionResult ConcludeCareCase(int RequestId, string Notes)
+        {
+            if(_IAdminDash.ConcludeCare(RequestId, Notes))
             {
-                _notyf.Success("Message Send Successfully..!");
+                _notyf.Success("Case concluded...");
             }
-            return RedirectToAction("Index", "Admin");
-
+            else
+            {
+                _notyf.Error("Error...");
+            }
+            return Redirect("~/Physician/DashBoard");
         }
     }
 }
