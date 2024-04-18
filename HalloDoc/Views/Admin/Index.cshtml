@@ -11,6 +11,7 @@
     ViewData["Title"] = "Dashboard";
 }
 <div>
+    @Html.Partial("_EncounterFinalize.cshtml")
     @Html.Partial("_EncounterTOC.cshtml")
     @Html.Partial("_TransToAdmin.cshtml")
     @Html.Partial("_AcceptRequest.cshtml")
@@ -161,21 +162,12 @@
 @Html.Partial("_sendLink.cshtml")
 
 <script>
-    //$(document).ready(function () {
-    //    $(".row > .btn").click(function () {
-    //        $(".row > .btn").removeClass("as");
-    //        $(this).addClass("as");
-    //    });
-    //});
-
-
-</script>
-<script>
     var statusidglobal = 1;
     var btnnameglobal = "new";
     var pageglobal = 1;
     var sortOrderglobal = false;
     var sortColumnglobal = "RequestedDate";
+    var EncounterFinalModal ;
 
     $(document).ready(function () {
         console.log("Document ready");
@@ -185,6 +177,7 @@
             $(".row > .btn").removeClass("as");
             $(this).addClass("as");
         });
+        EncounterFinalModal = new bootstrap.Modal("#EncounterFinalize");
     });
 
     $(document).on("click", ".btn6", function () {
@@ -326,4 +319,26 @@
             }
         });
     }
+    function isEncounterFinalized(requestId) 
+    {
+        $.ajax({
+            type: "GET",
+            url: '/Admin/IsEncounterFinalized',
+            data: { requestId: requestId },
+            
+            success: function (data) {
+               if(data)
+               {
+                    $('#RequestID_Encounter').val(requestId);
+                    EncounterFinalModal.show();
+               }
+               else{
+                    window.location.href = "/Admin/EncounterForm?RequestId=" + requestId;
+               }
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    } 
 </script>

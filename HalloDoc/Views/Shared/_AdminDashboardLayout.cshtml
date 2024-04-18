@@ -40,10 +40,10 @@
             <div class="position-absolute top-0 end-0 d-flex btn btn-sm align-items-center">
                 <span class="dNone"> Welcome @Crredntials.UserName()
                     </span>
-                <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" asp-action="Logout" asp-controller="AdminHome">
+                <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" onclick="Logout()">
                     Logout
                 </a>
-                <a class=" text-info text-decoration-none dBlock" asp-action="Logout" asp-controller="Login">
+                <a class=" text-info text-decoration-none dBlock" onclick="Logout()">
                     <i class="fa fa-sign-out fa-2x border border-info rounded p-2 m-1"></i>
                 </a>
 
@@ -224,6 +224,38 @@
                     }, false)
                 })
         })()
+        function Logout() {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-info m-2 shadow-none text-white px-3",
+                    denyButton: "btn btn-outline-info m-2"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                icon: "warning",
+                title: "Logout",
+                text: "Are you sure you want to Logout.",
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: "Logout",
+                denyButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Logout", "Login")',
+                        cache: false,
+                        success: function (response) {
+                            window.location.href = "/AdminHome/Login" ;
+                        },
+                        error: function () {
+
+                        }
+                    });
+                }
+            });
+        }
     </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

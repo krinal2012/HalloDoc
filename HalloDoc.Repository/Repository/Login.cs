@@ -6,6 +6,8 @@ using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using System.Reflection.Metadata.Ecma335;
+using System.Web.Helpers;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -33,7 +35,7 @@ namespace HalloDoc.Repository.Repository
                 admin.LastName = admin.LastName ?? string.Empty;
                 admin.Role = datarole.Name;
                 admin.AspNetUserId = user.Id;
-            
+
                 if (admin.Role == "Admin")
                 {
                     var admindata = _context.Admins.FirstOrDefault(u => u.AspNetUserId == user.Id);
@@ -44,7 +46,7 @@ namespace HalloDoc.Repository.Repository
                 {
                     var admindata = _context.Users.FirstOrDefault(u => u.AspNetUserId == user.Id);
                     admin.UserId = admindata.UserId;
-                   
+
                 }
                 else
                 {
@@ -58,6 +60,19 @@ namespace HalloDoc.Repository.Repository
             {
                 return null;
             }
+        }
+        public bool isAccessGranted(int roleId, string menuName)
+        {
+            // Get the list of menu IDs associated with the role
+            IQueryable<int> menuIds = _context.RoleMenus
+                                            .Where(e => e.RoleId == roleId)
+                                            .Select(e => e.MenuId);
+
+            // Check if any menu with the given name exists in the list of menu IDs
+            bool accessGranted = _context.Menus
+                                         .Any(e => menuIds.Contains(e.MenuId) && e.Name == menuName);
+
+            return accessGranted;
         }
         public bool SendResetLink(String Email)
         {
@@ -88,19 +103,67 @@ namespace HalloDoc.Repository.Repository
             return true;
 
         }
-
-        public bool isAccessGranted(int roleId, string menuName)
+        public bool CreateAccount(viewPatientReq viewPatientReq)
         {
-            // Get the list of menu IDs associated with the role
-            IQueryable<int> menuIds = _context.RoleMenus
-                                            .Where(e => e.RoleId == roleId)
-                                            .Select(e => e.MenuId);
+            var isexist = _context.Users.Any(req => req.Email == viewPatientReq.Email);
+            if (isexist)
+            {
+                return false;
+            }
+                var Aspnetuser = new AspNetUser();
+                var role = new AspNetUserRole();
+                var User = new User();
+                var Request = new Request();
+                var Requestclient = new RequestClient();
+                var U = _context.RequestClients.FirstOrDefault(m => m.Email == viewPatientReq.Email);
+                Guid g = Guid.NewGuid();
+                Aspnetuser.Id = g.ToString();
+                Aspnetuser.UserName = U.FirstName;
+                Aspnetuser.PasswordHash = viewPatientReq.Pass;
+                Aspnetuser.Email = viewPatientReq.Email;
+                Aspnetuser.PhoneNumber = U.PhoneNumber;
+                Aspnetuser.CreatedDate = DateTime.Now;
+                _context.AspNetUsers.Add(Aspnetuser);
+                _context.SaveChanges();
+                role.UserId = Aspnetuser.Id;
+                role.RoleId = "1"; //For Patient Role
+                _context.AspNetUserRoles.Add(role);
+                _context.SaveChanges();
 
-            // Check if any menu with the given name exists in the list of menu IDs
-            bool accessGranted = _context.Menus
-                                         .Any(e => menuIds.Contains(e.MenuId) && e.Name == menuName);
 
-            return accessGranted;
+                User.AspNetUserId = Aspnetuser.Id;
+                User.FirstName = U.FirstName;
+                User.LastName = U.LastName;
+                User.Email = viewPatientReq.Email;
+                User.Mobile = U.PhoneNumber;
+                User.Street = U.Street;
+                User.City = U.City;
+                User.State = U.State;
+                User.ZipCode = U.ZipCode;
+                User.StrMonth = U.StrMonth;
+                User.IntDate = U.IntDate;
+                User.IntYear = U.IntYear;
+                User.Status = 1; //for new request
+                User.CreatedBy = Aspnetuser.Id;
+                User.CreatedDate = DateTime.Now;
+                _context.Users.Add(User);
+                _context.SaveChanges();
+
+                var res = (from req in _context.Requests
+                           join rc in _context.RequestClients
+                           on req.RequestId equals rc.RequestId
+                           where rc.Email == viewPatientReq.Email
+                           select req.RequestId).ToList();
+
+                foreach (var r in res)
+                {
+                    var req = _context.Requests.FirstOrDefault(req => req.RequestId == r);
+                    req.UserId = User.UserId;
+                    _context.Requests.Update(req);
+                    _context.SaveChanges();
+                }
+                return true;
         }
     }
 }
+

@@ -193,7 +193,7 @@ namespace HalloDoc.Repository.Repository
         public List<Region> AssignCase()
         {
             var regiondata = _context.Regions.ToList();
-            return (regiondata);
+            return regiondata;
         }
         public List<AspNetRole> AspNetRole()
         {
@@ -1113,9 +1113,16 @@ namespace HalloDoc.Repository.Repository
         }
         public bool ConcludeCare(int RequestId, string Notes)
         {
+            var encounter = (from en in _context.EncounterForms
+                             where en.RequestId == RequestId
+                             select en.IsFinalize).FirstOrDefault();
+            if (encounter)
+            {
                 var requestData = _context.Requests.FirstOrDefault(e => e.RequestId == RequestId);
                 requestData.Status = 8;
                 requestData.ModifiedDate = DateTime.Now;
+                requestData.CompletedByPhysician = new BitArray(1);
+                requestData.CompletedByPhysician[0] = true;
                 _context.Requests.Update(requestData);
                 _context.SaveChanges();
 
@@ -1129,6 +1136,17 @@ namespace HalloDoc.Repository.Repository
                 _context.RequestStatusLogs.Add(rsl);
                 _context.SaveChanges();
                 return true;
+
+            }
+            else
+            {
+                return false;
+            }
+               
+        }
+        public bool IsEncounterFinalized(int requestId)
+        {
+            return _context.EncounterForms.Any( e => e.RequestId == requestId && e.IsFinalize);
         }
     }
 }

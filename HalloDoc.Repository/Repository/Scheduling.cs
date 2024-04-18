@@ -22,6 +22,7 @@ namespace HalloDoc.Repository.Repository
         }
         public void AddShift(SchedulingData model, List<string?>? chk, string adminId)
         {
+            
             var shiftid = _context.Shifts.Where(u => u.PhysicianId == model.physicianid).Select(u => u.ShiftId).ToList();
             if (shiftid.Count() > 0)
             {

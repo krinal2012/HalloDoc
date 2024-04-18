@@ -3,15 +3,19 @@ using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Repository.Repository.Interface;
 using System.Collections;
+using Microsoft.Extensions.Configuration;
+using HalloDoc.Entity.Models;
 
 namespace HalloDoc.Repository.Repository
 {
     public class PatientRequest : IPatientRequest
     {
         private readonly HelloDocContext _context;
-        public PatientRequest(HelloDocContext context)
+        private readonly EmailConfiguration _emailConfig;
+        public PatientRequest(HelloDocContext context,EmailConfiguration emailConfiguration)
         {
             _context = context;
+            _emailConfig = emailConfiguration;
         }
         public  void PatientReq(viewPatientReq viewPatientReq)
         {
@@ -57,14 +61,11 @@ namespace HalloDoc.Repository.Repository
             }
             Request.RequestTypeId = 2;
             Request.Status = 1;
-            if (isexist == null)
+            if (isexist != null)
             {
                 Request.UserId = User.UserId;
             }
-            else
-            {
-                Request.UserId = isexist.UserId;
-            }
+           
             Request.FirstName = viewPatientReq.FirstName;
             Request.LastName = viewPatientReq.LastName;
             Request.Email = viewPatientReq.Email;
@@ -121,46 +122,45 @@ namespace HalloDoc.Repository.Repository
             var User = new User();
             var Request = new Request();
             var Requestclient = new RequestClient();
-            var isexist = _context.Users.FirstOrDefault(x => x.Email == viewFamilyReq.Emailid);
+            var isexist = _context.Users.FirstOrDefault(x => x.Email == viewFamilyReq.Email);
+           
+            if (isexist == null)
+            {
+                var Subject = "Create Account";
+                var agreementUrl = "https://localhost:7151/Home/Register?Email=" + viewFamilyReq.Email;
+                var template = $"<a href='{agreementUrl}'>Create Account</a>";
+                var sent = _emailConfig.SendMail(viewFamilyReq.Email, Subject,template).Result;
+                EmailLog em = new EmailLog
+                {
+                    
+                    EmailTemplate = template,
+                    SubjectName = Subject,
+                    EmailId = viewFamilyReq.Email,
+                    CreateDate = DateTime.Now,
+                    SentDate = DateTime.Now,
+                    IsEmailSent = new BitArray(1),
+                    SentTries = 1,
+                    Action = 6,// action 6 for registration
+                    RoleId = 1,// role 1 for patient
+                };
+
+                if (sent)
+                {
+                    em.IsEmailSent[0] = true;
+                };
+                _context.EmailLogs.Add(em);
+                _context.SaveChanges();
+            }
             Guid g = Guid.NewGuid();
 
-            //Aspnetuser.Id = g.ToString();
-            //Aspnetuser.UserName = viewFamilyReq.FirstName;
-            //Aspnetuser.PasswordHash = "krinal";
-            //Aspnetuser.Email = viewFamilyReq.Email;
-            //Aspnetuser.PhoneNumber = viewFamilyReq.Mobile;
-            //Aspnetuser.CreatedDate = DateTime.Now;
-            //_context.AspNetUsers.Add(Aspnetuser);
-            // _context.SaveChangesAsync();
-
-            //User.AspNetUserId = viewFamilyReq.Id;
-            //User.FirstName = viewFamilyReq.FirstName;
-            //User.LastName = viewFamilyReq.LastName;
-            //User.Email = viewFamilyReq.Email;
-            //User.Mobile = viewFamilyReq.Mobile;
-            //User.Street = viewFamilyReq.Street;
-            //User.City = viewFamilyReq.City;
-            //User.State = viewFamilyReq.State;
-            //User.ZipCode = viewFamilyReq.ZipCode;
-            //User.StrMonth = (viewFamilyReq.DOB.Month).ToString();
-            //User.IntDate = viewFamilyReq.DOB.Day;
-            //User.IntYear = viewFamilyReq.DOB.Year;
-            //User.Status = 1;
-            //User.CreatedBy = Aspnetuser.Id;
-            //User.CreatedDate = DateTime.Now;
-            //_context.Users.Add(User);
-            // _context.SaveChangesAsync();
 
             Request.RequestTypeId = 3;
             Request.Status = 1;
-            if (isexist == null)
+            if (isexist != null)
             {
                 Request.UserId = User.UserId;
             }
-            else
-            {
-                Request.UserId = isexist.UserId;
-            }
+            
             Request.FirstName = viewFamilyReq.First_name;
             Request.LastName = viewFamilyReq.Last_name;
             Request.Email = viewFamilyReq.Emailid;
@@ -217,45 +217,42 @@ namespace HalloDoc.Repository.Repository
             var Requestclient = new RequestClient();
             var Business = new Business();
             var Requestbusiness = new RequestBusiness();
-            var isexist = _context.Users.FirstOrDefault(x => x.Email == viewBusinessReq.Emailid);
-            //Guid g = Guid.NewGuid();
-            //Aspnetuser.Id = g.ToString();
-            //Aspnetuser.UserName = viewBusinessReq.FirstName;
-            //Aspnetuser.PasswordHash = viewBusinessReq.FirstName;
-            //Aspnetuser.Email = viewBusinessReq.Email;
-            //Aspnetuser.PhoneNumber = viewBusinessReq.Mobile;
-            //Aspnetuser.CreatedDate = DateTime.Now;
-            //_context.AspNetUsers.Add(Aspnetuser);
-            // _context.SaveChangesAsync();
+            var isexist = _context.Users.FirstOrDefault(x => x.Email == viewBusinessReq.Email);
+            if (isexist == null)
+            {
+                var Subject = "Create Account";
+                var agreementUrl = "https://localhost:7151/Home/Register?Email=" + viewBusinessReq.Email;
+                var template = $"<a href='{agreementUrl}'>Create Account</a>";
+                var sent = _emailConfig.SendMail(viewBusinessReq.Email, Subject, template).Result;
+                EmailLog em = new EmailLog
+                {
 
-            //User.AspNetUserId = viewBusinessReq.Id;
-            //User.FirstName = viewBusinessReq.FirstName;
-            //User.LastName = viewBusinessReq.LastName;
-            //User.Email = viewBusinessReq.Email;
-            //User.Mobile = viewBusinessReq.Mobile;
-            //User.Street = viewBusinessReq.Street;
-            //User.City = viewBusinessReq.City;
-            //User.State = viewBusinessReq.State;
-            //User.ZipCode = viewBusinessReq.ZipCode;
-            //User.StrMonth = (viewBusinessReq.DOB.Month).ToString();
-            //User.IntDate = viewBusinessReq.DOB.Day;
-            //User.IntYear = viewBusinessReq.DOB.Year;
-            //User.Status = 1;
-            //User.CreatedBy = Aspnetuser.Id;
-            //User.CreatedDate = DateTime.Now;
-            //_context.Users.Add(User);
-            // _context.SaveChangesAsync();
+                    EmailTemplate = template,
+                    SubjectName = Subject,
+                    EmailId = viewBusinessReq.Email,
+                    CreateDate = DateTime.Now,
+                    SentDate = DateTime.Now,
+                    IsEmailSent = new BitArray(1),
+                    SentTries = 1,
+                    Action = 6,// action 6 for registration
+                    RoleId = 1,// role 1 for patient
+                };
+
+                if (sent)
+                {
+                    em.IsEmailSent[0] = true;
+                };
+                _context.EmailLogs.Add(em);
+                _context.SaveChanges();
+            }
 
             Request.RequestTypeId = 1;
             Request.Status = 1;
-            if (isexist == null)
+            if (isexist != null)
             {
                 Request.UserId = User.UserId;
             }
-            else
-            {
-                Request.UserId = isexist.UserId;
-            }
+           
             Request.FirstName = viewBusinessReq.First_name;
             Request.LastName = viewBusinessReq.Last_name;
             Request.Email = viewBusinessReq.Emailid;
@@ -282,7 +279,7 @@ namespace HalloDoc.Repository.Repository
             Business.Name = viewBusinessReq.First_name + " " + viewBusinessReq.Last_name;
             Business.Address1 = viewBusinessReq.Businessname;
             Business.CreatedDate = DateTime.Now;
-            Business.CreatedBy = isexist.AspNetUserId;
+           // Business.CreatedBy = isexist.AspNetUserId;
             Business.PhoneNumber = viewBusinessReq.Mobileno;
             _context.Businesses.Add(Business);
             _context.SaveChanges();
@@ -301,46 +298,44 @@ namespace HalloDoc.Repository.Repository
             var Requestclient = new RequestClient();
             var Concierge = new Concierge();
             var Requestconcierge = new RequestConcierge();
-            var isexist = _context.Users.FirstOrDefault(x => x.Email == viewConciergeReq.Emailid);
+            var isexist = _context.Users.FirstOrDefault(x => x.Email == viewConciergeReq.Email);
             Guid g = Guid.NewGuid();
+            if (isexist == null)
+            {
+                var Subject = "Create Account";
+                var agreementUrl = "https://localhost:7151/Home/Register?Email=" +  viewConciergeReq.Email;
+                var template = $"<a href='{agreementUrl}'>Create Account</a>";
+                var sent = _emailConfig.SendMail(viewConciergeReq.Email, Subject, template).Result;
+                EmailLog em = new EmailLog
+                {
 
-            //Aspnetuser.Id = g.ToString();
-            //Aspnetuser.UserName = viewConciergeReq.FirstName;
-            //Aspnetuser.PasswordHash = viewConciergeReq.FirstName;
-            //Aspnetuser.Email = viewConciergeReq.Email;
-            //Aspnetuser.PhoneNumber = viewConciergeReq.Mobile;
-            //Aspnetuser.CreatedDate = DateTime.Now;
-            //_context.AspNetUsers.Add(Aspnetuser);
-            // _context.SaveChangesAsync();
-            ////for user table
-            //User.AspNetUserId = viewConciergeReq.Id;
-            //User.FirstName = viewConciergeReq.FirstName;
-            //User.LastName = viewConciergeReq.LastName;
-            //User.Email = viewConciergeReq.Email;
-            //User.Mobile = viewConciergeReq.Mobile;
-            //User.Street = viewConciergeReq.Street;
-            //User.City = viewConciergeReq.City;
-            //User.State = viewConciergeReq.State;
-            //User.ZipCode = viewConciergeReq.ZipCode;
-            //User.StrMonth = (viewConciergeReq.DOB.Month).ToString();
-            //User.IntDate = viewConciergeReq.DOB.Day;
-            //User.IntYear = viewConciergeReq.DOB.Year;
-            //User.Status = 1;
-            //User.CreatedBy = Aspnetuser.Id;
-            //User.CreatedDate = DateTime.Now;
-            //_context.Users.Add(User);
-            // _context.SaveChangesAsync();
+                    EmailTemplate = template,
+                    SubjectName = Subject,
+                    EmailId = viewConciergeReq.Email,
+                    CreateDate = DateTime.Now,
+                    SentDate = DateTime.Now,
+                    IsEmailSent = new BitArray(1),
+                    SentTries = 1,
+                    Action = 6,// action 6 for registration
+                    RoleId = 1,// role 1 for patient
+                };
+
+                if (sent)
+                {
+                    em.IsEmailSent[0] = true;
+                };
+                _context.EmailLogs.Add(em);
+                _context.SaveChanges();
+            }
+
 
             Request.RequestTypeId = 4;
             Request.Status = 1;
-            if (isexist == null)
+            if (isexist != null)
             {
                 Request.UserId = User.UserId;
             }
-            else
-            {
-                Request.UserId = isexist.UserId;
-            }
+            
             Request.FirstName = viewConciergeReq.First_name;
             Request.LastName = viewConciergeReq.Last_name;
             Request.Email = viewConciergeReq.Emailid;

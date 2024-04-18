@@ -60,10 +60,10 @@ namespace HellodocMVC.Controllers
             return View("../PatientForm/Index");
         }
         [HttpPost]
-        public async Task<IActionResult> CheckEmail(string email)
+        public IActionResult CheckEmail(string email)
         {
             string message;
-            var aspnetuser = await _context.AspNetUsers.FirstOrDefaultAsync(m => m.Email == email);
+            var aspnetuser =  _context.AspNetUsers.FirstOrDefault(m => m.Email == email);
             if (aspnetuser == null)
             {
                 message = "Failure";

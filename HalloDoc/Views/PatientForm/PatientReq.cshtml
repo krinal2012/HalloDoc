@@ -112,11 +112,13 @@
                     var flag = response.message ;
                     var userId = response.data;
                     console.log(response);
-                    if (flag == "Failure") {
-                        // Show the username and password fields
+                    if (flag == "Failure") 
+                    {
                         $("#username").show();
                         $("#password").show();
-                    } else {
+                    } 
+                    else
+                    {
                         $("#username").hide();
                         $("#password").hide();
                     }

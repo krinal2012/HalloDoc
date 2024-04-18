@@ -5,6 +5,9 @@ using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Models;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
+using iText.Kernel.Pdf;
+using iText.Layout.Element;
+using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using System.Data;
@@ -164,7 +167,6 @@ namespace HalloDoc.Controllers
             var result = _IAdminTabs.ViewProviderProfile(PhysicianId);
             return View("EditProvider", result);
         }
-        
         public IActionResult AddProvider()
         {
             ViewData["Heading"] = "Add";
@@ -232,7 +234,6 @@ namespace HalloDoc.Controllers
             bool res = _IAdminTabs.AddProviderAccount(physicianData, checkboxes, UserId);
             return RedirectToAction("ProviderMenu");
         }
-
         public IActionResult DeleteProvider(int PhysicianId)
         {
             bool res = _IAdminTabs.DeleteProvider(PhysicianId);
@@ -397,5 +398,7 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("ProviderProfile", new { PhysicianId = Convert.ToInt32(Crredntials.UserID()) });
         }
+       
+
     }
 }

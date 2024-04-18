@@ -1,0 +1,42 @@
+﻿@model HalloDoc.Entity.Models.ViewModel.viewPatientReq
+@{
+    ViewData["Title"] = "Registration Page";
+}
+<div class=" container text-center bg-img maindiv">
+    <div class="col-lg-8 col-md-8 col-sm-3 col-5">
+        <a asp-action="Index" asp-controller="Home"><i class="fa fa-angle-left fa-lg p-3 text-info"> Back</i> </a>
+    </div>
+    <div class="d-flex text-center justify-content-center align-items-center">
+        <div class="col-lg-5 col-md-8 col-sm-12 text-center ">
+            <h2 class="mb-2 text-body-secondary">Create Account</h2>
+            <form method="post" asp-controller="Home" asp-action="CreateAccount">
+                <div class="form-floating mb-3 email">
+                    <input asp-for="Email" type="text" class="form-control shadow-none" name="Email" placeholder="email" required disabled>
+                    <button><i class='fa fa-user-circle field-icon'></i></button>
+                    <label for="Email">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3 password">
+                    <input asp-for="Pass" type="password" class="form-control shadow-none" placeholder="Password" id="floatingPassword" required>
+                    <button type="button" onclick="toggle()">
+                        <span class="fa fa-eye-slash fa-lg field-icon toggle-password"></span>
+                        <span class="fa fa-eye fa-lg field-icon toggle-password"></span>
+                    </button>
+                    <label for="Pass">Password</label>
+                    <span asp-validation-for="Pass" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3 password">
+                    <input asp-for="ConformPass" type="password" class="form-control shadow-none" placeholder="Password" required>
+                    <button type="button" onclick="toggle()">
+                        <span class="fa fa-eye-slash fa-lg field-icon toggle-password"></span>
+                        <span class="fa fa-eye fa-lg field-icon toggle-password"></span>
+                    </button>
+                    <label for="ConformPass">Confirm Password</label>
+                    <span asp-validation-for="ConformPass" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-info text-light form-control mb-3">Create</button>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -79,6 +79,27 @@ namespace HellodocMVC.Controllers
                 return View("ResetPass");
             }
         }
-       
+        public IActionResult Register(string Email)
+        {
+            viewPatientReq res = new viewPatientReq();
+            res.Email = Email;
+            return View(res);
+        }
+        public IActionResult CreateAccount(viewPatientReq viewPatientReq)
+        {
+            var res = _Ilogin.CreateAccount(viewPatientReq);
+            if (res)
+            {
+                _notyf.Success("Account Created successfully");
+                return View("Login");
+            }
+            else
+            {
+                _notyf.Error("You are already registered...");
+                return View("Register");
+            }
+            
+        }
+
     }
 }

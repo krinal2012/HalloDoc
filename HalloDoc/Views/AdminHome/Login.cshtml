@@ -28,18 +28,18 @@
         <div class="form-floating mb-4 email">
             <input asp-for="Email" type="email" value="Admin@gmail.com" class="form-control shadow-none" id="floatingInput" placeholder="name@example.com">
             <label class="bg-transparent" for="floatingInput">Email</label>
-            @* <button type="button" class="btn btn-light">
-            <i class="icon fa-solid fa-user field-icon position-relative"></i>
-            </button> *@
+            <button type="button" class="btn-sm">
+                <i class="fa fa-sm fa-user-circle field-icon"></i>
+            </button> 
             <span class="text-danger"></span>
         </div>
         <div class="form-floating mb-4 password">
             <input asp-for="PasswordHash" type="password" value="Admin" class="form-control shadow-none eyehide" id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Password</label>
-            @* <button type="button" class="btn btn-light" onclick="passtoggle()">
-            <i class="showImg fa fa-eye-slash"></i>
-            <i class="fa fa-eye"></i>
-            </button> *@
+            <button type="button" class="btn-sm" onclick="toggle()">
+                <span class="fa fa-xs fa-eye-slash fa-lg field-icon toggle-password"></span>
+                <span class="fa fa-xs fa-eye fa-lg field-icon toggle-password"></span>
+            </button>
             <span class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-info text-white w-100 mb-4" role="button">Login</button>

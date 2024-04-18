@@ -15,7 +15,7 @@ using System.Drawing.Printing;
 using System.Web.Helpers;
 using Twilio.TwiML.Messaging;
 using static HalloDoc.Entity.Models.Constant;
-using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
+
 using Region = HalloDoc.Entity.DataModels.Region;
 
 namespace HalloDoc.Repository.Repository
@@ -156,7 +156,7 @@ namespace HalloDoc.Repository.Repository
                     _context.Admins.Update(Data);
                     _context.SaveChanges();
                     List<int> regions = _context.AdminRegions.Where(r => r.AdminId == AdminProfile.AdminId).Select(req => req.RegionId).ToList();
-                    List<int> Regionsid = AdminProfile.RegionIdList.Split(',').Select(int.Parse).ToList();
+                   
 
                     if (regions.Count > 0)
                     {
@@ -167,17 +167,22 @@ namespace HalloDoc.Repository.Repository
                             _context.SaveChanges();
                         }
                     }
-                    foreach (var item in Regionsid)
+                    if (!(AdminProfile.RegionIdList.IsNullOrEmpty()))
                     {
-                        AdminRegion ar = new()
+                        List<int> Regionsid = AdminProfile.RegionIdList.Split(',').Select(int.Parse).ToList();
+                        foreach (var item in Regionsid)
                         {
-                            RegionId = item,
-                            AdminId = AdminProfile.AdminId
-                        };
-                        _context.AdminRegions.Update(ar);
-                        _context.SaveChanges();
-                        regions.Remove(item);
+                            AdminRegion ar = new()
+                            {
+                                RegionId = item,
+                                AdminId = AdminProfile.AdminId
+                            };
+                            _context.AdminRegions.Update(ar);
+                            _context.SaveChanges();
+                            regions.Remove(item);
+                        }
                     }
+                   
 
                     return true;
                 }
@@ -367,7 +372,7 @@ namespace HalloDoc.Repository.Repository
                     _context.Physicians.Update(Data);
                     _context.SaveChanges();
                     List<int> regions = _context.PhysicianRegions.Where(r => r.PhysicianId == PhysiciansData.Physicianid).Select(req => req.RegionId).ToList();
-                    List<int> Regionsid = PhysiciansData.RegionIdList.Split(',').Select(int.Parse).ToList();
+                   
 
                     if (regions.Count > 0)
                     {
@@ -378,17 +383,23 @@ namespace HalloDoc.Repository.Repository
                             _context.SaveChanges();
                         }
                     }
-                    foreach (var item in Regionsid)
+                    if (!(PhysiciansData.RegionIdList.IsNullOrEmpty()))
                     {
-                        PhysicianRegion ar = new()
+                        List<int> Regionsid = PhysiciansData.RegionIdList.Split(',').Select(int.Parse).ToList();
+                        foreach (var item in Regionsid)
                         {
-                            RegionId = item,
-                            PhysicianId = PhysiciansData.Physicianid
-                        };
-                        _context.PhysicianRegions.Update(ar);
-                        _context.SaveChanges();
-                        regions.Remove(item);
+                            PhysicianRegion ar = new()
+                            {
+                                RegionId = item,
+                                PhysicianId = PhysiciansData.Physicianid
+                            };
+                            _context.PhysicianRegions.Update(ar);
+                            _context.SaveChanges();
+                            regions.Remove(item);
+                        }
+
                     }
+                        
 
                     return true;
                 }

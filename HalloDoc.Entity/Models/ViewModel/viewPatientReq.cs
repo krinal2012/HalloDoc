@@ -9,12 +9,12 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Symptoms is required")]
         public   string Symptoms { get; set; }
         [Required(ErrorMessage = "First name is required")]      
-        public required string FirstName { get; set; }       
+        public string FirstName { get; set; }       
         public string? LastName { get; set; }       
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
-        public required string Email { get; set; }
+        public  string Email { get; set; }
         public string Password { get; set; }
         public string Pass { get; set; }
         [Compare("Pass", ErrorMessage = "Password doesn't match.")]

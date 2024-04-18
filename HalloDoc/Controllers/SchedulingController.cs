@@ -95,14 +95,15 @@ namespace HalloDoc.Controllers
                     MonthWiseScheduling month = new MonthWiseScheduling
                     {
                         date = currentDate,
-                        //shiftdetails = _context.ShiftDetails.Include(u => u.Shift).ThenInclude(u => u.Physician).ToList()
                         shiftdetails = _context.ShiftDetailRegions.Include(u => u.ShiftDetail).ThenInclude(u => u.Shift).ThenInclude(u => u.Physician).Where(u => u.IsDeleted == new BitArray(new[] { false })).Where(u => u.RegionId == regionid).Select(u => u.ShiftDetail).ToList()
-
-
                     };
                     if (regionid == 0)
                     {
                         month.shiftdetails = _context.ShiftDetails.Include(u => u.Shift).ThenInclude(u => u.Physician).Where(u => u.IsDeleted == new BitArray(new[] { false })).ToList();
+                    }
+                    if (Crredntials.Role() == "Physician")
+                    {
+                        month.shiftdetails = _context.ShiftDetails.Include(u => u.Shift).Where(u => u.IsDeleted == new BitArray(new[] { false }) && u.Shift.PhysicianId == Int32.Parse(Crredntials.UserID())).ToList();
                     }
                     return PartialView("_MonthWise", month);
 
@@ -115,6 +116,10 @@ namespace HalloDoc.Controllers
         {
             string adminId = Crredntials.AspNetUserId();
             var chk = Request.Form["repeatdays"].ToList();
+            if (model.physicianid == 0)
+            {
+                model.physicianid = Int32.Parse(Crredntials.UserID());
+            }
             _scheduling.AddShift(model, chk, adminId);
             return RedirectToAction("Index");
 

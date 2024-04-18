@@ -83,8 +83,11 @@
                                 <a class="dropdown-item" onclick="ClearSwal(@item.RequestId)">
                                 <i class="fa-regular fa-circle-xmark"></i> Clear case</a>
                             </li>
-                            <li><a class="dropdown-item">
-                                <i class="fa-regular fa-rectangle-list"></i> Encounter</a></li>
+                            <li>
+                                <a class="dropdown-item" onclick="isEncounterFinalized(@item.RequestId)">
+                                    <i class="fa-regular fa-rectangle-list"></i> Encounter
+                                </a>
+                            </li>
                         </ul>
                     </td>
                 </tr>

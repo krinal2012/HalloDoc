@@ -22,7 +22,7 @@
 </div>
 <div class="bg-white reqform p-3 container ">
     <h1 class="text-info d-flex justify-content-center"><strong>Medical report- Confidential</strong></h1>
-    <form class="bg-white sbox" method="post">
+    <form class="bg-white sbox" method="post" id="encform">
         <input type="hidden" asp-for="RequestId" />
         <div class="row">
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 form-floating mb-4">
@@ -181,13 +181,48 @@
             <button type="submit" class="col-1 btn btn-info text-white rounded mx-2 p-2">Save</button>
             @if(Crredntials.Role()=="Physician")
             {
-                <button class="col-1 btn btn-success text-white rounded mx-2 p-2" asp-action="EncounterFinalize" asp-controller="Admin">Finalize</button>
+                <button type="button" class="col-1 btn btn-success text-white rounded mx-2 p-2" onclick="Finalize()">Finalize</button>
             }
             <button class="col-1 btn btn-outline-info rounded mx-2 p-2" asp-action="Index" asp-controller="Admin">Cancel</button>
         </div>
     </form>
 </div>
             
-   
+ <script>
+    function Finalize() {
+        var formdata = $('#encform').serialize();
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-info m-2 shadow-none text-white px-3",
+                denyButton: "btn btn-outline-info m-2"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+            icon: "warning",
+            title: "finalize",
+            text: "Are you sure you want to finalize this request.Once it is finalized if can't be modified.",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Finalize",
+            denyButtonText: "Cancel",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("EncounterFinalize", "Admin")',
+                    cache: false,
+                    data: formdata,
+                    success: function (response) {
+                       window.location.href = "/Admin/Dashboard";
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        });
+    }
+ </script>
 
 

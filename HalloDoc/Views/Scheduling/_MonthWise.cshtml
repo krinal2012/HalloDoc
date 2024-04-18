@@ -86,14 +86,22 @@
                                                                 {
                                                                     <div class="shiftdisplay shiftmodal" id="@obj.ShiftDetailId" data-bs-toggle="modal" data-bs-target="#viewShiftModal">
                                                                         @obj.StartTime-@obj.EndTime
-                                                                        @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName
+                                                                        @if (Crredntials.Role() == "Admin")
+                                                                        {
+                                                                            <span> @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName</span>
+                                                                        }
                                                                     </div>
                                                                 }
                                                                 else
                                                                 {
                                                                     <div class="shiftdisplay2 shiftmodal" id="@obj.ShiftDetailId" data-bs-toggle="modal" data-bs-target="#viewShiftModal">
                                                                         @obj.StartTime-@obj.EndTime
-                                                                        @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName
+                                                                        @if (Crredntials.Role() == "Admin")
+                                                                        {
+                                                                            <span>
+                                                                                @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName
+                                                                            </span>
+                                                                        }
                                                                     </div>
                                                                 }
                                                             </td>
@@ -108,14 +116,20 @@
                                                                 {
                                                                     <div class="shiftdisplay shiftmodal" id="@obj.ShiftDetailId" data-bs-toggle="modal" data-bs-target="#viewShiftModal">
                                                                         @obj.StartTime-@obj.EndTime
-                                                                        @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName
+                                                                        @if (Crredntials.Role() == "Admin")
+                                                                        {
+                                                                            <span> @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName</span>
+                                                                        }
                                                                     </div>
                                                                 }
                                                                 else
                                                                 {
                                                                     <div class="shiftdisplay2 shiftmodal" id="@obj.ShiftDetailId" data-bs-toggle="modal" data-bs-target="#viewShiftModal">
                                                                         @obj.StartTime-@obj.EndTime
-                                                                        @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName
+                                                                        @if (Crredntials.Role() == "Admin")
+                                                                        {
+                                                                            <span> @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName</span>
+                                                                        }
                                                                     </div>
                                                                 }
                                                             </td>
@@ -143,14 +157,20 @@
                                                                 {
                                                                     <div class="shiftdisplay shiftmodal" id="@obj.ShiftDetailId" data-bs-toggle="modal" data-bs-target="#viewShiftModal">
                                                                         @obj.StartTime-@obj.EndTime
-                                                                        @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName
+                                                                        @if (Crredntials.Role() == "Admin")
+                                                                        {
+                                                                            <span> @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName</span>
+                                                                        }
                                                                     </div>
                                                                 }
                                                                 else
                                                                 {
                                                                     <div class="shiftdisplay2 shiftmodal" id="@obj.ShiftDetailId" data-bs-toggle="modal" data-bs-target="#viewShiftModal">
                                                                         @obj.StartTime-@obj.EndTime
-                                                                        @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName
+                                                                        @if (Crredntials.Role() == "Admin")
+                                                                        {
+                                                                            <span> @obj.Shift.Physician.FirstName, @obj.Shift.Physician.LastName</span>
+                                                                        }
                                                                     </div>
                                                                 }
 

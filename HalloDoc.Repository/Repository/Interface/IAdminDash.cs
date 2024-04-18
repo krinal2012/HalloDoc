@@ -48,6 +48,8 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool Housecall(int RequestId);
         public bool Consult(int RequestId);
         public bool ConcludeCare(int RequestId, string Notes);
-       
+        public bool IsEncounterFinalized(int requestId);
+
+
     }
 }

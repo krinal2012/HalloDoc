@@ -98,7 +98,7 @@
                                 </li>
                             }
                             <li>
-                                <a class="dropdown-item" asp-action="EncounterForm" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
+                                <a class="dropdown-item" onclick="isEncounterFinalized(@item.RequestId)">
                                 <i class="fa-regular fa-rectangle-list"></i> Encounter</a></li>
                         </ul>
                     </td>
