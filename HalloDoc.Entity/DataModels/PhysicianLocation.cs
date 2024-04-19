@@ -16,10 +16,10 @@ public partial class PhysicianLocation
     public int PhysicianId { get; set; }
 
     [Column("Latitude ")]
-    [Precision(10, 0)]
+    [Precision(10, 5)]
     public decimal? Latitude { get; set; }
 
-    [Precision(10, 0)]
+    [Precision(10, 5)]
     public decimal? Longitude { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]

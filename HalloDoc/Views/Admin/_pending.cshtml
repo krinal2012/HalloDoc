@@ -20,7 +20,7 @@
                 {
                     <th scope="col" class="">Requestor<span class="sortbtn" data-value="Requestor"><i class="fa fa-sort"></i></span></th>
                     <th scope="col" class="">Physician Name<span class="sortbtn" data-value="Physician"><i class="fa fa-sort"></i></span></th>
-                    <th scope="col" class="d-flex justify-content-between">Date of Service<span class="sortbtn" data-value="DOS"><i class="fa fa-sort"></i></span></th>
+                    <th scope="col" class="d-flex justify-content-between">Date of Service<span class="sortbtn" data-value="RequestedDate"><i class="fa fa-sort"></i></span></th>
                 }
                 <th scope="col">Phone</th>
                 <th scope="col" class="d-flex justify-content-between">Address<span class="sortbtn" data-value="Address"><i class="fa fa-sort"></i></span></th>
@@ -278,6 +278,7 @@
         e.preventDefault();
         console.log("etfh");
         var page = $(this).data('page');
+        var pagesize = $('#pagesizedropdown').val();
         pageglobal = page;
         var searchValue = document.getElementById('searchInput').value;
         $.ajax({
@@ -288,6 +289,7 @@
                 searchValue: searchValue,
                 btnName: "pending",
                 statusid: 2,
+                pagesize: pagesize,
                 sortColumn: sortColumnglobal,
                 sortOrder: sortOrderglobal,
             },
@@ -306,6 +308,7 @@
         var sortOrder = sortOrderglobal;
         var sortColumn = e;
         var page = pageglobal;
+        var pagesize = $('#pagesizedropdown').val();
         var searchValue = document.getElementById('searchInput').value;
         debugger;
         if (event.target.tagName == "I") {
@@ -343,6 +346,7 @@
                 statusid: 2,
                 btnName: "pending",
                 sortColumn: sortColumnglobal,
+                pagesize: pagesize,
                 sortOrder: sortOrderglobal,
                 searchValue: searchValue
             },

@@ -4,6 +4,7 @@ using HalloDoc.Entity.DataModels;
 using HalloDoc.Repository.Repository.Interface;
 using System.Collections;
 using HalloDoc.Entity.Models;
+using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -47,7 +48,8 @@ namespace HalloDoc.Repository.Repository
                 User.Mobile = viewPatientReq.Mobile;
                 User.Street = viewPatientReq.Street;
                 User.City = viewPatientReq.City;
-                User.State = viewPatientReq.State;
+                User.State = Enum.GetName(typeof(RegionList), viewPatientReq.State);
+                User.RegionId = viewPatientReq.State;
                 User.ZipCode = viewPatientReq.ZipCode;
                 User.StrMonth = viewPatientReq.DOB.Month.ToString();
                 User.IntDate = viewPatientReq.DOB.Day;
@@ -62,7 +64,7 @@ namespace HalloDoc.Repository.Repository
             Request.Status = 1;
             if (isexist != null)
             {
-                Request.UserId = User.UserId;
+                Request.UserId = isexist.UserId;
             }
            
             Request.FirstName = viewPatientReq.FirstName;
@@ -84,7 +86,13 @@ namespace HalloDoc.Repository.Repository
             Requestclient.Notes = viewPatientReq.Symptoms;
             Requestclient.IntDate = viewPatientReq.DOB.Day;
             Requestclient.IntYear = viewPatientReq.DOB.Year;
+            Requestclient.Street = viewPatientReq.Street;
+            Requestclient.City = viewPatientReq.City;
+            Requestclient.State = Enum.GetName(typeof(RegionList),viewPatientReq.State);
+            Requestclient.RegionId = viewPatientReq.State;
             Requestclient.StrMonth = (viewPatientReq.DOB.Month).ToString();
+            Requestclient.ZipCode = viewPatientReq.ZipCode;
+            Requestclient.CreatedDate = DateTime.Now;
             _context.RequestClients.Add(Requestclient);
             _context.SaveChanges();
 
@@ -152,7 +160,7 @@ namespace HalloDoc.Repository.Repository
             Request.Status = 1;
             if (isexist != null)
             {
-                Request.UserId = User.UserId;
+                Request.UserId = isexist.UserId;
             }
             
             Request.FirstName = viewFamilyReq.First_name;
@@ -172,10 +180,16 @@ namespace HalloDoc.Repository.Repository
             Requestclient.Address = viewFamilyReq.Street + "," + viewFamilyReq.City + "," + viewFamilyReq.State + "," + viewFamilyReq.ZipCode;
             Requestclient.Email = viewFamilyReq.Email;
             Requestclient.PhoneNumber = viewFamilyReq.Mobile;
+            Requestclient.Notes = viewFamilyReq.Symptoms;
             Requestclient.IntDate = viewFamilyReq.DOB.Day;
             Requestclient.IntYear = viewFamilyReq.DOB.Year;
+            Requestclient.Street = viewFamilyReq.Street;
+            Requestclient.City = viewFamilyReq.City;
+            Requestclient.State = Enum.GetName(typeof(RegionList), viewFamilyReq.State);
+            Requestclient.RegionId = viewFamilyReq.State;
             Requestclient.StrMonth = (viewFamilyReq.DOB.Month).ToString();
-            Requestclient.Notes = viewFamilyReq.Symptoms;           
+            Requestclient.ZipCode = viewFamilyReq.ZipCode;
+            Requestclient.CreatedDate = DateTime.Now;
             _context.RequestClients.Add(Requestclient);
             _context.SaveChanges();
 
@@ -242,9 +256,8 @@ namespace HalloDoc.Repository.Repository
             Request.Status = 1;
             if (isexist != null)
             {
-                Request.UserId = User.UserId;
+                Request.UserId = isexist.UserId;
             }
-           
             Request.FirstName = viewBusinessReq.First_name;
             Request.LastName = viewBusinessReq.Last_name;
             Request.Email = viewBusinessReq.Emailid;
@@ -265,6 +278,13 @@ namespace HalloDoc.Repository.Repository
             Requestclient.IntYear = viewBusinessReq.DOB.Year;
             Requestclient.StrMonth = (viewBusinessReq.DOB.Month).ToString();
             Requestclient.Notes = viewBusinessReq.Symptoms;
+            Requestclient.Street = viewBusinessReq.Street;
+            Requestclient.City = viewBusinessReq.City;
+            Requestclient.State = Enum.GetName(typeof(RegionList), viewBusinessReq.State);
+            Requestclient.RegionId = viewBusinessReq.State;
+            Requestclient.StrMonth = (viewBusinessReq.DOB.Month).ToString();
+            Requestclient.ZipCode = viewBusinessReq.ZipCode;
+            Requestclient.CreatedDate = DateTime.Now;
             _context.RequestClients.Add(Requestclient);
             _context.SaveChanges();
 
@@ -324,7 +344,7 @@ namespace HalloDoc.Repository.Repository
             Request.Status = 1;
             if (isexist != null)
             {
-                Request.UserId = User.UserId;
+                Request.UserId = isexist.UserId;
             }
             
             Request.FirstName = viewConciergeReq.First_name;
@@ -347,13 +367,20 @@ namespace HalloDoc.Repository.Repository
             Requestclient.IntYear = viewConciergeReq.DOB.Year;
             Requestclient.StrMonth = (viewConciergeReq.DOB.Month).ToString();
             Requestclient.Notes = viewConciergeReq.Symptoms;
+            Requestclient.Street = viewConciergeReq.Street;
+            Requestclient.City = viewConciergeReq.City;
+            Requestclient.State = Enum.GetName(typeof(RegionList), viewConciergeReq.State);
+            Requestclient.RegionId = viewConciergeReq.State;
+            Requestclient.StrMonth = (viewConciergeReq.DOB.Month).ToString();
+            Requestclient.ZipCode = viewConciergeReq.ZipCode;
+            Requestclient.CreatedDate = DateTime.Now;
             _context.RequestClients.Add(Requestclient);
             _context.SaveChanges();
 
             Concierge.ConciergeName = viewConciergeReq.First_name + "" + viewConciergeReq.Last_name;
             Concierge.Street = viewConciergeReq.Street;
             Concierge.City = viewConciergeReq.City;
-            Concierge.State = viewConciergeReq.State;
+            Concierge.State = Enum.GetName(typeof(RegionList), viewConciergeReq.State);
             Concierge.ZipCode = viewConciergeReq.ZipCode;
             Concierge.CreatedDate = DateTime.Now;
             _context.Concierges.Add(Concierge);

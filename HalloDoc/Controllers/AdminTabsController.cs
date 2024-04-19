@@ -172,7 +172,7 @@ namespace HalloDoc.Controllers
             ViewData["Heading"] = "Add";
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             ViewBag.Role = _IAdminTabs.RolePhyscian();
-            return View("EditProvider");
+            return View("AddProvider");
         }
         public IActionResult EditPassword(int PhysicianId, string Password)
         {

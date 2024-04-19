@@ -59,7 +59,8 @@ namespace HalloDoc.Repository.Repository
             user.Mobile = singleUser.Mobile;
             user.Street = singleUser.Street;
             user.City = singleUser.City;
-            user.State = singleUser.State;
+            user.State = (int?)(RegionList?)singleUser.RegionId ?? 0;
+            user.Zipcode = singleUser.ZipCode;
             return user;
         }
         public void EditProfile(int id, viewProfile vp)
@@ -72,7 +73,8 @@ namespace HalloDoc.Repository.Repository
                 userToUpdate.LastName = vp.LastName;
                 userToUpdate.Mobile = vp.Mobile;
                 userToUpdate.Email = vp.Email;
-                userToUpdate.State = vp.State;
+                userToUpdate.State = Enum.GetName(typeof(RegionList), vp.State); 
+                userToUpdate.RegionId = vp.State;
                 userToUpdate.Street = vp.Street;
                 userToUpdate.City = vp.City;
                 userToUpdate.ZipCode = vp.Zipcode;

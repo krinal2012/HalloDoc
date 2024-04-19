@@ -98,6 +98,8 @@ public partial class HelloDocContext : DbContext
         {
             entity.HasKey(e => e.AdminId).HasName("Admin_pkey");
 
+            entity.Property(e => e.IsDeleted).HasDefaultValueSql("'0'::\"bit\"");
+
             entity.HasOne(d => d.AspNetUser).WithMany(p => p.AdminAspNetUsers)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("AspNetUserId");
@@ -149,6 +151,8 @@ public partial class HelloDocContext : DbContext
         {
             entity.HasKey(e => e.BlockRequestId).HasName("BlockRequests_pkey");
 
+            entity.Property(e => e.IsActive).HasDefaultValueSql("'0'::\"bit\"");
+
             entity.HasOne(d => d.Request).WithMany(p => p.BlockRequests)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("RequestId");
@@ -158,9 +162,7 @@ public partial class HelloDocContext : DbContext
         {
             entity.HasKey(e => e.BusinessId).HasName("Business_pkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.BusinessCreatedByNavigations)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Business_CreatedBy_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.BusinessCreatedByNavigations).HasConstraintName("Business_CreatedBy_fkey");
 
             entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.BusinessModifiedByNavigations).HasConstraintName("Business_ModifiedBy_fkey");
 
@@ -209,6 +211,8 @@ public partial class HelloDocContext : DbContext
         {
             entity.HasKey(e => e.VendorId).HasName("HealthProfessionals_pkey");
 
+            entity.Property(e => e.IsDeleted).HasDefaultValueSql("'0'::\"bit\"");
+
             entity.HasOne(d => d.ProfessionNavigation).WithMany(p => p.HealthProfessionals).HasConstraintName("HealthProfessionals_Profession_fkey");
 
             entity.HasOne(d => d.Region).WithMany(p => p.HealthProfessionals).HasConstraintName("HealthProfessionals_RegionId_fkey");
@@ -217,6 +221,8 @@ public partial class HelloDocContext : DbContext
         modelBuilder.Entity<HealthProfessionalType>(entity =>
         {
             entity.HasKey(e => e.HealthProfessionalId).HasName("HealthProfessionalType_pkey");
+
+            entity.Property(e => e.IsDeleted).HasDefaultValueSql("'0'::\"bit\"");
         });
 
         modelBuilder.Entity<Menu>(entity =>
@@ -298,6 +304,8 @@ public partial class HelloDocContext : DbContext
         modelBuilder.Entity<Request>(entity =>
         {
             entity.HasKey(e => e.RequestId).HasName("Request_pkey");
+
+            entity.Property(e => e.IsDeleted).HasDefaultValueSql("'0'::\"bit\"");
 
             entity.HasOne(d => d.Physician).WithMany(p => p.Requests).HasConstraintName("Request_PhysicianId _fkey");
 
@@ -475,6 +483,8 @@ public partial class HelloDocContext : DbContext
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.UserId).HasName("User_pkey");
+
+            entity.Property(e => e.IsDeleted).HasDefaultValueSql("'0'::\"bit\"");
 
             entity.HasOne(d => d.AspNetUser).WithMany(p => p.Users).HasConstraintName("AspNetUsers");
 

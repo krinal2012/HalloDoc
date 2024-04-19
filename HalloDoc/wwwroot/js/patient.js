@@ -1,13 +1,31 @@
 //country code
-const phoneInputField = document.querySelector("#phone");
-const phoneInput = window.intlTelInput(phoneInputField, {
+//const phoneInputField = document.querySelector("#phone");
+//const phoneInput = window.intlTelInput(phoneInputField, {
+//    utilsScript:
+//        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+//});
+//const phoneInputField1 = document.querySelector("#phone1");
+//const phoneInput1 = window.intlTelInput(phoneInputField1, {
+//    utilsScript:
+//        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+//});
+var phone1 = document.querySelector("#phone");
+var phoneInput1 = window.intlTelInput(phone1, {
     utilsScript:
         "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    nationalMode: false,
+    showSelectedDialCode: true,
+    autoInsertDialCode: true,
+    formatOnDisplay: false,
 });
-const phoneInputField1 = document.querySelector("#phone1");
-const phoneInput1 = window.intlTelInput(phoneInputField1, {
+var phone2 = document.querySelector("#phone1");
+var phoneInput2 = window.intlTelInput(phone2, {
     utilsScript:
         "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    nationalMode: false,
+    showSelectedDialCode: true,
+    autoInsertDialCode: true,
+    formatOnDisplay: false,
 });
 //file upload
 function displayFilename() {
@@ -22,6 +40,9 @@ swal({
     type: "warning",
     confirmButtonColor: "#0dcaf0",
 });
+
+
+   
 
 
 

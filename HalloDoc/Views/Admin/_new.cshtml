@@ -264,6 +264,7 @@
         e.preventDefault();
         console.log("hhhh");
         var page = $(this).data('page');
+        var pagesize = $('#pagesizedropdown').val();
         pageglobal = page;
         console.log(sortOrderglobal);
         console.log(sortColumnglobal);
@@ -274,6 +275,7 @@
             type: "GET",
             data: {
                 page: page,
+                pagesize: pagesize,
                 searchValue: searchValue,
                 btnName: "new", 
                 statusid: 1,
@@ -295,6 +297,7 @@
         var sortOrder = sortOrderglobal;
         var sortColumn = e;
         var page = pageglobal;
+        var pagesize = $('#pagesizedropdown').val();
         var searchValue = document.getElementById('searchInput').value;
         debugger;
         if (event.target.tagName == "I")
@@ -334,6 +337,7 @@
                 statusid: 1,
                 btnName: "new",
                 sortColumn: sortColumnglobal,
+                pagesize: pagesize,
                 sortOrder: sortOrderglobal,
                 searchValue: searchValue
             },

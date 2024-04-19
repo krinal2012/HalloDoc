@@ -1,14 +1,17 @@
-﻿@model HalloDoc.Entity.Models.ViewModel.viewFamilyReq
+﻿@using static HalloDoc.Entity.Models.Constant;
+@model HalloDoc.Entity.Models.ViewModel.viewFamilyReq
 @{
     ViewData["Title"] = "Request as a family/friend";
 }
-<div class=" border border-info rounded p-1 m-3 btn btn-sm backBtn">
-    <a asp-action="Index" asp-controller="PatientForm"><i class="fa fa-angle-left p-2 fa-sm text-info"> Back</i> </a>
+
+<div class=" btn d-flex justify-content-end">
+    <a class="btn border border-info text-info shadow-none" asp-action="Index" asp-controller="PatientForm">
+        <i class="fa fa-angle-left pe-1 text-info"> </i> Back
+    </a>
 </div>
 <form  method="post" class="container bg-white my-5 reqform">
     <h4 class="py-3">Family/Friend Information</h4>
     <div class="row">
-
         <div class="mb-3 col-lg-6 form-floating">
             <input asp-for="First_name" type="text" class="form-control" placeholder="First Name">
             <label for="FormControlInput1" class="form-label">Your First Name</label>
@@ -50,8 +53,9 @@
             <label for="Lastname" class="form-label">Last Name</label>
         </div>
         <div class="mb-3 col-lg-6 form-floating">
-            <input asp-for="DOB" type="date" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")">
+            <input asp-for="DOB" type="date" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" required>
             <label class="form-label" for="Date">Date of Birth</label>
+            <span asp-validation-for="DOB" class="text-danger"></span>
         </div>
     </div>
     <h4 class="py-3">Patient Contact Information</h4>
@@ -77,9 +81,18 @@
             <label for="City" class="form-label">City</label>
         </div>
         <div class="mb-3 col-lg-6 form-floating">
-            <input asp-for="State" type="text" class="form-control" placeholder="State">
+            <select asp-for="State" class="form-select" placeholder="State">
+                @foreach (var item in Enum.GetValues(typeof(RegionList)))
+                {
+                    <option value="@((int)item)">@item.ToString()</option>
+                }
+            </select>
             <label for="State" class="form-label">State</label>
         </div>
+        @*<div class="mb-3 col-lg-6 form-floating">
+            <input asp-for="State" type="text" class="form-control" placeholder="State">
+            <label for="State" class="form-label">State</label>
+        </div>*@
         <div class="mb-3 col-lg-6 form-floating">
             <input asp-for="ZipCode" type="text" class="form-control" placeholder="Zip-code">
             <label for="Zip-code" class="form-label">Zip-code</label>

@@ -117,7 +117,13 @@
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="State" class="form-control" placeholder="State" disabled>
+                <select asp-for="State" class="form-select" placeholder="State" disabled>
+                    <option value="">Select state</option>
+                    @foreach (var item in Enum.GetValues(typeof(RegionList)))
+                    {
+                        <option value="@((int)item)">@item.ToString()</option>
+                    }
+                </select>
                 <label for="State" class="form-label">State</label>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
@@ -151,7 +157,7 @@
         }
         $(".editprofile").click(function () {
             var form = $(this).closest('form');
-            form.find("input").removeAttr('disabled');
+            form.find("input,select").removeAttr('disabled');
             form.find(".submit").css("display", "block");
             $(this).css("display", "none");
         });

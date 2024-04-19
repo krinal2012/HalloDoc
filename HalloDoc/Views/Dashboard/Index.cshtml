@@ -52,7 +52,7 @@
                         <th scope="col">Document</th>
                     </tr>
                 </thead>
-                <tbody class="table-group-divider mx-5 bg-white">
+                <tbody class="table-group-divider mx-5 bg-white " id="history">
                     @if (Model != null)
                     {
                         @foreach (var item in Model.AdminList)
@@ -175,7 +175,11 @@
                 sortOrder: sortOrderglobal,
             },
             success: function (data) {
-                $("#btnContent").html(data);
+                var bodyContent = $(data).find('tbody').html();
+                var page = $(data).find('.pagenav').html();
+                $('#pagination').html(page);
+                $("#history").html(bodyContent);
+                console.log("AJAX success");
             },
             error: function (error) {
                 console.error("Error:", error);
@@ -219,7 +223,11 @@
                 sortOrder: sortOrderglobal,
             },
             success: function (data) {
-                $("#btnContent").html(data);
+                console.log(data);
+                var bodyContent = $(data).find('tbody').html();
+                var page = $(data).find('.pagenav').html();
+                $('#pagination').html(page);
+                $("#history").html(bodyContent);
                 console.log("AJAX success");
             },
             error: function (error) {

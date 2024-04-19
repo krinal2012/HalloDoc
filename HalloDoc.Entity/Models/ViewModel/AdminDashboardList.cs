@@ -72,9 +72,10 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Address is required")]
         public string? Address1 { get; set; }
         public string? Address2 { get; set; }
-        [Required(ErrorMessage = "City is required")]
+       
         public string? City { get; set; }
-        public string? State { get; set; }
+        [Required(ErrorMessage = "State is required")]
+        public int State { get; set; }
         [StringLength(6, MinimumLength = 6, ErrorMessage = "It must be of 6 digits")]
         [RegularExpression(@"([0-9]{6})", ErrorMessage = "It must be of 6 numerics")]
         public string ZipCode { get; set; }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
+using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Entity.Models.ViewModel
 {
@@ -7,10 +8,11 @@ namespace HalloDoc.Entity.Models.ViewModel
     {
         public string Id { get; set; } = string.Empty;
         [Required(ErrorMessage = "Symptoms is required")]
-        public   string Symptoms { get; set; }
+        public  string Symptoms { get; set; }
         [Required(ErrorMessage = "First name is required")]      
         public string FirstName { get; set; }       
-        public string? LastName { get; set; }       
+        public string? LastName { get; set; }
+        [Required(ErrorMessage = "Date of birth is required")]
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
@@ -22,7 +24,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Mobile { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
-        public string? State { get; set; }
+        public int State { get; set; }
         [StringLength(6, MinimumLength = 6, ErrorMessage = "It must be of 6 digits")]
         [RegularExpression(@"([0-9]{6})", ErrorMessage = "It must be of 6 numerics")]
         public string ZipCode { get; set; }
@@ -47,6 +49,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "First name is required")]
         public string FirstName { get; set; }
         public string? LastName { get; set; }
+        [Required(ErrorMessage = "Date of birth is required")]
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
@@ -54,7 +57,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Mobile { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
-        public string? State { get; set; }
+        public int? State { get; set; }
         [StringLength(6, MinimumLength = 6, ErrorMessage = "It must be of 6 digits")]
         [RegularExpression(@"([0-9]{6})", ErrorMessage = "It must be of 6 numerics")]
         public string ZipCode { get; set; }
@@ -76,6 +79,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Hotelname { get; set; }
         public required string FirstName { get; set; }
         public string? LastName { get; set; }
+        [Required(ErrorMessage = "Date of birth is required")]
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
@@ -83,7 +87,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Mobile { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
-        public string? State { get; set; }
+        public int? State { get; set; }
         [StringLength(6, MinimumLength = 6, ErrorMessage = "It must be of 6 digits")]
         [RegularExpression(@"([0-9]{6})", ErrorMessage = "It must be of 6 numerics")]
         public required string ZipCode { get; set; }
@@ -108,6 +112,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "First name is required")]
         public string FirstName { get; set; }
         public string? LastName { get; set; }
+        [Required(ErrorMessage = "Date of birth is required")]
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
@@ -115,7 +120,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Mobile { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
-        public string? State { get; set; }
+        public int? State { get; set; }
         [StringLength(6, MinimumLength = 6, ErrorMessage = "It must be of 6 digits")]
         [RegularExpression(@"([0-9]{6})", ErrorMessage = "It must be of 6 numerics")]
         public string ZipCode { get; set; }

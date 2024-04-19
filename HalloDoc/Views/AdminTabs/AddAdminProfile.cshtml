@@ -106,13 +106,19 @@
                 <label for="Address2" class="form-label">Address 2</label>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="City" class="form-control" placeholder="City"  required>
+                <input type="text" asp-for="City" class="form-control" placeholder="City" >
                 <label for="City" class="form-label">City</label>
-                <span asp-validation-for="City" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
-                <input type="text" asp-for="State" class="form-control" placeholder="State" >
+                <select asp-for="State" class="form-select" placeholder="State" required>
+                    <option value="">Select state</option>
+                    @foreach (var item in Enum.GetValues(typeof(RegionList)))
+                    {
+                        <option value="@((int)item)">@item.ToString()</option>
+                    }
+                </select>
                 <label for="State" class="form-label">State</label>
+                <span asp-validation-for="State" class="text-danger"></span>
             </div>
             <div class="mb-3 col-lg-6 form-floating">
                 <input type="text" asp-for="ZipCode" class="form-control" placeholder="Zip-code" >

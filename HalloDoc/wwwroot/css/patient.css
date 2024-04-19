@@ -158,11 +158,11 @@ body {
     border-color: #8a76a0;
     color: #e4e4e4;
 }
-.backBtn {
+/*.backBtn {
     position: absolute;
     right: 10vw;
     top: 14vh;
-}
+}*/
 .backBtn:hover {
     background-color: #dcf6ff;
 }

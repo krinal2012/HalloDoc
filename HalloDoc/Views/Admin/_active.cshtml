@@ -20,7 +20,7 @@
                 {
                     <th scope="col" class="">Requestor<span class="sortbtn" data-value="Requestor"><i class="fa fa-sort"></i></span></th>
                     <th scope="col" class="">Physician Name<span class="sortbtn" data-value="Physician"><i class="fa fa-sort"></i></span></th>
-                    <th scope="col" class="d-flex justify-content-between">Date of Service<span class="sortbtn" data-value="DOS"><i class="fa fa-sort"></i></span></th>
+                    <th scope="col" class="d-flex justify-content-between">Date of Service<span class="sortbtn" data-value="RequestedDate"><i class="fa fa-sort"></i></span></th>
                 }
                 <th scope="col">Phone</th>
                 <th scope="col" class="d-flex justify-content-between">Address<span class="sortbtn" data-value="Address"><i class="fa fa-sort"></i></span></th>
@@ -262,6 +262,7 @@
         e.preventDefault();
         console.log("hhhh");
         var page = $(this).data('page');
+        var pagesize = $('#pagesizedropdown').val();
         pageglobal = page;
         console.log(sortOrderglobal);
         console.log(sortColumnglobal);
@@ -274,6 +275,7 @@
                 searchValue: searchValue,
                 btnName: "active",
                 statusid: 3,
+                pagesize: pagesize,
                 sortColumn: sortColumnglobal,
                 sortOrder: sortOrderglobal,
             },
@@ -291,6 +293,7 @@
         var e = $(this).data("value");
         var sortOrder = sortOrderglobal;
         var sortColumn = e;
+            var pagesize = $('#pagesizedropdown').val();
         var page = pageglobal;
         var searchValue = document.getElementById('searchInput').value;
         debugger;
@@ -330,7 +333,8 @@
                 btnName: "active",
                 sortColumn: sortColumnglobal,
                 sortOrder: sortOrderglobal,
-                searchValue: searchValue
+                searchValue: searchValue,
+                 pagesize: pagesize,
             },
             success: function (data) {
                 $("#btnContent").html(data);

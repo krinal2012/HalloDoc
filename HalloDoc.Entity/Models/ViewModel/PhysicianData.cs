@@ -33,7 +33,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Compare("Email", ErrorMessage = "Email doesn't match.")]
         public string ConformEmail { get; set; } = null!;
         public string? Mobile { get; set; }
-        public string? State { get; set; }
+        public int? State { get; set; }
         [StringLength(6, MinimumLength = 6, ErrorMessage = "It must be of 6 digits")]
         [RegularExpression(@"([0-9]{6})", ErrorMessage = "It must be of 6 numerics")]
         public string? ZipCode { get; set; }

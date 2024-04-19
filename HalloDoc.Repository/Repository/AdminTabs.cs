@@ -48,6 +48,7 @@ namespace HalloDoc.Repository.Repository
                                    Address2 = a.Address2,
                                    Mobile = a.Mobile,
                                    City = a.City,
+                                   State = (int?)(RegionList)a.RegionId ?? 0,
                                    ZipCode = a.Zip,
                                }).FirstOrDefault();
             List<Region> regions = new List<Region>();
@@ -202,6 +203,7 @@ namespace HalloDoc.Repository.Repository
                 Data.Address1 = AdminProfile.Address1;
                 Data.Address2 = AdminProfile.Address2;
                 Data.City = AdminProfile.City;
+                Data.RegionId = AdminProfile.State;
                 Data.Zip = AdminProfile.ZipCode;
                 Data.ModifiedDate = DateTime.Now;
                 _context.Admins.Update(Data);

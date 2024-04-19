@@ -14,12 +14,12 @@ namespace HellodocMVC.Controllers
     {
         private readonly HelloDocContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        //private readonly IJWTInterface _jWTInterface;
-        public LoginController(HelloDocContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly IJWTInterface _jWTInterface;
+        public LoginController(HelloDocContext context, IHttpContextAccessor httpContextAccessor, IJWTInterface jWTInterface)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
-            //_jWTInterface = jWTInterface;
+            _jWTInterface = jWTInterface;
         }
         
         public IActionResult Index()
@@ -38,7 +38,7 @@ namespace HellodocMVC.Controllers
             }
             else
             {
-                //var jwtToken = _jWTInterface.GenerateToken(user);
+                //var jwtToken = _jWTInterface.GenerateJWTAuthetication(user);
                 //Response.Cookies.Append("jwt", jwtToken);
                 int id = _context.Users.FirstOrDefault(u => u.AspNetUserId == user.Id).UserId;
                 string userName = _context.Users.Where(x => x.AspNetUserId == user.Id).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault();
@@ -48,7 +48,6 @@ namespace HellodocMVC.Controllers
             }
            
         }
-
          public IActionResult Logout()
         {
             HttpContext.Session.Clear();

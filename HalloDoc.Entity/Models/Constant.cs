@@ -30,6 +30,13 @@
             Clear=10,
             Block=11
         }
+        public enum RegionList
+        {
+            Gujarat=1,
+            Rajsthan =2,
+            Maharastra=3,
+            Delhi=4
+        }
         public enum state
         {
             Active = 1,
