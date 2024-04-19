@@ -3,7 +3,6 @@ using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Repository.Repository.Interface;
 using System.Collections;
-using Microsoft.Extensions.Configuration;
 using HalloDoc.Entity.Models;
 
 namespace HalloDoc.Repository.Repository
@@ -93,12 +92,7 @@ namespace HalloDoc.Repository.Repository
             {
                 string FilePath = "wwwroot\\Upload";
                 string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
-                //if (!Directory.Exists(path))
-                //{
-                //    Directory.CreateDirectory(path);
-                //}
                 string fileNameWithPath = Path.Combine(path, viewPatientReq.file.FileName);
-                //viewPatientReq.UploadImage = "~" + FilePath.Replace("wwwroot\\", "/") + "/" + viewpatientcreaterequest.UploadFile.FileName;
 
                 using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
                 {
@@ -191,7 +185,6 @@ namespace HalloDoc.Repository.Repository
                 string FilePath = "wwwroot\\Upload";
                 string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
                 string fileNameWithPath = Path.Combine(path, viewFamilyReq.file.FileName);
-                //viewPatientReq.UploadImage = "~" + FilePath.Replace("wwwroot\\", "/") + "/" + viewpatientcreaterequest.UploadFile.FileName;
 
                 using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
                 {
@@ -279,7 +272,6 @@ namespace HalloDoc.Repository.Repository
             Business.Name = viewBusinessReq.First_name + " " + viewBusinessReq.Last_name;
             Business.Address1 = viewBusinessReq.Businessname;
             Business.CreatedDate = DateTime.Now;
-           // Business.CreatedBy = isexist.AspNetUserId;
             Business.PhoneNumber = viewBusinessReq.Mobileno;
             _context.Businesses.Add(Business);
             _context.SaveChanges();
@@ -372,7 +364,6 @@ namespace HalloDoc.Repository.Repository
             Requestconcierge.ConciergeId = Concierge.ConciergeId;
             _context.RequestConcierges.Add(Requestconcierge);
             _context.SaveChanges();
-
         }
     }
 }

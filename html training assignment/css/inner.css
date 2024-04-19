@@ -1,0 +1,108 @@
+.disabled {
+  border: 2px dotted #ADADAD;
+}
+
+h2,
+h3,
+h4 {
+  color: #3E3E3E;
+}
+
+input {
+  height: 50px;
+}
+
+input[type=text]:focus {
+  /* border: 2px solid red; */
+  box-shadow: none;
+}
+
+input[type=radio]:checked {
+  background-color: red;
+}
+
+input[type=checkbox]:checked {
+  background-color: red;
+}
+
+select {
+  height: 56px;
+}
+
+#files {
+  visibility: hidden;
+}
+
+.form-floating {
+  position: relative;
+}
+
+.form-floating .form-control:focus~label {
+  margin-top: -10px;
+  margin-left: 15px;
+}
+
+.form-floating label {
+  margin-left: 15px;
+}
+
+.maindiv li {
+  display: inline;
+}
+
+.tab {
+  overflow: hidden;
+  font: normal normal normal 15px/20px Roboto;
+  letter-spacing: 0px;
+  border-bottom: 1px solid #ADADAD;
+}
+
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+  border-bottom: 3px solid #C8242F;
+  color: #C8242F;
+}
+
+.tabcontent {
+  display: none;
+}
+
+.tablinks {
+  font-size: 25px;
+  letter-spacing: 0px;
+  color: #ADADAD;
+}
+
+.defaulttab {
+  display: block;
+}
+
+.custom-file-input {
+  display: none;
+}
+
+.custom-button {
+  padding: 10px 15px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+
+.selected-filename {
+  margin-top: 10px;
+} 

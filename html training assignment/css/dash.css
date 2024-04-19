@@ -1,0 +1,63 @@
+.row {
+    align-items: center;
+}
+
+.box {
+    height: 80px;
+    width: 290px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.icon {
+    height: 50px;
+    width: 50px;
+}
+
+.graph {
+    height: 350px;
+}
+
+.pie {
+    height: 300px;
+}
+
+.pieimg {
+    height: 25px;
+    width: 25px;
+}
+
+th {
+    color: #ADADAD;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+}
+
+.paid {
+    color: #3CDD5F;
+    background: #EBFFEF;
+    border-radius: 5px;
+}
+
+.failed {
+    color: #FF4545;
+    background: #FFF5F5;
+    border-radius: 5px;
+}
+
+.pending {
+    color: #BABABA;
+    background: #F8F8F8;
+    border-radius: 5px;
+}
+.red{
+    color: #d53232;
+}
+.profile{
+
+    height: 45px;
+    width: 45px;
+}

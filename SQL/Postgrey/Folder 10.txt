@@ -1,0 +1,30 @@
+Coding Exercise 1
+The "rental" table has fields for rental_date (when the movie was rented), and return_date (when it was returned). We want to reach out to customers whose rental duration was 7 or more days, and send them an email. Can you create a report for me that lists down following columns:
+Rental Date
+Return Date
+Rent Duration - that is, difference between two dates (HINT: Use AGE function)
+Customer First name
+Customer Last Name
+Customer Email
+You can find the last 3 fields in the "customer" table
+
+Keep the data sorted by rent duration (high to low) so we can see the longest renters first.
+
+select rental.rental_date, rental.return_date, AGE(return_date, rental_date) as "Rental Duration",
+customer.first_name, customer.last_name, customer.email
+from rental join customer
+on rental.customer_id = customer.customer_id
+where AGE(return_date, rental_date)>=interval '7 days'
+
+Coding Exercise 2
+The "film" table has a title field containing name of movies. Some of the movie names are pretty long. Practice writing queries using SUBSTR function to do following:
+Return string after the 10th character
+Return string after the 15th character. Notice how some results are blank because titles do not have 15 characters (HINT: You can use the LENGTH() function to see length of title)
+Return string after the 5th character, just 3 words
+Return string after the 5th character, just 1 word
+
+select title, substr(title,10) from film
+select title, substr(title,15) from film
+select title,length(title), substr(title,15) from film
+select title,length(title), substr(title,5,3) from film
+select title,length(title), substr(title,5,1) from film

@@ -5,7 +5,6 @@ using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
-using System.Collections.Generic;
 using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Repository.Repository
@@ -52,7 +51,7 @@ namespace HalloDoc.Repository.Repository
         }
         public viewProfile viewProfile(int id)
         {
-            User singleUser = _context.Users.FirstOrDefault(u => u.UserId == id);
+            var singleUser = _context.Users.FirstOrDefault(u => u.UserId == id);
             viewProfile user = new();
             user.FirstName = singleUser.FirstName;
             user.LastName = singleUser.LastName;
@@ -171,8 +170,6 @@ namespace HalloDoc.Repository.Repository
                 string FilePath = "wwwroot\\Upload";
                 string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
                 string fileNameWithPath = Path.Combine(path, viewPatientReq.file.FileName);
-                //viewPatientReq.UploadImage = "~" + FilePath.Replace("wwwroot\\", "/") + "/" + viewpatientcreaterequest.UploadFile.FileName;
-
                 using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
                 {
                     viewPatientReq.file.CopyTo(stream);
@@ -225,8 +222,6 @@ namespace HalloDoc.Repository.Repository
                 string FilePath = "wwwroot\\Upload";
                 string path = Path.Combine(Directory.GetCurrentDirectory(), FilePath);
                 string fileNameWithPath = Path.Combine(path, viewFamilyReq.file.FileName);
-                //viewPatientReq.UploadImage = "~" + FilePath.Replace("wwwroot\\", "/") + "/" + viewpatientcreaterequest.UploadFile.FileName;
-
                 using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
                 {
                     viewFamilyReq.file.CopyTo(stream);
