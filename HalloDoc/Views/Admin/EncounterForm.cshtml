@@ -75,8 +75,9 @@
                 <label for="medications" class="form-label">Medications</label>
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 form-floating mb-4">
-                <input type="text" asp-for="Allergies" class="form-control shadow-none" id="allergies" placeholder="Allergies">
+                <input type="text" asp-for="Allergies" class="form-control shadow-none" id="allergies" placeholder="Allergies" required>
                 <label for="allergies" class="form-label">Allergies</label>
+                <span asp-validation-for="Allergies" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
@@ -157,24 +158,28 @@
                 <label for="diagnosis" class="form-label">Diagnosis</label>
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 form-floating mb-4">
-                <input type="text" asp-for="Treatment" class="form-control shadow-none" id="treatment" placeholder="Treatment Plan">
+                <input type="text" asp-for="Treatment" class="form-control shadow-none" id="treatment" placeholder="Treatment Plan" required>
                 <label for="treatment" class="form-label">Treatment Plan</label>
+                <span asp-validation-for="Treatment" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 form-floating mb-4">
-                <input type="text" asp-for="MDispensed" class="form-control shadow-none" id="mDispensed" placeholder="Medications Dispensed">
+                <input type="text" asp-for="MDispensed" class="form-control shadow-none" id="mDispensed" placeholder="Medications Dispensed" required>
                 <label for="mDispensed" class="form-label">Medications Dispensed</label>
+                <span asp-validation-for="MDispensed" class="text-danger"></span>
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 form-floating mb-4">
-                <input type="text" asp-for="Procedures" class="form-control shadow-none" id="procedures" placeholder="Procedures">
+                <input type="text" asp-for="Procedures" class="form-control shadow-none" id="procedures" placeholder="Procedures" required>
                 <label for="procedures" class="form-label">Procedures</label>
+                <span asp-validation-for="Procedures" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 form-floating mb-4">
-                <input type="text" asp-for="Followup" class="form-control shadow-none" id="followup" placeholder="Followup">
+                <input type="text" asp-for="Followup" class="form-control shadow-none" id="followup" placeholder="Followup" required> 
                 <label for="followup" class="form-label">Followup</label>
+                <span asp-validation-for="Followup" class="text-danger"></span>
             </div>
         </div>
         <div class="row px-3 d-flex justify-content-end">

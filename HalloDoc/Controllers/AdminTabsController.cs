@@ -16,9 +16,11 @@ using System.Web.Helpers;
 using Twilio.TwiML.Messaging;
 using Twilio.TwiML.Voice;
 using static HalloDoc.Entity.Models.Constant;
+using static HalloDoc.Repository.Repository.JWTService;
 
 namespace HalloDoc.Controllers
 {
+    [CustomAuthorize("Admin,Physician")]
     public class AdminTabsController : Controller
     {
         private static IHttpContextAccessor _httpContextAccessor;

@@ -6,17 +6,18 @@
     <table class="table table-responsive p-3">
         <thead class="bg-light ">
             <tr>
-                <th scope="col" class="d-flex justify-content-between">Name 
+                <th scope="col" class="d-flex justify-content-between">
+                    Name
                     <span class="sortbtn" data-value="Name"><i class="fa fa-sort"></i></span>
                 </th>
                 <th></th>
                 <th scope="col" class=" d-flex justify-content-between">Date Of Birth<span class="sortbtn" data-value="DOB"><i class="fa fa-sort"></i></span></th>
-                @if(Crredntials.Role()=="Admin")
+                @if (Crredntials.Role() == "Admin")
                 {
                     <th scope="col" class="">Requestor<span class="sortbtn" data-value="Requestor"><i class="fa fa-sort"></i></span></th>
                     <th scope="col" class="d-flex justify-content-between">Requested Date<span class="sortbtn" data-value="RequestedDate"><i class="fa fa-sort"></i> </span></th>
                 }
-                 <th scope="col">Phone</th>
+                <th scope="col">Phone</th>
                 <th scope="col" class="d-flex justify-content-between">Address<span class="sortbtn" data-value="Address"><i class="fa fa-sort"></i></span></th>
                 <th scope="col">Note</th>
                 <th scope="col">Actions</th>
@@ -68,7 +69,7 @@
                         <button class="btn border border-white text-white my-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <small>Actions</small>
                         </button>
-                       
+
                         <ul class="dropdown-menu">
                             @if (Crredntials.Role() == "Physician")
                             {
@@ -92,12 +93,15 @@
                                     </a>
                                 </li>
                             }
-                            <li><a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId, status=1})'">
-                                <i class="bi bi-journal-text"></i> View Case</a>
+                            <li>
+                                <a class="dropdown-item" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId, status=1})'">
+                                    <i class="bi bi-journal-text"></i> View Case
+                                </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
-                                <i class="fa fa-list"></i> View Notes</a>
+                                    <i class="fa fa-list"></i> View Notes
+                                </a>
                             </li>
                             @if (Crredntials.Role() == "Admin")
                             {
@@ -136,19 +140,17 @@
                             <button class="btn btn-sm btn-white border-info text-info rounded-pill 2px">
                                 <small>Map Location</small>
                             </button>
-                           
-                           
                         </div>
                     </div>
                 </div>
             </h2>
             <div id="flush-@item.RequestId" class="accordion-collapse collapse mb-3 border-top" data-bs-parent="#accordionExample">
                 <div class="accordion-body container-fluid">
-                    
+
                     <a class=" btn bg-white border border-info rounded-pill position-relative top-0 end-0" onclick="location.href='@Url.Action("viewCase", "Admin",new {RequestId=item.RequestId, RequestTypeId=item.RequestTypeId})'">
                         <i class="bi bi-journal-text"></i> View Case
-                        </a>
-                   
+                    </a>
+
                     <p> <i class="fa fa-calendar border border-info rounded-pill p-1 me-2" aria-hidden="true"></i>Date of Birth: @item.DOB</p>
                     <p> <i class="fa fa-envelope border border-info rounded-pill p-1 me-2"></i> Email : @item.Email</p>
                     <p> <i class="fa fa-phone border  border-info rounded-pill p-1 me-2"></i> Patient : @item.PatientPhoneNumber</p>
@@ -166,7 +168,7 @@
                             </button>
                         </div>
 
-                        <div class="col-6 mb-3" >
+                        <div class="col-6 mb-3">
                             <a class="btn btn-success text-white rounded-pill 2px w-100" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
                                 <small>View Notes</small>
                             </a>
@@ -175,23 +177,12 @@
                             <button class="btn btn-danger text-white rounded-pill 2px w-100" onclick="Blockcaseid('@item.RequestId','@item.PatientName')" data-bs-toggle="modal" data-bs-target="#Blockcase">
                                 <small>Block Patient</small>
                             </button>
-                        </div>                       
+                        </div>
                         <div class="col-6 mb-3 ">
-                            <button class="btn btn-success text-white rounded-pill 2px w-100" >
+                            <button class="btn btn-success text-white rounded-pill 2px w-100">
                                 <small>Email</small>
                             </button>
                         </div>
-                    </div>
-                    <div class="text-end d-md-flex justify-content-md-end">
-                        <span>Chat With:</span>
-                        <button class="btn btn-white border-info text-info me-md-2 mb-2" type="button">
-                            <i class="fa-regular fa-user me-1"></i>
-                            Patient
-                        </button>
-                        <button class="btn btn-white border-info text-info mb-2" type="button">
-                            <i class="fa-solid fa-user-doctor me-1"></i>
-                            Provider
-                        </button>
                     </div>
                 </div>
             </div>
@@ -199,46 +190,62 @@
     }
 </div>
 <nav aria-label="Page navigation example">
-    <ul class="pagination pagination-container d-flex justify-content-center">
-        @{
-            int i;
-            
-            if (Model.CurrentPage > 1)
-            {
-                <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage -1 )">&lt;</a></li>
-            }
-            else 
-            {
-                <li class="page-item disabled"><a class="page-link">&lt;</a></li>
-            }
-            @for (i = 1; i <= Model.TotalPages; i++)
-            {
-                
-                <li class="page-item"><a href="#" data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
-            }
-            if (Model.CurrentPage < Model.TotalPages)
-            {
-                <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage + 1)">&gt;</a></li>
-            }
-            else
-            {
-                <li class="page-item disabled"><a class="page-link">&gt;</a></li>
-            }
-        }
-    </ul>
+    @if (Model.CurrentPage <= Model.TotalPages && Model.TotalPages != 0)
+    {
+        <div class="d-flex justify-content-between">
+            <div>
+                @(
+                    (Model.CurrentPage - 1) * Model.PageSize + 1
+                    ) - @Math.Min(Model.CurrentPage * Model.PageSize, Model.Count) out of @Model.Count
+            </div>
+            <div>
+                <ul class="pagination pagination-container d-flex justify-content-center">
+                    @{
+                        int i;
+
+                        if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-item"><a class="page-link" data-page="@(
+                        Model.CurrentPage - 1
+                        )">&lt;</a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                        }
+                        @for (i = 1; i <= Model.TotalPages; i++)
+                        {
+
+                            <li class="page-item"><a href="#" data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                        }
+                        if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-item"><a class="page-link" data-page="@(
+                        Model.CurrentPage + 1
+                        )">&gt;</a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    }
 </nav>
 <script>
     function Assigncaseid(id) {
-        var RequestId = id ;
+        var RequestId = id;
         console.log(RequestId);
-        document.getElementById('RequestID_ModelAssignCase').value = RequestId;    
+        document.getElementById('RequestID_ModelAssignCase').value = RequestId;
     }
     function Acceptcaseid(id) {
-        var RequestId = id ;
+        var RequestId = id;
         console.log(RequestId);
         document.getElementById('RequestID_ModelAcceptCase').value = RequestId;
     }
- 
+
     function Canclecaseid(id, patientname) {
         var RequestId = id;
         var patientname = patientname;
@@ -248,12 +255,12 @@
         document.getElementById('PatientName_ModelCancelCase').innerText = patientname;
     }
     function Blockcaseid(id, patientname) {
-    var RequestId = id ;
-    var patientname = patientname;
+        var RequestId = id;
+        var patientname = patientname;
         console.log(RequestId);
         console.log(patientname);
         document.getElementById('RequestID_ModelBlockCase').value = RequestId;
-        document.getElementById('PatientName_ModelBlockCase').innerText = patientname;  
+        document.getElementById('PatientName_ModelBlockCase').innerText = patientname;
     }
     var reqtypeElements = document.getElementsByClassName('sortbtn');
     for (var i = 0; i < reqtypeElements.length; i++) {
@@ -268,7 +275,7 @@
         pageglobal = page;
         console.log(sortOrderglobal);
         console.log(sortColumnglobal);
-       
+
         var searchValue = document.getElementById('searchInput').value;
         $.ajax({
             url: "@Url.Action("GetPartialView", "Admin")",
@@ -277,7 +284,7 @@
                 page: page,
                 pagesize: pagesize,
                 searchValue: searchValue,
-                btnName: "new", 
+                btnName: "new",
                 statusid: 1,
                 sortColumn: sortColumnglobal,
                 sortOrder: sortOrderglobal,
@@ -300,19 +307,18 @@
         var pagesize = $('#pagesizedropdown').val();
         var searchValue = document.getElementById('searchInput').value;
         debugger;
-        if (event.target.tagName == "I")
-        {
+        if (event.target.tagName == "I") {
             var icon = event.target;
             icon.classList.remove("fa", "fa-sort");
-            icon.classList.add("fa","fa-sort-asc");
+            icon.classList.add("fa", "fa-sort-asc");
         }
-       
-        if ( e== sortColumnglobal) {
-            if(sortOrder == true){
-                sortOrderglobal=false;
+
+        if (e == sortColumnglobal) {
+            if (sortOrder == true) {
+                sortOrderglobal = false;
             }
-            else{
-                sortOrderglobal=true;
+            else {
+                sortOrderglobal = true;
             }
         }
         else {
@@ -326,7 +332,7 @@
         }
         //localStorage.setItem('sortOrderglobal', sortOrderglobal);
         //localStorage.setItem('sortColumnglobal', sortColumnglobal);
-        
+
         console.log(sortOrderglobal);
         console.log(sortColumnglobal);
         $.ajax({

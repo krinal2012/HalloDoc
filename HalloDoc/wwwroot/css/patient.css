@@ -26,6 +26,9 @@ body {
     height: 0px;
     width: 352px;    
 }
+.dBlock {
+    display: none;
+}
 /*Forms*/
 .form-floating label {
     margin-left: 15px;
@@ -332,6 +335,12 @@ reqtype:focus {
     .maindiv {
         padding-top: 120px;
     }
+    .dNone {
+        display: none;
+    }
+    .dBlock {
+        display: block;
+    }   
 }
 
 @media only screen and (max-height: 600px) {

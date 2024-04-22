@@ -6,10 +6,8 @@ using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web.Helpers;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -183,8 +181,6 @@ namespace HalloDoc.Repository.Repository
                 return true;
         }
      
-       
-
     }
 }
 

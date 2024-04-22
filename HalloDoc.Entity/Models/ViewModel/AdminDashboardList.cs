@@ -29,6 +29,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public int CurrentPage { get; set; } = 1;
         public int PageSize { get; set; } = 5;
         public int TotalPages { get; set; }
+        public int Count { get; set; }
         public string sortColumn { get; set; } = "RequestedDate";
         public bool sortOrder { get; set; } = false;
     }

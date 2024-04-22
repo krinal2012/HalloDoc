@@ -126,6 +126,7 @@ namespace HalloDoc.Repository.Repository
                 AdminList = list1,
                 CurrentPage = page,
                 TotalPages = totalPages,
+                Count = totalItemCount,
             };
             return viewModel;
         }
@@ -899,7 +900,7 @@ namespace HalloDoc.Repository.Repository
                              }).FirstOrDefault();
             return encounter;
         }
-        public void EditEncounterinfo(ViewEncounterForm ve)
+        public bool EditEncounterinfo(ViewEncounterForm ve)
         {
             var RC = _context.RequestClients.FirstOrDefault(rc => rc.RequestId == ve.RequestId);
             RC.FirstName = ve.FirstName;
@@ -944,6 +945,7 @@ namespace HalloDoc.Repository.Repository
             E.FollowUp = ve.Followup;
             E.IsFinalize = false;
             _context.SaveChanges();
+            return true;
         }
         public bool Finalizeform(ViewEncounterForm ve)
         {
@@ -1147,7 +1149,7 @@ namespace HalloDoc.Repository.Repository
         public bool IsEncounterFinalized(int requestId)
         {
             return _context.EncounterForms.Any( e => e.RequestId == requestId && e.IsFinalize);
-        }
+        }   
     }
 }
 

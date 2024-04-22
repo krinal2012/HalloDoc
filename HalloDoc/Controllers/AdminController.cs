@@ -368,12 +368,16 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult EncounterForm(ViewEncounterForm ve)
         {
-            _IAdminDash.EditEncounterinfo(ve);
+            bool res = _IAdminDash.EditEncounterinfo(ve);
             return View();
         }   
         public IActionResult EncounterFinalize(ViewEncounterForm ve)
         {
-            bool result = _IAdminDash.Finalizeform(ve);
+            bool save = _IAdminDash.EditEncounterinfo(ve);
+            if(save)
+            {
+                bool result = _IAdminDash.Finalizeform(ve);
+            }
             return RedirectToAction("Index", "Admin");
         }
         public IActionResult Housecall (int RequestId)

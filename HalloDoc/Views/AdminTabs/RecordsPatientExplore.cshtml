@@ -3,6 +3,8 @@
     ViewData["Title"] = " ";
 }
 @using HalloDoc.Entity.Models.ViewModel;
+@using HalloDoc.Repository.Repository.Interface
+@inject IAdminDash IAdminDash
 @using static HalloDoc.Entity.Models.Constant;
 @model List<PatientDashList>;
 
@@ -42,11 +44,13 @@
                     <td scope="row"> @item.Physician</td>
                     <td scope="row"> @item.ConcludedDate.ToString("MMM d , yyyy")</td>
                     <td scope="row"> @item.Status</td>
-                    <td class="mobile-hide" data-label="Document">
-                        <a asp-action="" asp-controller="" class="btn btn-outline-info btn-sm">
-                            View
-
-                        </a>
+                    <td>
+                        @if (IAdminDash.IsEncounterFinalized(item.RequestId) == true)
+                        {
+                            <a asp-action="GeneratePdf" asp-controller="Admin" asp-route-RequestId="@item.RequestId" class="btn btn-outline-info btn-sm">
+                                View
+                            </a>
+                        }
                     </td>
                     <td>
                         <a class=" dropdown btn btn-sm btn-outline-info " role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

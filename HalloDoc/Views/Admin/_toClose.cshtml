@@ -131,47 +131,30 @@
                     <p><i class="fa fa-location border border-info rounded-pill p-1 me-2"></i>Region : @item.Region</p>
                     <div class="row">
                         <div class="col-6 mb-3">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
+                            <button class="btn btn-success text-white rounded-pill 2px w-100" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
                                 <small>View Notes</small>
                             </button>
                         </div>
                         <div class="col-6 mb-3">
-                            <button class="btn btn-success text-white rounded-pill 2px w-100">
-                                <small>Doctors Note</small>
-                            </button>
-                        </div>
-
-                        <div class="col-6 mb-3">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
+                            <button class="btn btn-success text-white rounded-pill 2px w-100" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId">
                                 <small>View Uploads</small>
                             </button>
                         </div>
                         <div class="col-6 mb-3">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
+                            <button class="btn btn-success text-white rounded-pill 2px w-100" onclick="isEncounterFinalized(@item.RequestId)">
                                 <small>Encounter</small>
                             </button>
                         </div>
                         <div class="col-6 mb-3">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #FFD43B;">
+                            <button class="btn btn-warning text-white rounded-pill 2px w-100" onclick="location.href='@Url.Action("SendOrders", "Admin",new {RequestId=item.RequestId})'">
                                 <small>Orders</small>
                             </button>
                         </div>
                         <div class="col-6 mb-3 ">
-                            <button class="btn btn-white text-white rounded-pill 2px w-100" style="background-color: #3ecc4e;">
+                            <button class="btn btn-success text-white rounded-pill 2px w-100">
                                 <small>Email</small>
                             </button>
                         </div>
-                    </div>
-                    <div class="text-end d-md-flex justify-content-md-end">
-                        <span>Chat With:</span>
-                        <button class="btn btn-white border-info text-info me-md-2 mb-2" type="button">
-                            <i class="fa-regular fa-user me-1"></i>
-                            Patient
-                        </button>
-                        <button class="btn btn-white border-info text-info mb-2" type="button">
-                            <i class="fa-solid fa-user-doctor me-1"></i>
-                            Provider
-                        </button>
                     </div>
                 </div>
             </div>
@@ -179,33 +162,49 @@
     }
 </div>
 <nav aria-label="Page navigation example">
-    <ul class="pagination pagination-container d-flex justify-content-center">
-        @{
-            int i;
+    @if (Model.CurrentPage <= Model.TotalPages && Model.TotalPages != 0)
+    {
+        <div class="d-flex justify-content-between">
+            <div>
+                @(
+                    (Model.CurrentPage - 1) * Model.PageSize + 1
+                    ) - @Math.Min(Model.CurrentPage * Model.PageSize, Model.Count) out of @Model.Count
+            </div>
+            <div>
+                <ul class="pagination pagination-container d-flex justify-content-center">
+                    @{
+                        int i;
 
-            if (Model.CurrentPage > 1)
-            {
-                <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage - 1)">&lt;</a></li>
-            }
-            else
-            {
-                <li class="page-item disabled"><a class="page-link">&lt;</a></li>
-            }
-            @for (i = 1; i <= Model.TotalPages; i++)
-            {
+                        if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-item"><a class="page-link" data-page="@(
+                        Model.CurrentPage - 1
+                        )">&lt;</a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                        }
+                        @for (i = 1; i <= Model.TotalPages; i++)
+                        {
 
-                <li class="page-item"><a href="#" data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
-            }
-            if (Model.CurrentPage < Model.TotalPages)
-            {
-                <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage + 1)">&gt;</a></li>
-            }
-            else
-            {
-                <li class="page-item disabled"><a class="page-link">&gt;</a></li>
-            }
-        }
-    </ul>
+                            <li class="page-item"><a href="#" data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                        }
+                        if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-item"><a class="page-link" data-page="@(
+                        Model.CurrentPage + 1
+                        )">&gt;</a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    }
 </nav>
 <script>
     var reqtypeElements = document.getElementsByClassName('sortbtn');

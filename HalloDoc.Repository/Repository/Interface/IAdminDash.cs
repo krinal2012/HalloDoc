@@ -39,7 +39,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool EditCloseCase(ViewCaseModel vp, int RequestID);
         public bool CloseCase(int RequestID);
         public ViewEncounterForm EncounterInfo(int RequestId);
-        public void EditEncounterinfo(ViewEncounterForm ve);
+        public bool EditEncounterinfo(ViewEncounterForm ve);
         public bool Finalizeform(ViewEncounterForm ve);
         public bool SendLink(sendAgreement sendAgreement);
         public bool CreateReq(viewPatientReq viewPatientReq, string UserId);

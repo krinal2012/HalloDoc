@@ -124,12 +124,12 @@
 
                     <div class="row">
                         <div class="col-6 mb-3">
-                            <button class="btn btn-success text-white rounded-pill 2px w-100">
+                            <button class="btn btn-success text-white rounded-pill 2px w-100" asp-action="viewNotes" asp-controller="Admin" asp-route-RequestId="@item.RequestId">
                                 <small>View Notes</small>
                             </button>
                         </div>
                         <div class="col-6 mb-3">
-                            <button class="btn btn-success text-white rounded-pill 2px w-100" >
+                            <button class="btn btn-success text-white rounded-pill 2px w-100" asp-action="ViewUploads" asp-controller="Admin" asp-route-requestid="@item.RequestId">
                                 <small>View Uploads</small>
                             </button>
                         </div>
@@ -156,33 +156,50 @@
     }
 </div>
 <nav aria-label="Page navigation example">
-    <ul class="pagination pagination-container d-flex justify-content-center">
-        @{
-            int i;
+    <div class="d-flex justify-content-between">
+        @if (Model.CurrentPage <= Model.TotalPages && Model.TotalPages != 0)
+        {
+            <div>
+                @(
+                    (Model.CurrentPage - 1) * Model.PageSize + 1
+                    ) - @Math.Min(Model.CurrentPage * Model.PageSize, Model.Count) out of @Model.Count
+            </div>
+            <div>
+                <ul class="pagination pagination-container d-flex justify-content-center">
+                    @{
+                        int i;
 
-            if (Model.CurrentPage > 1)
-            {
-                <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage - 1)">&lt;</a></li>
-            }
-            else
-            {
-                <li class="page-item disabled"><a class="page-link">&lt;</a></li>
-            }
-            @for (i = 1; i <= Model.TotalPages; i++)
-            {
+                        if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-item"><a class="page-link" data-page="@(
+                        Model.CurrentPage - 1
+                        )">&lt;</a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                        }
+                        @for (i = 1; i <= Model.TotalPages; i++)
+                        {
 
-                <li class="page-item"><a href="#" data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
-            }
-            if (Model.CurrentPage < Model.TotalPages)
-            {
-                <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage + 1)">&gt;</a></li>
-            }
-            else
-            {
-                <li class="page-item disabled"><a class="page-link">&gt;</a></li>
-            }
+                            <li class="page-item"><a href="#" data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                        }
+                        if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-item"><a class="page-link" data-page="@(
+                        Model.CurrentPage + 1
+                        )">&gt;</a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                        }
+                    }
+                </ul>
+        </div>
         }
-    </ul>
+    </div>
+
 </nav>
 <script>
     var reqtypeElements = document.getElementsByClassName('sortbtn');
