@@ -10,7 +10,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public List<Role> RoleAdmin();
         public AdminProfile ViewAdminProfile(string UserId);
         public bool AddAdminAccount(AdminProfile admindata);
-        public bool ProfilePassword(string Password, int UserId);
+        public bool ProfilePassword(string Password, int AdminID);
         public bool EditAdministratorInfo(AdminProfile AdminProfile);
         public bool EditBillingInfo(AdminProfile AdminProfile);
         public PaginatedViewModel<PhysiciansData> PhysicianAll(int region, int page);
@@ -22,7 +22,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public bool EditBilling(PhysiciansData AdminProfile);
         public bool EditProviderProfile(PhysiciansData PhysiciansData);
         public bool SaveProvider(int[] checkboxes, int physicianid);
-        public bool AddProviderAccount(PhysiciansData PhysiciansData, int[] checkboxes, string UserId);
+        public bool AddProviderAccount(PhysiciansData PhysiciansData, string UserId);
         public bool DeleteProvider(int PhysicianId);
         public PaginatedViewModel<Role> AccessAccount(int page);
         public List<Menu> RolebyAccountType(AccountType Account);

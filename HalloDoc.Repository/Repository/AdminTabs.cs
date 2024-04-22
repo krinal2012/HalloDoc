@@ -12,6 +12,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing.Printing;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web.Helpers;
 using Twilio.TwiML.Messaging;
 using static HalloDoc.Entity.Models.Constant;
@@ -28,6 +30,21 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
             _emailConfig = emailConfig;
+        }
+        public string GenerateSHA256(string input)
+        {
+            var bytes = Encoding.UTF8.GetBytes(input);
+            using (var hashEngine = SHA256.Create())
+            {
+                var hashedBytes = hashEngine.ComputeHash(bytes, 0, bytes.Length);
+                var sb = new StringBuilder();
+                foreach (var b in hashedBytes)
+                {
+                    var hex = b.ToString("x2");
+                    sb.Append(hex);
+                }
+                return sb.ToString();
+            }
         }
         public AdminProfile ViewAdminProfile(string UserId)
         {
@@ -65,6 +82,11 @@ namespace HalloDoc.Repository.Repository
         }
         public bool AddAdminAccount(AdminProfile admindata)
         {
+            bool isAdminExist = _context.AspNetUsers.Any(x => x.Email == admindata.Email);
+            if(isAdminExist)
+            {
+                return false;
+            }
             var Aspnetuser = new AspNetUser();
             var AspNetUserRoles = new AspNetUserRole();
             Guid g = Guid.NewGuid();
@@ -127,14 +149,14 @@ namespace HalloDoc.Repository.Repository
             var role = _context.Roles.Where(r => r.AccountType == 2).ToList();
             return (role);
         }
-        public bool ProfilePassword(string Password, int UserId)
+        public bool ProfilePassword(string Password, int AdminID)
         {
-            var hasher = new PasswordHasher<string>();
-            var Admin = _context.Admins.Where(A => A.AdminId == UserId).FirstOrDefault();
+           
+            var Admin = _context.Admins.Where(A => A.AdminId == AdminID).FirstOrDefault();
             AspNetUser? U = _context.AspNetUsers.FirstOrDefault(m => m.Id == Admin.AspNetUserId);
             if (U != null)
             {
-                U.PasswordHash = Password;
+                U.PasswordHash = GenerateSHA256(Password);
                 U.ModifiedDate = DateTime.Now;
                 _context.AspNetUsers.Update(U);
                 _context.SaveChanges();
@@ -146,6 +168,11 @@ namespace HalloDoc.Repository.Repository
         {
             try
             {
+                var isAdminExist = _context.Admins.FirstOrDefault(x => x.Email == AdminProfile.Email && x.AdminId != AdminProfile.AdminId);
+                if (AdminProfile == null || isAdminExist != null)
+                {
+                    return false;
+                }
                 var Data = _context.Admins.Where(W => W.AdminId == AdminProfile.AdminId).FirstOrDefault();
                 if (Data != null)
                 {
@@ -350,7 +377,7 @@ namespace HalloDoc.Repository.Repository
             AspNetUser? U = _context.AspNetUsers.FirstOrDefault(m => m.Id == Admin.AspNetUserId);
             if (U != null)
             {
-                U.PasswordHash = Password;
+                U.PasswordHash = GenerateSHA256(Password);
                 _context.AspNetUsers.Update(U);
                 _context.SaveChanges();
                 return true;
@@ -508,8 +535,14 @@ namespace HalloDoc.Repository.Repository
             _context.SaveChanges();
             return true;
         }
-        public bool AddProviderAccount(PhysiciansData PhysiciansData, int[] checkboxes, string UserId)
+        public bool AddProviderAccount(PhysiciansData PhysiciansData, string UserId)
         {
+            bool isExist = _context.AspNetUsers.Any(x => x.Email == PhysiciansData.Email);
+            if (isExist)
+            {
+                return false;
+            }
+
             var Data = new Physician();
             var Aspnetuser = new AspNetUser();
             var AspNetUserRoles = new AspNetUserRole();
@@ -576,24 +609,28 @@ namespace HalloDoc.Repository.Repository
 
                 Data.Photo = PhysiciansData.PhotoFile.FileName;
             }
-            foreach (var i in checkboxes)
+            if (PhysiciansData.checkboxesList != null)
             {
-                switch (i)
+                List<int> checkboxes = PhysiciansData.checkboxesList.Split(',').Select(int.Parse).ToList();
+                foreach (var i in checkboxes)
                 {
-                    case 1:
-                        Data.IsAgreementDoc = new BitArray(1);
-                        Data.IsAgreementDoc[0] = true; break;
-                    case 2:
-                        Data.IsBackgroundDoc = new BitArray(1);
-                        Data.IsBackgroundDoc[0] = true; break;
-                    case 3:
-                        Data.IsCredentialDoc = new BitArray(1);
-                        Data.IsCredentialDoc[0] = true; break;
-                    case 4:
-                        Data.IsNonDisclosureDoc = true; break;
-                    case 5:
-                        Data.IsLicenseDoc = new BitArray(1);
-                        Data.IsLicenseDoc[0] = true; break;
+                    switch (i)
+                    {
+                        case 1:
+                            Data.IsAgreementDoc = new BitArray(1);
+                            Data.IsAgreementDoc[0] = true; break;
+                        case 2:
+                            Data.IsBackgroundDoc = new BitArray(1);
+                            Data.IsBackgroundDoc[0] = true; break;
+                        case 3:
+                            Data.IsCredentialDoc = new BitArray(1);
+                            Data.IsCredentialDoc[0] = true; break;
+                        case 4:
+                            Data.IsNonDisclosureDoc = true; break;
+                        case 5:
+                            Data.IsLicenseDoc = new BitArray(1);
+                            Data.IsLicenseDoc[0] = true; break;
+                    }
                 }
             }
             _context.Physicians.Add(Data);
@@ -640,7 +677,7 @@ namespace HalloDoc.Repository.Repository
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)pagesize);
             List<Role> list1 = list.Skip((page - 1) * pagesize).Take(pagesize).ToList();
 
-            PaginatedViewModel<Role> viewModel = new PaginatedViewModel<Role>()
+            PaginatedViewModel<Role> viewModel = new()
             {
                 AdminList = list1,
                 CurrentPage = page,
@@ -658,25 +695,31 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SaveCreateRole(CreateRole roles, string UserId)
         {
-            var data = new Role();
-            data.Name = roles.Role;
-            data.AccountType = (short)roles.AccountType;
-            data.CreatedDate = DateTime.Now;
-            data.CreatedBy = UserId;
-            _context.Roles.Add(data);
-            _context.SaveChanges();
-
-            List<int> menus = roles.files.Split(',').Select(int.Parse).ToList();
-
-            foreach (var item in menus)
+            Role checkname = _context.Roles.Where(r => r.Name == roles.Role).FirstOrDefault();
+            if (checkname == null)
             {
-                var obj = new RoleMenu();
-                obj.RoleId = data.RoleId;
-                obj.MenuId = item;
-                _context.RoleMenus.Add(obj);
+                var data = new Role();
+                data.Name = roles.Role;
+                data.AccountType = (short)roles.AccountType;
+                data.CreatedDate = DateTime.Now;
+                data.CreatedBy = UserId;
+                _context.Roles.Add(data);
                 _context.SaveChanges();
+
+                List<int> menus = roles.files.Split(',').Select(int.Parse).ToList();
+
+                foreach (var item in menus)
+                {
+                    var obj = new RoleMenu();
+                    obj.RoleId = data.RoleId;
+                    obj.MenuId = item;
+                    _context.RoleMenus.Add(obj);
+                    _context.SaveChanges();
+                }
+                return true;
             }
-            return true;
+            else
+                return false;
         }
         public CreateRole ViewEditRole(int RoleId)
         {
@@ -698,28 +741,30 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SaveEditRole(CreateRole roles)
         {
+            Role checkname = _context.Roles.Where(r => r.Name == roles.Role && r.RoleId != roles.RoleId).FirstOrDefault();
             List<int> selectedmenus = roles.files.Split(',').Select(int.Parse).ToList();
             List<int> rolemenus = _context.RoleMenus.Where(r => r.RoleId == roles.RoleId).Select(req => req.RoleMenuId).ToList();
-
-            if (rolemenus.Count > 0)
+            if (checkname == null)
             {
-                foreach (var item in rolemenus)
+                if (rolemenus.Count > 0)
                 {
-                    RoleMenu ar = _context.RoleMenus.Where(r => r.RoleId == roles.RoleId).First();
-                    _context.RoleMenus.Remove(ar);
+                    foreach (var item in rolemenus)
+                    {
+                        RoleMenu ar = _context.RoleMenus.Where(r => r.RoleId == roles.RoleId).First();
+                        _context.RoleMenus.Remove(ar);
+                        _context.SaveChanges();
+                    }
+                }
+                foreach (var item in selectedmenus)
+                {
+                    RoleMenu ar = new()
+                    {
+                        RoleId = roles.RoleId,
+                        MenuId = item
+                    };
+                    _context.RoleMenus.Update(ar);
                     _context.SaveChanges();
                 }
-            }
-            foreach (var item in selectedmenus)
-            {
-                RoleMenu ar = new()
-                {
-                    RoleId = roles.RoleId,
-                    MenuId = item
-                };
-                _context.RoleMenus.Update(ar);
-                _context.SaveChanges();
-                //regions.Remove(item);
             }
             return true;
         }
@@ -870,9 +915,9 @@ namespace HalloDoc.Repository.Repository
         public SearchInputs PatientHistory(SearchInputs search)
         {
             var His = _context.Users
-                     .Where(pp => (string.IsNullOrEmpty(search.FirstName) || pp.FirstName.Contains(search.FirstName))
-                               && (string.IsNullOrEmpty(search.LastName) || pp.LastName.Contains(search.LastName))
-                               && (string.IsNullOrEmpty(search.Email) || pp.Email.Contains(search.Email))
+                     .Where(pp => (string.IsNullOrEmpty(search.FirstName) || pp.FirstName.ToLower().Contains(search.FirstName.ToLower()))
+                               && (string.IsNullOrEmpty(search.LastName) || pp.LastName.ToLower().Contains(search.LastName.ToLower()))
+                               && (string.IsNullOrEmpty(search.Email) || pp.Email.ToLower().Contains(search.Email.ToLower()))
                                && (string.IsNullOrEmpty(search.Mobile) || pp.Mobile.Contains(search.Mobile)))
                      .ToList();
             SearchInputs data = new SearchInputs();
@@ -983,7 +1028,6 @@ namespace HalloDoc.Repository.Repository
                                            orderby req.CreatedDate
                                            select new SearchRecords
                                            {
-                                               //Modifieddate = req.Modifieddate,
                                                PatientName = req.FirstName + " " + req.LastName,
                                                RequestTypeID = req.RequestTypeId,
                                                DateOfService = req.CreatedDate,

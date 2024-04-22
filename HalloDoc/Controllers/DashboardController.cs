@@ -1,13 +1,16 @@
 ﻿using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
+using HalloDoc.Models;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
+using static HalloDoc.Repository.Repository.JWTService;
 
 namespace HalloDoc.Controllers
 {
-    //[CustomAuthorize("1")]
+
+    [CustomAuthorize("Patient")]
     public class DashboardController : Controller
     {
         private readonly HelloDocContext _context;
@@ -22,18 +25,13 @@ namespace HalloDoc.Controllers
             _IAdminTabs = iAdminTabs;
         }
         public IActionResult Index(string sortColumn, string sortOrder, int pagesize = 5, int page = 1)
-        {       
-            if (_httpContextAccessor.HttpContext.Session.GetInt32("id") == null)
-            {
-                return View("../Home/Login");
-            }
-            else
-            {
-                int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
-                var result = _PatientDash.PatientList(id, page, pagesize, sortColumn, sortOrder);
-                return View(result);
-            }
-        }           
+        {
+            // int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
+            int id = Int32.Parse(Crredntials.UserID());
+            var result = _PatientDash.PatientList(id, page, pagesize, sortColumn, sortOrder);
+            return View(result);
+
+        }
         public IActionResult UploadDocument(int RequestId)
         {
             var result = _PatientDash.viewDocuments(RequestId);
@@ -44,17 +42,19 @@ namespace HalloDoc.Controllers
         {
             _PatientDash.uploadDocument(RequestId, UploadFile);
             return RedirectToAction("UploadDocument", new { RequestId = RequestId });
-        }   
+        }
         public IActionResult PatientProfile()
         {
-            int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
-            var result=_PatientDash.viewProfile(id);
+            //int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
+            int id = Int32.Parse(Crredntials.UserID());
+            var result = _PatientDash.viewProfile(id);
             return View(result);
         }
         [HttpPost]
         public IActionResult PatientProfile(viewProfile vp)
         {
-            int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
+           // int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
+            int id = Int32.Parse(Crredntials.UserID());
             _PatientDash.EditProfile(id, vp);
             return View();
         }

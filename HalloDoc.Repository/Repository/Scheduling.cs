@@ -3,26 +3,20 @@ using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace HalloDoc.Repository.Repository
 {
     public class Scheduling : IScheduling
     {
         private readonly HelloDocContext _context;
-
         public Scheduling(HelloDocContext context)
         {
             _context = context;
         }
         public void AddShift(SchedulingData model, List<string?>? chk, string adminId)
         {
-            
             var shiftid = _context.Shifts.Where(u => u.PhysicianId == model.physicianid).Select(u => u.ShiftId).ToList();
             if (shiftid.Count() > 0)
             {
@@ -35,7 +29,6 @@ namespace HalloDoc.Repository.Repository
                         {
                             if ((model.starttime >= item.StartTime && model.starttime <= item.EndTime) || (model.endtime >= item.StartTime && model.endtime <= item.EndTime))
                             {
-                                //TempData["error"] = "Shift is already assigned in this time";
                                 return;
                             }
                         }
@@ -144,7 +137,6 @@ namespace HalloDoc.Repository.Repository
                             RegionId = model.regionid,
                             StartTime = model.starttime,
                             EndTime = model.endtime,
-
                             IsDeleted = new BitArray(new[] { false })
                         };
                         _context.ShiftDetails.Add(shiftdetailnew);
@@ -313,7 +305,6 @@ namespace HalloDoc.Repository.Repository
             return pl;
 
         }
-        #region GetAllNotApprovedShift
         public async Task<List<SchedulingData>> GetAllNotApprovedShift(int? regionId)
         {
 
@@ -341,9 +332,6 @@ namespace HalloDoc.Repository.Repository
                                 .ToListAsync();
             return ss;
         }
-        #endregion
-
-        #region DeleteShift
         public async Task<bool> DeleteShift(string s, string AdminID)
         {
             List<int> shidtID = s.Split(',').Select(int.Parse).ToList();
@@ -372,13 +360,11 @@ namespace HalloDoc.Repository.Repository
                 return false;
             }
         }
-        #endregion
-
         public async Task<bool> UpdateStatusShift(string s, string AdminID)
         {
             List<int> shidtID = s.Split(',').Select(int.Parse).ToList();
             try
-            {
+            {   
                 foreach (int i in shidtID)
                 {
                     ShiftDetail sd = _context.ShiftDetails.FirstOrDefault(sd => sd.ShiftDetailId == i);

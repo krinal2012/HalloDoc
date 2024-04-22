@@ -35,38 +35,22 @@ namespace HalloDoc.Controllers
         }
         public IActionResult GetPhysicianByRegion(int regionid)
         {
-            var PhysiciansByRegion = _IAdminDash.ProviderbyRegion(regionid);
-
-            return Json(PhysiciansByRegion);
+            var ProviderbyRegion = _IAdminDash.ProviderbyRegion(regionid);
+            return Json(ProviderbyRegion);
         }
-     
-        //public IActionResult Scheduling()
-        //{
-        //    ViewBag.Adminname = HttpContext.Session.GetString("Adminname");
-        //    ViewBag.RegionCombobox = _adminFunction.RegionComboBox();
-        //    ViewBag.PhysiciansByRegion = new SelectList(Enumerable.Empty<SelectListItem>());
-        //    SchedulingModel modal = new SchedulingModel();
-        //    modal.regions = _context.Regions.ToList();
-        //    return View(modal);
-        //}
-
+  
         public IActionResult LoadSchedulingPartial(string PartialName, string date, int regionid)
         {
             var currentDate = DateTime.Parse(date);
             List<Physician> physician = _context.PhysicianRegions.Include(u => u.Physician).Where(u => u.RegionId == regionid).Select(u => u.Physician).ToList();
-
             physician = _context.Physicians.ToList();
-
-
             switch (PartialName)
             {
-
                 case "_DayWise":
                     DayWiseScheduling day = new DayWiseScheduling
                     {
                         date = currentDate,
                         physicians = physician,
-                        //shiftdetails = _context.ShiftDetails.Include(u => u.Shift).ToList()
                         shiftdetails = _context.ShiftDetailRegions.Include(u => u.ShiftDetail).ThenInclude(u => u.Shift).Where(u => u.RegionId == regionid && u.IsDeleted == new BitArray(new[] { false })).Select(u => u.ShiftDetail).ToList()
 
                     };
@@ -81,7 +65,6 @@ namespace HalloDoc.Controllers
                     {
                         date = currentDate,
                         physicians = physician,
-                        //shiftdetails = _context.ShiftDetails.Include(u => u.Shift).ThenInclude(u => u.Physician).ToList()
                         shiftdetails = _context.ShiftDetailRegions.Include(u => u.ShiftDetail).ThenInclude(u => u.Shift).ThenInclude(u => u.Physician).Where(u => u.IsDeleted == new BitArray(new[] { false })).Where(u => u.RegionId == regionid).Select(u => u.ShiftDetail).ToList()
 
                     };
@@ -122,7 +105,6 @@ namespace HalloDoc.Controllers
             }
             _scheduling.AddShift(model, chk, adminId);
             return RedirectToAction("Index");
-
         }
 
         public SchedulingData viewshift(int shiftdetailid)
@@ -169,7 +151,6 @@ namespace HalloDoc.Controllers
         public IActionResult ViewShiftDelete(SchedulingData modal)
         {
             _scheduling.ViewShiftDelete(modal, Crredntials.AspNetUserId());
-
             return RedirectToAction("Index");
         }
         public IActionResult MDSOnCall(int? regionId)
@@ -182,17 +163,14 @@ namespace HalloDoc.Controllers
             }
             return View("../Scheduling/MDSOnCall", v);
         }
-        #region RequestedShift
+  
         public async Task<IActionResult> RequestedShift(int? regionId)
         {
             ViewBag.RegionComboBox = _IAdminDash.AssignCase();
             List<SchedulingData> v = await _scheduling.GetAllNotApprovedShift(regionId);
-
             return View("../Scheduling/ReviewShift", v);
         }
-        #endregion
 
-        #region _ApprovedShifts
 
         public async Task<IActionResult> _ApprovedShifts(string shiftids)
         {
@@ -200,23 +178,17 @@ namespace HalloDoc.Controllers
             {
                 TempData["Status"] = "Approved Shifts Successfully..!";
             }
-
-
             return RedirectToAction("RequestedShift");
         }
-        #endregion
-
-        #region _DeleteShifts
-
+      
         public async Task<IActionResult> _DeleteShifts(string shiftids)
         {
             if (await _scheduling.DeleteShift(shiftids, Crredntials.AspNetUserId()))
             {
                 TempData["Status"] = "Delete Shifts Successfully..!";
             }
-
             return RedirectToAction("RequestedShift");
         }
-        #endregion
+      
     }
 }

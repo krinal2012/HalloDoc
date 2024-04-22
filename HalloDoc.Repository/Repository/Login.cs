@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web.Helpers;
 
 namespace HalloDoc.Repository.Repository
@@ -22,9 +24,25 @@ namespace HalloDoc.Repository.Repository
             _context = context;
             _emailConfig = emailConfig;
         }
+        public string GenerateSHA256(string input)
+        {
+            var bytes = Encoding.UTF8.GetBytes(input);
+            using (var hashEngine = SHA256.Create())
+            {
+                var hashedBytes = hashEngine.ComputeHash(bytes, 0, bytes.Length);
+                var sb = new StringBuilder();
+                foreach (var b in hashedBytes)
+                {
+                    var hex = b.ToString("x2");
+                    sb.Append(hex);
+                }
+                return sb.ToString();
+            }
+        }
         public async Task<UserInfo> CheckAccessLogin(AspNetUser aspNetUser)
         {
-            var user = await _context.AspNetUsers.FirstOrDefaultAsync(u => u.Email == aspNetUser.Email && u.PasswordHash == aspNetUser.PasswordHash);
+            var Password = GenerateSHA256(aspNetUser.PasswordHash);
+            var user = await _context.AspNetUsers.FirstOrDefaultAsync(u => u.Email == aspNetUser.Email && u.PasswordHash == Password);
             UserInfo admin = new UserInfo();
             if (user != null)
             {
@@ -164,6 +182,9 @@ namespace HalloDoc.Repository.Repository
                 }
                 return true;
         }
+     
+       
+
     }
 }
 

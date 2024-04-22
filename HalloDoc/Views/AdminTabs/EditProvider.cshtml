@@ -166,7 +166,7 @@
                     Select Photo
                 </button>
                 <input id="files" type="file" class="d-none form-control doc_uploder" asp-for="PhotoFile" data-target="choosenfile">
-                <button id="" type="submit" class="btn btn-info text-white" value="Upload" onclick="document.getElementById('files').click()" disabled>
+                <button id="" type="button" class="btn btn-info text-white" value="Upload" onclick="document.getElementById('files').click()" disabled>
                     <i class="fa fa-cloud-upload"></i>
                     <span class="dNone"> Upload </span>
                 </button>
@@ -211,12 +211,12 @@
                 <td>Independent Contractor Agreement</td>
                 <td>
                     <input type="file" id="files2" class="d-none form-control doc_uploder file-input" data-target="choosenfile">
-                    <button type="submit" class="btn btn-info text-white upload-btn" >
+                    <button type="button" class="btn btn-info text-white upload-btn">
                         <span onclick="document.getElementById('files2').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white view-btn" style="display: none;">
+                    <button type="button" class="btn btn-info text-white view-btn" style="display: none;">
                         <span> View </span>
                     </button>
                 </td>
@@ -228,12 +228,12 @@
                 <td>Background Check</td>
                 <td>
                     <input id="files3" type="file" class="d-none form-control doc_uploder">
-                    <button type="submit" class="btn btn-info  upload-btn text-white" >
+                    <button type="button" class="btn btn-info  upload-btn text-white" >
                         <span onclick="document.getElementById('files3').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white view-btn" style="display: none;">
+                    <button type="button" class="btn btn-info text-white view-btn" style="display: none;">
                         <span> View </span>
                     </button>
                 </td>
@@ -245,12 +245,12 @@
                 <td>HIPAA Compliance</td>
                 <td>
                     <input id="files4" type="file" class="d-none form-control doc_uploder">
-                    <button type="submit" class="btn btn-info upload-btn text-white" >
+                    <button type="button" class="btn btn-info upload-btn text-white">
                         <span  onclick="document.getElementById('files4').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white view-btn" style="display: none;">
+                    <button type="button" class="btn btn-info text-white view-btn" style="display: none;">
                         <span> View </span>
                     </button>
                 </td>
@@ -262,12 +262,12 @@
                 <td>Non-Disclosure Agreement</td>
                 <td>
                     <input id="files5" type="file" class="d-none form-control doc_uploder">
-                    <button type="submit" class="btn btn-info text-white  upload-btn" >
+                    <button type="button" class="btn btn-info text-white  upload-btn">
                         <span onclick="document.getElementById('files5').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white view-btn" style="display: none;">
+                    <button type="button" class="btn btn-info text-white view-btn" style="display: none;">
                         <span> View </span>
                     </button>
                 </td>
@@ -279,12 +279,12 @@
                 <td>License Document</td>
                 <td>
                     <input id="files6" type="file" class="d-none form-control doc_uploder">
-                    <button type="submit" class="btn btn-info text-white upload-btn" >
+                    <button type="button" class="btn btn-info text-white upload-btn">
                         <span onclick="document.getElementById('files6').click()"> Upload </span>
                     </button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-info text-white view-btn" style="display: none;">
+                    <button type="button" class="btn btn-info text-white view-btn" style="display: none;">
                         <span> View </span>
                     </button>
                 </td>
@@ -305,10 +305,6 @@
 <script>
    
     $(document).ready(function () {
-        if("@ViewData["Heading"]" == "Add"){
-            $(".editprofile, .reset, .save, .delete").css("display", "none");
-            $("input, textarea, button, select").removeAttr('disabled');
-        }
         if ("@ViewData["Heading"]" == "Edit Physician Account") {
             $(".add").css("display", "none");
           
@@ -367,16 +363,6 @@
             $('#AdministratorInfoForm').submit();
         });
     });
-    //onboarding checkbox trigger upload
-    //$(document).ready(function () {
-    //    $(document).on('change', '.row-checkbox', function () {
-    //        var checkbox = $(this);
-    //        var row = checkbox.closest('tr');
-    //        var uploadBtn = row.find('.upload-btn');
-    //        uploadBtn.prop('disabled', !checkbox.prop('checked'));
-    //    });
-    //});
-
     //save btn
     function saveChng() {
         var checkboxes = [];

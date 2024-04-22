@@ -24,6 +24,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
         public string? RegionIdList { get; set; }
+        public string? checkboxesList { get; set; }
         [Required(ErrorMessage = "First name is required")]
         public string FirstName { get; set; } = null!;
         public string? LastName { get; set; }

@@ -11,6 +11,7 @@ using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using System.Data;
+using System.Text;
 using System.Web.Helpers;
 using Twilio.TwiML.Messaging;
 using Twilio.TwiML.Voice;
@@ -34,22 +35,23 @@ namespace HalloDoc.Controllers
             _httpContextAccessor = httpContextAccessor;
             _IAdminTabs = IAdminTabs;
         }
+       
         public IActionResult ProviderLocation()
         {
             ViewBag.Log = _IAdminTabs.FindPhysicianLocation();
             return View();
         }
-        public IActionResult AdminProfile(string UserId)
+        public IActionResult AdminProfile(string AdminId)
         {
-            if (UserId == null)
+            if (AdminId == null)
             {
                 var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
-                UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
+                AdminId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
             }
             ViewData["Heading"] = "My Profile";
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             ViewBag.Role = _IAdminTabs.RoleAdmin();
-            var result = _IAdminTabs.ViewAdminProfile(UserId);
+            var result = _IAdminTabs.ViewAdminProfile(AdminId);
             return View(result);
         }
         public IActionResult AddAdminProfile()
@@ -62,13 +64,25 @@ namespace HalloDoc.Controllers
         public IActionResult AddAdminAccount(AdminProfile admindata)
         {
             bool res = _IAdminTabs.AddAdminAccount(admindata);
-            return RedirectToAction("AdminProfile");
+            if(res)
+            {
+                _notyf.Success("Account Created Successfully..");
+            }
+            else
+            {
+                _notyf.Error("User is already exist..");
+            }
+            return RedirectToAction("AccessUser");
         }
-        public IActionResult ProfilePassword(string Password)
+        public IActionResult ProfilePassword(string Password, int AdminID)
         {
-            var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
-            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
-            if (_IAdminTabs.ProfilePassword(Password, Convert.ToInt32(UserId)))
+            if (AdminID == 0)
+            {
+                var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
+                AdminID = Int32.Parse(DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value);
+            }
+           
+            if (_IAdminTabs.ProfilePassword(Password, AdminID))
             {
                 _notyf.Success("Password changed Successfully...");
             }
@@ -81,6 +95,10 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult EditAdministratorInfo(AdminProfile AdminProfile)
         {
+            if(AdminProfile.AdminId == 0)
+            {
+                AdminProfile.AdminId  = Int32.Parse(Crredntials.UserID());
+            }
             if (_IAdminTabs.EditAdministratorInfo(AdminProfile))
             {
                 _notyf.Success("Information changed Successfully...");
@@ -227,11 +245,19 @@ namespace HalloDoc.Controllers
             bool res = _IAdminTabs.SaveProvider(checkboxes, physicianid);
             return RedirectToAction("ProviderMenu");
         }
-        public IActionResult AddAccount(PhysiciansData physicianData, int[] checkboxes)
+        public IActionResult AddAccount(PhysiciansData physicianData)
         {
             var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
             var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "AspNetUserId").Value;
-            bool res = _IAdminTabs.AddProviderAccount(physicianData, checkboxes, UserId);
+            bool res = _IAdminTabs.AddProviderAccount(physicianData, UserId);
+            if(res)
+            {
+                _notyf.Success("Account Created Successfully..");
+            }
+            else
+            {
+                _notyf.Error("User is already exist..");
+            }
             return RedirectToAction("ProviderMenu");
         }
         public IActionResult DeleteProvider(int PhysicianId)
@@ -261,11 +287,19 @@ namespace HalloDoc.Controllers
             if (roles.files != null)
             {
                 var v = _IAdminTabs.SaveCreateRole(roles, UserId);
-                _notyf.Success("Role Created Successfully");
+                if(v)
+                {
+                    _notyf.Success("Role Created Successfully");
+                }
+                else
+                {
+                    _notyf.Error("Role is already created.");
+                }
             }
             else
             {
                 TempData["Errormessage"] = "Please Select one of the role!!";
+                _notyf.Error("Role is not created.");
                 return View("CreateRole");
             }
             ModelState.Clear();
@@ -274,7 +308,15 @@ namespace HalloDoc.Controllers
         public IActionResult SaveEditRole(CreateRole roles)
         {
             var v = _IAdminTabs.SaveEditRole(roles);
-            _notyf.Success("Role Edited Successfully");
+            if(v)
+            {
+                _notyf.Success("Role Edited Successfully");
+            }
+            else
+            {
+                _notyf.Error("Role is not Edited.");
+            }
+            
             return RedirectToAction("EditRole", new { RoleId = roles.RoleId });
         }
         public IActionResult DeleteRole(int RoleId)

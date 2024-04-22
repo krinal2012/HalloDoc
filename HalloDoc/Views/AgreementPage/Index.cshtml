@@ -16,7 +16,6 @@
     </style>
 </head>
 <body>
-
     <div class="pb-3" style="min-height:1000px">
         <div class="container mt-5 p-4 fs-4 f-flex justify-items-center ">
             <p>
@@ -32,7 +31,6 @@
         </div>
 
     </div>
-
     <div class="modal fade" id="Reject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -42,11 +40,8 @@
                 </div>
                 <form asp-action="Reject" asp-controller="AgreementPage" class="needs-validation" novalidate>
                     <input type="hidden" value="@TempData["RequestID"]" name="RequestId" />
-
                     <div class="modal-body">
                         <h3 class="modal-title fs-5" id="exampleModalLabel">Patient Name : <span class="text-info"> @TempData["PatientName"] </span></h3>
-
-
                         <div class="inputs-control w-100 mt-2">
                             <textarea id="changenote" placeholder=" " name="Notes" rows="5" class="input-outline w-100  " type="text" required></textarea>
                             <span class="invalid-feedback">
@@ -65,14 +60,9 @@
     </div>
 
     <script>
-
         (function () {
             'use strict'
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
             var forms = document.querySelectorAll('.needs-validation')
-
-            // Loop over them and prevent submission
             Array.prototype.slice.call(forms)
                 .forEach(function (form) {
                     form.addEventListener('submit', function (event) {
@@ -80,19 +70,14 @@
                             event.preventDefault()
                             event.stopPropagation()
                         }
-
                         form.classList.add('was-validated')
                     }, false)
                 })
         })()
-
     </script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/custom.js" asp-append-version="true"></script>
-
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-
 </body>
 </html>

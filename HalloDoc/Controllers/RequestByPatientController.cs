@@ -4,6 +4,7 @@ using HalloDoc.Entity.DataModels;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
+using HalloDoc.Models;
 
 namespace HellodocMVC.Controllers
 {
@@ -20,7 +21,8 @@ namespace HellodocMVC.Controllers
         }
         public IActionResult SubmitForMe()
         {
-            int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
+            int id = Int32.Parse(Crredntials.UserID());
+            //int id = (int)_httpContextAccessor.HttpContext.Session.GetInt32("id");
             var ViewPatientCreateRequest = _PatientDash.viewMeData(id);
             return View(ViewPatientCreateRequest);
         }

@@ -71,23 +71,13 @@
             <div class="mb-3 col-lg-6 form-floating phone">
                 <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone" >
             </div>
-            <input asp-for="RegionIdList" type="hidden" id="regionids" />
+            <input asp-for="RegionIdList" type="hidden" id="regionsidlist" />
             @foreach (var items in ViewBag.AssignCase)
             {
-                @if (Model != null && Model.RegionIds.Count > 0 && Model.RegionIds.Exists(id => id.RegionId == items.RegionId))
-                {
                     <div class="form-check col">
-                        <input class="form-check-input" type="checkbox" name="RegionIds" value="@items.RegionId"  checked>
+                        <input class="form-check-input" type="checkbox" name="RegionIds" value="@items.RegionId">
                         <label class="form-check-label" for="flexCheckDisabled"> @items.Name </label>
                     </div>
-                }
-                else
-                {
-                    <div class="form-check col">
-                        <input class="form-check-input" type="checkbox" value="@items.RegionId" name="RegionIds" >
-                        <label class="form-check-label" for="flexCheckDisabled"> @items.Name </label>
-                    </div>
-                }
             }
 
 
@@ -147,17 +137,20 @@
 
     $('#mainform').on('submit', function (e) {
         event.preventDefault();
-        var admindata = $('#mainform').serialize();
+        
         var clonedForm = $(this).clone();
         if (!$('#mainform')[0].checkValidity()) {
             return;
         }
         let checkboxes = document.querySelectorAll('input[name="RegionIds"]:checked');
+       
         let RegionIdList = [];
         checkboxes.forEach((checkbox) => {
             RegionIdList.push(checkbox.value);
         });
-        document.querySelector('#regionids').value = RegionIdList.join(',');
+        console.log(RegionIdList);
+        document.querySelector('#regionsidlist').value = RegionIdList.join(',');
+        var admindata = $('#mainform').serialize();
         console.log(admindata);
         $.ajax({
             type: 'POST',
@@ -165,6 +158,7 @@
             data: admindata  ,
             success: function (response) {
                 console.log('Data sent successfully', response);
+                window.location.href = "/AdminTabs/AccessUser";
             },
             error: function (error) {
                 console.log('Error sending data', error);
