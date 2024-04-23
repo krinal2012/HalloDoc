@@ -20,7 +20,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public DateTime DOB { get; set; }
         public string? Mobile { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public string Email { get; set; }
         public string? Region { get; set; }
         public string Address { get; set; }

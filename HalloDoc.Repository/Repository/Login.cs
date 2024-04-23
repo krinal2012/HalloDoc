@@ -92,6 +92,11 @@ namespace HalloDoc.Repository.Repository
         }
         public bool SendResetLink(String Email)
         {
+            bool isexist = _context.AspNetUsers.Any(req => req.Email == Email);
+            if(!isexist)
+            {
+                return false;
+            }
             var agreementUrl = "https://localhost:7151/Home/ResetPass?Email=" + Email;
             var subject = "Reset your password";
             var EmailTemplate = $"To reset your password <a href='{agreementUrl}'>Click here..</a>";
@@ -145,7 +150,6 @@ namespace HalloDoc.Repository.Repository
                 role.RoleId = "1"; //For Patient Role
                 _context.AspNetUserRoles.Add(role);
                 _context.SaveChanges();
-
 
                 User.AspNetUserId = Aspnetuser.Id;
                 User.FirstName = U.FirstName;

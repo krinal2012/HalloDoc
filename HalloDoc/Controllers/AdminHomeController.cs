@@ -52,6 +52,7 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> Logout()
         {
             Response.Cookies.Delete("jwt");
+            HttpContext.Session.Clear();
             return RedirectToAction("Login", "AdminHome");
         }  
         public IActionResult Error()

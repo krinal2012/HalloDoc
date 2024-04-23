@@ -1,10 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using System.Net.Mail;
-using System.Net;
-using System.Text.RegularExpressions;
+﻿using Microsoft.AspNetCore.Mvc;
 using HalloDoc.Entity.DataContext;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
@@ -25,7 +19,6 @@ namespace HellodocMVC.Controllers
             _notyf = notyf;
             _httpContextAccessor = httpContextAccessor;
         }
-
         public IActionResult Index()
         {
             return View();
@@ -44,8 +37,11 @@ namespace HellodocMVC.Controllers
             {
                 _notyf.Success("Mail Send  Successfully..!");
             }
+            else
+            {
+                _notyf.Error("User not exist.");
+            }
             return RedirectToAction("ForgotPass", "Home");
-
         }
         [HttpGet]
         public IActionResult ResetPass(string email, string datetime)
@@ -98,8 +94,10 @@ namespace HellodocMVC.Controllers
                 _notyf.Error("You are already registered...");
                 return View("Register");
             }
-            
         }
-
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

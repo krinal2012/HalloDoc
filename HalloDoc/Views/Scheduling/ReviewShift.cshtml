@@ -31,9 +31,9 @@
                     <div class="d-flex align-self-center">
                         <!-- Button trigger modal -->
                         <div class="mx-2">
-                            <div class="btn btn-success shadow" id="">
+                            <a class="btn btn-success shadow" asp-controller="Scheduling" asp-action="Index">
                                 View Current Month Shift
-                            </div>
+                            </a>
                         </div>
                         <form asp-action="_ApprovedShifts" id="approvedform" asp-controller="Scheduling" class="mx-2">
                             <input type="hidden" id="approved" name="shiftids" />

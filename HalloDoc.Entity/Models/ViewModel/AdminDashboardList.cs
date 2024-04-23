@@ -64,7 +64,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public required string FirstName { get; set; }
         public string? LastName { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public required string Email { get; set; }
         [Required(ErrorMessage = "ConfirmEmail is required")]
         [Compare("Email", ErrorMessage = "Email doesn't match.")]

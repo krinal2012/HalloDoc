@@ -9,18 +9,12 @@ using iText.Kernel.Pdf;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections;
-using System.Data;
-using System.Text;
-using System.Web.Helpers;
-using Twilio.TwiML.Messaging;
-using Twilio.TwiML.Voice;
 using static HalloDoc.Entity.Models.Constant;
 using static HalloDoc.Repository.Repository.JWTService;
 
 namespace HalloDoc.Controllers
 {
-    [CustomAuthorize("Admin,Physician")]
+    
     public class AdminTabsController : Controller
     {
         private static IHttpContextAccessor _httpContextAccessor;
@@ -37,7 +31,7 @@ namespace HalloDoc.Controllers
             _httpContextAccessor = httpContextAccessor;
             _IAdminTabs = IAdminTabs;
         }
-       
+        [CustomAuthorize("Admin,Physician", "ProviderLocation")]
         public IActionResult ProviderLocation()
         {
             ViewBag.Log = _IAdminTabs.FindPhysicianLocation();
@@ -177,6 +171,10 @@ namespace HalloDoc.Controllers
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             ViewBag.Role = _IAdminTabs.RolePhyscian();
             var result = _IAdminTabs.ViewProviderProfile(PhysicianId);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return View(result);
         }
         public IActionResult ProviderProfile(int PhysicianId)
@@ -185,6 +183,10 @@ namespace HalloDoc.Controllers
             ViewBag.AssignCase = _IAdminDash.AssignCase();
             ViewBag.Role = _IAdminTabs.RolePhyscian();
             var result = _IAdminTabs.ViewProviderProfile(PhysicianId);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return View("EditProvider", result);
         }
         public IActionResult AddProvider()
@@ -271,6 +273,10 @@ namespace HalloDoc.Controllers
         public IActionResult AccessAccount(int page)
         {
             var res = _IAdminTabs.AccessAccount(page);
+            if (res == null)
+            {
+                return NotFound();
+            }
             return View(res);
         }
         public IActionResult CreateRole()
@@ -334,12 +340,20 @@ namespace HalloDoc.Controllers
         {
             ViewBag.AspNetRole = _IAdminDash.AspNetRole();
             var res = _IAdminTabs.UserAccessData(AccountType, page);
+            if (res == null)
+            {
+                return NotFound();
+            }
             return View(res);
         }
         public IActionResult Partners(string searchValue, int Profession, int page)
         {
             ViewBag.Professions = _context.HealthProfessionalTypes.ToList();
             var res = _IAdminTabs.PartnersData(searchValue, Profession, page);
+            if (res == null)
+            {
+                return NotFound();
+            }
             return View(res);
         }
         public IActionResult PartnersAddEdit(int VendorId)

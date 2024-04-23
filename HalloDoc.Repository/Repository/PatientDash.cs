@@ -164,6 +164,13 @@ namespace HalloDoc.Repository.Repository
             Requestclient.IntDate = viewPatientReq.DOB.Day;
             Requestclient.IntYear = viewPatientReq.DOB.Year;
             Requestclient.StrMonth = (viewPatientReq.DOB.Month).ToString();
+            Requestclient.Street = viewPatientReq.Street;
+            Requestclient.City = viewPatientReq.City;
+            Requestclient.State = Enum.GetName(typeof(RegionList), viewPatientReq.State);
+            Requestclient.RegionId = viewPatientReq.State;
+            Requestclient.ZipCode = viewPatientReq.ZipCode;
+            Requestclient.CreatedDate = DateTime.Now;
+            Requestclient.Address = viewPatientReq.Street + "," + viewPatientReq.City + "," + viewPatientReq.State;
             _context.RequestClients.Add(Requestclient);
             _context.SaveChanges();
 
@@ -216,6 +223,12 @@ namespace HalloDoc.Repository.Repository
             Requestclient.StrMonth = (viewFamilyReq.DOB.Month).ToString();
             Requestclient.Notes = viewFamilyReq.Symptoms;
             Requestclient.Address = viewFamilyReq.Street + "," + viewFamilyReq.City + "," + viewFamilyReq.State;
+            Requestclient.Street = viewFamilyReq.Street;
+            Requestclient.City = viewFamilyReq.City;
+            Requestclient.State = Enum.GetName(typeof(RegionList), viewFamilyReq.State);
+            Requestclient.RegionId = viewFamilyReq.State;
+            Requestclient.ZipCode = viewFamilyReq.ZipCode;
+            Requestclient.CreatedDate = DateTime.Now;
             _context.RequestClients.Add(Requestclient);
             _context.SaveChanges();
 

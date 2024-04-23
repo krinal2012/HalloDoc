@@ -14,7 +14,7 @@ using iText.Layout;
 
 namespace HalloDoc.Controllers
 {
-    [CustomAuthorize("Admin,Physician")]
+    [CustomAuthorize("Admin,Physician", "Dashboard")]
     public class AdminController : Controller
     {
         private readonly IAdminDash _IAdminDash;
@@ -28,7 +28,7 @@ namespace HalloDoc.Controllers
             _notyf = notyf;
             _httpContextAccessor = httpContextAccessor;
         }
-        
+       
         [Route("Physician/DashBoard")]
         [Route("Admin/DashBoard")]
         public IActionResult Index()
@@ -76,9 +76,9 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult CreateRequest(viewPatientReq viewPatientReq)
         {
-            var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
-            var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
-
+            //var cookieValue = _httpContextAccessor.HttpContext.Request.Cookies["jwt"].ToString();
+            //var UserId = DecodedToken.DecodeJwt(DecodedToken.ConvertJwtStringToJwtSecurityToken(cookieValue)).claims.FirstOrDefault(t => t.Key == "UserId").Value;
+            var UserId = Crredntials.AspNetUserId();
             bool result = _IAdminDash.CreateReq(viewPatientReq, UserId);
             if (result)
             {
@@ -141,10 +141,14 @@ namespace HalloDoc.Controllers
             return RedirectToAction("Index", "Admin");
 
         }
-        public IActionResult viewCase(int RequestId, int RequestTypeId, int status)
+        public IActionResult viewCase(int RequestId)
         {
             ViewBag.AssignCase = _IAdminDash.AssignCase();
-            var result = _IAdminDash.ViewCaseData(RequestId, RequestTypeId, status);
+            var result = _IAdminDash.ViewCaseData(RequestId);
+            if(result==null)
+            {
+                return NotFound();
+            }
             return View(result);
         }
         [HttpPost]
@@ -158,6 +162,10 @@ namespace HalloDoc.Controllers
         public IActionResult viewNotes(int RequestId)
         {
             viewNotesData result = _IAdminDash.viewNotesData(RequestId);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return View("../Admin/viewNotes", result);
             // return View();
         }
@@ -253,6 +261,10 @@ namespace HalloDoc.Controllers
         public IActionResult ViewUploads(int requestid)
         {
             var v = _IAdminDash.ViewUploadsInfo(requestid);
+            if (v == null)
+            {
+                return NotFound();
+            }
             return View("../Admin/ViewUploads", v);
         }
         [HttpPost]
@@ -330,6 +342,10 @@ namespace HalloDoc.Controllers
         public IActionResult CloseCase(int RequestId)
         {
             ViewCaseModel vc = _IAdminDash.CloseCaseData(RequestId);
+            if (vc == null)
+            {
+                return NotFound();
+            }
             return View("../Admin/CloseCase", vc);
         }
         public IActionResult EditCloseCase(ViewCaseModel vc, int RequestID)
@@ -363,6 +379,10 @@ namespace HalloDoc.Controllers
         public IActionResult EncounterForm(int RequestId)
         {
             ViewEncounterForm ei = _IAdminDash.EncounterInfo(RequestId);
+            if (ei == null)
+            {
+                return NotFound();
+            }
             return View(ei);
         }
         [HttpPost]
@@ -407,6 +427,10 @@ namespace HalloDoc.Controllers
         public IActionResult ConcludeCare(int RequestId)
         {
             var v = _IAdminDash.ViewUploadsInfo(RequestId);
+            if (v == null)
+            {
+                return NotFound();
+            }
             return View("../Admin/ConcludeCare", v);
         }
         public IActionResult ConcludeCareUploads(viewDocument vp, int userid, IFormFile UploadFile)

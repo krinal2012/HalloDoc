@@ -15,13 +15,13 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Date of birth is required")]
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public  string Email { get; set; }
         public string Password { get; set; }
         public string Pass { get; set; }
         [Compare("Pass", ErrorMessage = "Password doesn't match.")]
         public string ConformPass { get; set; }
-        [RegularExpression(@"([0-9]{10})", ErrorMessage = "It must be of 6 numerics")]
+        [RegularExpression(@"([0-9]{10})", ErrorMessage = "It must be of 10 numerics")]
         public string? Mobile { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
@@ -44,7 +44,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Last_name { get; set; }
         public string? Mobileno { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public string Emailid { get; set; }
         public string? Relation { get; set; }
         [Required(ErrorMessage = "First name is required")]
@@ -53,7 +53,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Date of birth is required")]
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public string Email { get; set; }
         public string? Mobile { get; set; }
         public string? Street { get; set; }
@@ -75,7 +75,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Last_name { get; set; }
         public string? Mobileno { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public required string Emailid { get; set; }
         public string? Hotelname { get; set; }
         public required string FirstName { get; set; }
@@ -83,7 +83,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Date of birth is required")]
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public required string Email { get; set; }
         public string? Mobile { get; set; }
         public string? Street { get; set; }
@@ -107,7 +107,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string? Last_name { get; set; }
         public string? Mobileno { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public string Emailid { get; set; }
         public string? Hotelname { get; set; }
         [Required(ErrorMessage = "First name is required")]
@@ -116,7 +116,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         [Required(ErrorMessage = "Date of birth is required")]
         public DateTime DOB { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public string Email { get; set; }
         public string? Mobile { get; set; }
         public string? Street { get; set; }

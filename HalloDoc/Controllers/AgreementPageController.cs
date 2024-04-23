@@ -17,7 +17,6 @@ namespace HalloDoc.Controllers
         {
             TempData["RequestID"] = " " + RequestID;
             TempData["PatientName"] = "krinal";
-
             return View();
         }
         public IActionResult Accept(int RequestID)

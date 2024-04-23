@@ -14,5 +14,6 @@ namespace HalloDoc.Repository.Repository.Interface
         //public string GenerateToken(AspNetUser user);
         string GenerateJWTAuthetication(UserInfo userinfo);
         bool ValidateToken(string token, out JwtSecurityToken jwtSecurityTokenHandler);
+        public List<string> getManuByID(string RoleID);
     }
 }

@@ -77,7 +77,7 @@ namespace HellodocMVC.Controllers
         public async Task<IActionResult> Logout()
         {
             Response.Cookies.Delete("jwt");
-            return RedirectToAction("Login", "AdminHome");
+            return RedirectToAction("Login", "Home");
         }
     }
 }

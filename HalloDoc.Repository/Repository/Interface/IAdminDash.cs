@@ -8,7 +8,7 @@ namespace HalloDoc.Repository.Repository.Interface
     {
         public CountStatusWiseRequestModel CountRequestData(int phyid);
         public PaginatedViewModel<AdminList> NewRequestData(int userid,int statusid, string? searchValue, int page, int pagesize, int? Region, string sortColumn, string sortOrder, int? requesttype);
-        public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId, int status);
+        public ViewCaseModel ViewCaseData(int RequestID);
         public ViewCaseModel EditViewCaseData(int RequestID, int RequestTypeId, ViewCaseModel vp);
         public List<Physician> ProviderbyRegion(int Regionid);
         public List<Region> AssignCase();

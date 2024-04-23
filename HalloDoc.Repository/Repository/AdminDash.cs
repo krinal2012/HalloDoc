@@ -1,14 +1,14 @@
 ﻿using HalloDoc.Entity.DataContext;
-using HalloDoc.Repository.Repository.Interface;
-using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Entity.DataModels;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using System.Collections;
 using HalloDoc.Entity.Models;
+using HalloDoc.Entity.Models.ViewModel;
+using HalloDoc.Repository.Repository.Interface;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Utilities;
+using System.Collections;
 using Twilio.Http;
+using static HalloDoc.Entity.Models.Constant;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -130,16 +130,16 @@ namespace HalloDoc.Repository.Repository
             };
             return viewModel;
         }
-        public ViewCaseModel ViewCaseData(int RequestID, int RequestTypeId, int status)
+        public ViewCaseModel ViewCaseData(int RequestID)
         {
             ViewCaseModel? list =
                         _context.RequestClients
                        .Where(req => req.Request.RequestId == RequestID)
                        .Select(req => new ViewCaseModel()
                        {
-                           Status = status,
+                           Status = _context.Requests.Where(req => req.RequestId == RequestID).Select(req => req.Status).FirstOrDefault(),
                            RequestId = RequestID,
-                           RequestTypeId = RequestTypeId,
+                           RequestTypeId = _context.Requests.Where(req=> req.RequestId == RequestID).Select(req=> req.RequestTypeId).FirstOrDefault(),
                            ConfNo = req.Address.Substring(0, 2) + req.IntDate.ToString() + req.StrMonth + req.IntYear.ToString() + req.LastName.Substring(0, 2) + req.FirstName.Substring(0, 2) + "002",
                            Symptoms = req.Notes,
                            FirstName = req.FirstName,
@@ -985,7 +985,7 @@ namespace HalloDoc.Repository.Repository
         }
         public bool CreateReq(viewPatientReq viewPatientReq, string UserId)
         {
-            var admin = _context.Admins.Where(x => x.AdminId.ToString() == UserId).FirstOrDefault();
+            var admin = _context.AspNetUsers.Where(x => x.Id == UserId).FirstOrDefault();
 
             var Request = new Entity.DataModels.Request();
             var Requestclient = new RequestClient();
@@ -993,10 +993,9 @@ namespace HalloDoc.Repository.Repository
             Request.RequestTypeId = 1;
             Request.Status = 1;
             //Request.UserId = Int32.Parse(UserId);
-            Request.FirstName = admin.FirstName;
-            Request.LastName = admin.LastName;
+            Request.FirstName = admin.UserName;
             Request.Email = admin.Email;
-            Request.PhoneNumber = admin.Mobile;
+            Request.PhoneNumber = admin.PhoneNumber;
             Request.CreatedDate = DateTime.Now;
             Request.IsUrgentEmailSent = new BitArray(1);
             Request.ConfirmationNumber = viewPatientReq.City.Substring(0, 2) + DateTime.Now.ToString("yyyyMM") + viewPatientReq.LastName.Substring(0, 2) + viewPatientReq.FirstName.Substring(0, 2) + "002";
@@ -1005,7 +1004,9 @@ namespace HalloDoc.Repository.Repository
             Requestclient.RequestId = Request.RequestId;
             Requestclient.FirstName = viewPatientReq.FirstName;
             Requestclient.LastName = viewPatientReq.LastName;
-            Requestclient.Address = viewPatientReq.Street + "," + viewPatientReq.City + "," + viewPatientReq.State + "," + viewPatientReq.ZipCode;
+            Requestclient.State = Enum.GetName(typeof(RegionList), viewPatientReq.State);
+            Requestclient.RegionId = viewPatientReq.State;
+            Requestclient.Address = viewPatientReq.Street + "," + viewPatientReq.City + "," + Enum.GetName(typeof(RegionList), viewPatientReq.State) + "," + viewPatientReq.ZipCode;
             Requestclient.Email = viewPatientReq.Email;
             Requestclient.PhoneNumber = viewPatientReq.Mobile;
             Requestclient.Notes = viewPatientReq.Symptoms;

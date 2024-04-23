@@ -17,9 +17,9 @@ namespace HalloDoc.Entity.Models.ViewModel
         public bool IsNotificationStopped { get; set; }
         public string? Role { get; set; }
         public int? onCallStatus { get; set; } = 0;
-        public int? shiftid { get; set; }
+       
         public int Physicianid { get; set; }
-        public string? Aspnetuserid { get; set; }
+      
         public string? UserName { get; set; }
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
@@ -29,7 +29,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string FirstName { get; set; } = null!;
         public string? LastName { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Please enter valid Email Address.")]
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public string Email { get; set; } = null!;
         [Compare("Email", ErrorMessage = "Email doesn't match.")]
         public string ConformEmail { get; set; } = null!;
@@ -74,11 +74,6 @@ namespace HalloDoc.Entity.Models.ViewModel
         public IFormFile? BackGrounddoc { get; set; }
         public IFormFile? Licensedoc { get; set; }
         public List<Region>? RegionIds { get; set; }
-        //public class Regions
-        //{
-        //    public int? regionid { get; set; }
-        //    public string? regionname { get; set; }
-        //}
-        
+       
     }
 }

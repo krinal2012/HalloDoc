@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public DateTime? DOS { get; set; }
 
         public string? Mobile { get; set; }
-
+        [RegularExpression(@"(^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$)", ErrorMessage = "Please enter valid Email Address.")]
         public string Email { get; set; } = string.Empty;
 
         public string? Injury { get; set; }

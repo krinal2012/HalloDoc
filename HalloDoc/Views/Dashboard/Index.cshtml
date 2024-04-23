@@ -61,14 +61,9 @@
                                 <td scope="row"> @item.createdDate</td>
                                 <td>@item.Status</td>
                                 <td>
-                                    @{
-                                        if (@item.Fcount != 0)
-                                        {
-                                            <a onclick="location.href='@Url.Action("UploadDocument", "Dashboard",new {RequestId=item.RequestId})'" class="btn btn-outline-info btn-sm">
-                                                (@item.Fcount)  Documents
-                                            </a>
-                                        }
-                                    }
+                                    <a onclick="location.href='@Url.Action("UploadDocument", "Dashboard",new {RequestId=item.RequestId >0  ?item.RequestId : 0 })'" class="btn btn-outline-info btn-sm">
+                                        Documents (@item.Fcount)
+                                    </a>
                                 </td>
                             </tr>
                         }

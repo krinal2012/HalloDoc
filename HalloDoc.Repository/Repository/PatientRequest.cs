@@ -76,11 +76,11 @@ namespace HalloDoc.Repository.Repository
             Request.ConfirmationNumber = viewPatientReq.City.Substring(0, 2) + DateTime.Now.ToString("yyyyMM") + viewPatientReq.LastName.Substring(0, 2) + viewPatientReq.FirstName.Substring(0, 2) + "002";
 
             _context.Requests.Add(Request);
-             _context.SaveChanges();
+             _context.SaveChanges();    
             Requestclient.RequestId = Request.RequestId;
             Requestclient.FirstName = viewPatientReq.FirstName;
             Requestclient.LastName = viewPatientReq.LastName;
-            Requestclient.Address = viewPatientReq.Street + "," + viewPatientReq.City + "," + viewPatientReq.State + "," + viewPatientReq.ZipCode;
+            Requestclient.Address = viewPatientReq.Street + "," + viewPatientReq.City + "," + Enum.GetName(typeof(RegionList), viewPatientReq.State) + "," + viewPatientReq.ZipCode;
             Requestclient.Email = viewPatientReq.Email;
             Requestclient.PhoneNumber = viewPatientReq.Mobile;
             Requestclient.Notes = viewPatientReq.Symptoms;
@@ -177,7 +177,7 @@ namespace HalloDoc.Repository.Repository
             Requestclient.RequestId = Request.RequestId;
             Requestclient.FirstName = viewFamilyReq.FirstName;
             Requestclient.LastName = viewFamilyReq.LastName;
-            Requestclient.Address = viewFamilyReq.Street + "," + viewFamilyReq.City + "," + viewFamilyReq.State + "," + viewFamilyReq.ZipCode;
+            Requestclient.Address = viewFamilyReq.Street + "," + viewFamilyReq.City + "," + Enum.GetName(typeof(RegionList), viewFamilyReq.State) + "," + viewFamilyReq.ZipCode;
             Requestclient.Email = viewFamilyReq.Email;
             Requestclient.PhoneNumber = viewFamilyReq.Mobile;
             Requestclient.Notes = viewFamilyReq.Symptoms;

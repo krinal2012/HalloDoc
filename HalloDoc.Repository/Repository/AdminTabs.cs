@@ -11,13 +11,9 @@ using Org.BouncyCastle.Pqc.Crypto.Lms;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing.Printing;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web.Helpers;
-using Twilio.TwiML.Messaging;
 using static HalloDoc.Entity.Models.Constant;
-
 using Region = HalloDoc.Entity.DataModels.Region;
 
 namespace HalloDoc.Repository.Repository
@@ -151,7 +147,6 @@ namespace HalloDoc.Repository.Repository
         }
         public bool ProfilePassword(string Password, int AdminID)
         {
-           
             var Admin = _context.Admins.Where(A => A.AdminId == AdminID).FirstOrDefault();
             AspNetUser? U = _context.AspNetUsers.FirstOrDefault(m => m.Id == Admin.AspNetUserId);
             if (U != null)

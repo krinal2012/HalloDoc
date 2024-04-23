@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -33,12 +35,12 @@
        
             <div class="position-absolute top-0 end-0 d-flex btn btn-sm align-items-center">
                 <span class="dNone"> Welcome
-                    @Crredntials.UserName()
+                    <b>@Crredntials.UserName() </b>
                 </span>
-                <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" asp-action="Logout" asp-controller="Login">
+                <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" onclick="Logout()">
                     Log Out
                 </a>
-                <a class=" text-info text-decoration-none dBlock" asp-action="Logout" asp-controller="Login">
+                <a class=" text-info text-decoration-none dBlock" onclick="Logout()">
                     <i class="fa fa-sign-out fa-2x border border-info rounded p-2 m-1"></i>
                 </a>       
 
@@ -95,6 +97,38 @@
       
     </footer>
     <script>
+        function Logout() {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-info m-2 shadow-none text-white px-3",
+                    denyButton: "btn btn-outline-info m-2"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                icon: "warning",
+                title: "Logout",
+                text: "Are you sure you want to Logout.",
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: "Logout",
+                denyButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Logout", "Login")',
+                        cache: false,
+                        success: function (response) {
+                            window.location.href = "/Home/Login";
+                        },
+                        error: function () {
+
+                        }
+                    });
+                }
+            });
+        }
         let metemp = false;
         let elsetemp = false;
 

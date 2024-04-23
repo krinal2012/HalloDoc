@@ -11,7 +11,7 @@
 
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-5">
     <div class="d-flex align-self-center">
-    <h3 class="">New Request</h3>
+    <h3 class="">Patient Request</h3>
         <btn class=" @Enum.GetName(typeof(RequestTypes),Model.RequestTypeId) mx-3 align-self-center p-2 rounded-pill text-white">@Enum.GetName(typeof(RequestTypes),Model.RequestTypeId)</btn>
     </div>
     <div class=" btn d-flex justify-content-end">
@@ -45,14 +45,9 @@
                 <input type="date" asp-for="DOB" class="form-control" id="Date" disabled>
                 <label class="form-label" for="Date">Date of Birth</label>
             </div>
-            <div class="mb-3 col-lg-5 form-floating phone">
+            <div class="mb-3 col-lg-6 form-floating phone">
                 <input type="tel" asp-for="Mobile" class="form-control shadow-none" id="phone" disabled>
             </div>
-            <div class="mb-3 col-lg-1 form-floating">
-                <a class=" border border-info rounded p-3 mt-1 ">
-                    <i class="fa fa-phone px-1 py-2 mt-3 fa-sm text-info"> </i>
-                </a>
-            </div>     
             <div class="mb-3 col-lg-6 form-floating">
                 <input type="email" asp-for="Email" class="form-control" id="email" placeholder="abc@email.com"
                        aria-describedby="emailHelp" disabled required>
@@ -78,11 +73,6 @@
                     <input type="text" asp-for="Address" class="form-control" placeholder="Address" disabled>
                     <label for="Address" class="form-label" >Address</label>
             </div>
-               @* <div class="mb-3 col-lg-1 form-floating">
-                    <a class=" border border-info rounded p-3 mt-1 ">
-                        <i class="fa fa-map-marker-alt px-1 py-2 mt-3 fa-lg text-info"> </i>
-                    </a>
-                </div>*@
             <div class="mb-3 col-lg-6 form-floating">
                     <input type="text" asp-for="Room" class="form-control" placeholder="Room" disabled>
                     <label for="Room" class="form-label">Room</label>
