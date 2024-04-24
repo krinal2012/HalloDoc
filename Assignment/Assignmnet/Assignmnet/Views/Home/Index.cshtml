@@ -134,6 +134,9 @@
             searchbtn(event);
         });
         function searchbtn(event) {
+            if (event == "search") {
+                $('#CurrentPage').val(1);
+            }
             var formData = $('#myform').serialize();
             $.ajax({
                 type: "POST",
