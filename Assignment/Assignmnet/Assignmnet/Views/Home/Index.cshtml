@@ -1,0 +1,205 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using Assignment.Entity.DataModels;
+@using Assignment.Entity.Models;
+@model PaginatedViewModel<Patient>
+<div>
+    @Html.Partial("../PartialView/_AddPatient.cshtml")
+
+</div>
+<div class="d-flex justify-content-end Header2">
+    <button class="btn btn-sm btn-light m-2 shadow" data-bs-toggle="modal" data-bs-target="#AddPatient">ADD Patient</button>
+</div>
+<div class="container-fluid">
+    <form class="form-floating" id="myform">
+        <div class="m-3 form-floating">
+            <input class="form-control rounded" type="text" placeholder="Search" asp-for="SearchValue" id="searchInput">
+            <label for="floatingInput">Search </label>
+        </div>
+        <input type="hidden" asp-for="CurrentPage" id="CurrentPage" />
+        <input type="hidden" asp-for="PageSize" id="PageSize" />
+    </form>
+    <div class="table-responsive">
+        <table class="table table-responsive my-2">
+            <thead>
+                <tr>
+                    <th scope="col">Patient Id</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Phone number</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Disease</th>
+                    <th scope="col">Doctor</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody id="tablebody">
+                @foreach (var item in Model.List)
+                {
+                    <tr>
+                        <td scope="col">@item.Id</td>
+                        <td scope="col">@item.FirstName</td>
+                        <td scope="col">@item.LastName</td>
+                        <td>@item.Email</td>
+                        <td scope="col">@item.Age</td>
+                        <td scope="col">@item.PhoneNo</td>
+                        <td scope="col">@item.Gender</td>
+                        <td scope="col">@item.Disease</td>
+                        <td scope="col">@item.Specialist</td>
+                        <td>
+                            <button class="btn btn-sm Header2 mx-2 " onclick="editPatient(@item.Id)">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger mx-2 deletebtn" data-id="@item.Id">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="display"></div>
+    <nav aria-label="Page navigation example" class="pagenav">
+        @if (Model.CurrentPage <= Model.TotalPages && Model.TotalPages != 0)
+        {
+            <div class="d-flex justify-content-end align-items-center">
+                <div>
+                    <p class="pagesize m-1">Page Size</p>
+                </div>
+                <div class="me-5 ">
+                    <select class="form-select p-2 me-3" data-allow-clear="true" tabindex="-1" id="pagesizedropdown" asp-for="PageSize">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+                <div class="me-5">
+                    @(
+                        (Model.CurrentPage - 1) * Model.PageSize + 1
+                        ) - @Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount) of @Model.TotalCount
+                </div>  
+                <div>
+                    <ul class="pagination pagination-container d-flex justify-content-center" id="pagination">
+                        @{
+                            int i;
+                            if (Model.CurrentPage > 1)
+                            {
+                                <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage - 1)">&lt;</a></li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                            }
+                            @for (i = 1; i <= Model.TotalPages; i++)
+                            {
+
+                                <li class="page-item"><a data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                            }
+                            if (Model.CurrentPage < Model.TotalPages)
+                            {
+                                <li class="page-item"><a class="page-link" data-page="@(Model.CurrentPage + 1)">&gt;</a></li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </nav>
+
+
+    <script>
+
+        document.getElementById('searchInput').addEventListener('keyup', function (evt) {
+            searchbtn("search");
+        });
+        $(document).on('click', '.page-link', function (event) {
+            var page = $(this).data('page');
+            console.log(page);
+            $('#CurrentPage').val(page);
+            searchbtn(event);
+        });
+        $(document).on('change', '#pagesizedropdown', function (event) {
+            var pagesize = $('#pagesizedropdown').val();
+            console.log(pagesize);
+            $('#PageSize').val(pagesize);
+            searchbtn(event);
+        });
+        function searchbtn(event) {
+            var formData = $('#myform').serialize();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Index", "Home")',
+                data: formData, // Send serialized form data
+                success: function (data) {
+                    var form = $(data).find('#myform').html();
+                    var bodyContent = $(data).find('tbody').html();
+                    var page = $(data).find('.pagenav').html();
+                    $('#tablebody').html(bodyContent);
+                    $('.pagenav').html(page);
+                },
+                error: function (error) {
+                    console.log("Error:", error);
+                }
+            });
+        }
+        function editPatient(id) {
+            console.log(id);
+            $.ajax({
+                url: '@Url.Action("editPatientModal", "Home")',
+                data: { id: id },
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    $('#display').html(response);
+                    $('#EditPatient').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert('Error Fetching Request')
+                },
+            });
+        }
+        $('.deletebtn').click(function (event) {
+            var Id = $(this).data("id");
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-info m-2 shadow-none text-white",
+                    cancelButton: "btn btn-outline-info m-2"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                title: "Are you sure you want to Delete this Patient?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Delete",
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Success");
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("DeletePatient", "Home")',
+                        data: { Id: Id },
+                        success: function (data) {
+                            location.reload();
+
+                        },
+                        error: function (error) {
+                            console.log("Error:", error);
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>

@@ -31,7 +31,7 @@
             </div>
             <div class="btns">
                 <a asp-controller="Scheduling" asp-action="Index" class="btn btn-info text-white">Calender View</a>
-                <button type="button" class="btn btn-info text-white">Shifts For Review</button>
+                <button type="button" asp-controller="Scheduling" asp-action="ReviewShift" class="btn btn-info text-white">Shifts For Review</button>
             </div>
         </div>
     </div>
@@ -45,9 +45,7 @@
                         @if (item.onCallStatus == 1)
                         {
                             <div class="col-md-4 my-2">
-                                <img src="~/favicon.ico" />
-                                @*<img src="/Upload/Physician/@item.Physicianid/@item.Photo" style="height: 50px;">*@
-                                @*<i class="fa fa-user"></i>*@
+                                <img src="/Upload/@item.Photo" style="height: 100px;">
                                 <span> @item.FirstName @item.LastName</span>
                             </div>
                         }
@@ -64,7 +62,14 @@
                         @if (item.onCallStatus == 0)
                         {
                             <div class="col-md-4 my-2">
-                                <img src="/Upload/Physician/@item.Physicianid/@item.Photo" style="height: 50px;">
+                                @if (@item.Photo!=null)
+                                {
+                                    <img src="/Upload/@item.Photo" style="height: 100px;">
+                                }
+                                else
+                                {
+                                    <img src="/Upload/11116016_415.png" style="height: 100px;">
+                                }
                                 @item.FirstName @item.LastName
                             </div>
                         }
