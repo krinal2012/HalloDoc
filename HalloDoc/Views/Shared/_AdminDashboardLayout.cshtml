@@ -27,8 +27,15 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <link href="~/css/patient.css" rel="stylesheet" />
 
-   @* <link href="~/css/doc.css" rel="stylesheet" />*@
-
+    @* <link href="~/css/doc.css" rel="stylesheet" />*@
+    @*Hetanshi, 3:19 PM
+    @{
+    var activePaths = new[] { "/Provider", "/Scheduling"};
+    var activeClass = activePaths.Any(path.EndsWith) ? "activeNav" : "";
+    }
+    <a class="nav-link dropdown px-2 text-dark @activeClass " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Providers
+    </a>*@
 </head>
 <body class="bg-light ">
     <div class="loading-overlay" style="display:none">
@@ -49,7 +56,7 @@
             <div class="position-absolute top-0 end-0 d-flex btn btn-sm align-items-center">
                 <span class="dNone">
                     Welcome <b>@Crredntials.UserName()</b>
-                    </span>
+                </span>
                 <a class="h5 text-info border border-info rounded p-2 m-1 text-decoration-none dNone" onclick="Logout()">
                     Logout
                 </a>
@@ -68,12 +75,12 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        
+
                         <li class="nav-item">
                             <a class="nav-link px-2 text-dark  @(path.StartsWith ("/Admin/") ? "activeNav" : "")" aria-current="page" asp-action="Index" asp-controller="Admin">Dashboard</a>
                         </li>
                         @if (Crredntials.Role() == "Admin")
-                            {
+                        {
                             <li class="nav-item">
                                 <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/ProviderLocation") ? "activeNav" : "")" asp-action="ProviderLocation" asp-controller="AdminTabs">ProviderLocation</a>
                             </li>
@@ -95,8 +102,12 @@
                         }
                         @if (Crredntials.Role() == "Admin")
                         {
+                           
+                                var activePaths = new[] { "/ProviderMenu", "/Scheduling" };
+                                var activeClass = activePaths.Any(path.EndsWith) ? "activeNav" : "";
+                            
                             <li class="nav-item dropdown ">
-                                <a class="nav-link dropdown px-2 text-dark @(path.StartsWith ("/AdminTabs/Providers") ? "activeNav" : "")" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown px-2 text-dark @activeClass " role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Providers
                                 </a>
                                 <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
@@ -199,14 +210,14 @@
         </div>
         <div class="offcanvas-body">
             <ul class="list-group list-group-flush">
-                
-                    @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Dashboard"))
-                    {
+
+                @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Dashboard"))
+                {
                     <li class="list-group-item h6">
                         <a class="nav-link px-2 text-dark  @(path.StartsWith ("/Admin/") ? "activeNav" : "")" aria-current="page" asp-action="Index" asp-controller="Admin">Dashboard</a>
                     </li>
-                    }
-                
+                }
+
                 <li class="list-group-item h6">
                     @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "ProviderLocation"))
                     {
@@ -214,8 +225,8 @@
                         <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/ProviderLocation") ? "activeNav" : "")" asp-action="ProviderLocation" asp-controller="AdminTabs">ProviderLocation</a>
                     </li>
                     }
-              
-              
+
+
                     @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "MyProfile"))
                     {
                         @if (Crredntials.Role() == "Admin")
@@ -231,7 +242,7 @@
                         </li>
                         }
                     }
-               
+
                     @if (Crredntials.Role() == "Admin")
                     {
                     <li class="list-group-item h6">
@@ -269,16 +280,16 @@
                         </li>
                         }
                     }
-               
-              
+
+
                     @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "VendorsInfo"))
                     {
                     <li class="list-group-item h6">
                         <a class="nav-link px-2 text-dark @(path.StartsWith("/AdminTabs/Partners") ? "activeNav" : "")" asp-action="Partners" asp-controller="AdminTabs">Partners</a>
                     </li>
                     }
-               
-               
+
+
                     @if (loginRepository.isAccessGranted((int)Crredntials.RoleID(), "Role"))
                     {
                     <li class="list-group-item h6">
@@ -291,7 +302,7 @@
                         </div>
                     </li>
                     }
-              
+
                     @if (Crredntials.Role() == "Admin")
                     {
                     <li class="list-group-item h6">
@@ -330,7 +341,7 @@
                         </div>
                     </li>
                     }
-                
+
             </ul>
         </div>
     </div>
@@ -380,7 +391,7 @@
                         url: '@Url.Action("Logout", "Login")',
                         cache: false,
                         success: function (response) {
-                            window.location.href = "/AdminHome/Login" ;
+                            window.location.href = "/AdminHome/Login";
                         },
                         error: function () {
 

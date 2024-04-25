@@ -10,7 +10,7 @@
 @{
     ViewData["Title"] = "Dashboard";
 }
-<div class="tabcontent defaulttab py-4 mx-5 ">
+<div class="tabcontent py-4 mx-5 ">
     <h2 class="py-4"><b>Medical History </b></h2>
     <div class="reqform">
         <div class=" d-flex justify-content-end bg-white ">
@@ -97,14 +97,12 @@
                                 </div>
                                 <div>
                                     @{
-                                        if (@item.Fcount != null)
-                                        {
-                                            <a asp-action="UploadDocument" asp-controller="Dashboard" asp-route-id="@item.RequestId" class="btn btn-outline-info btn-sm">
+                                          <a asp-action="UploadDocument" asp-controller="Dashboard" asp-route-id="@item.RequestId" class="btn btn-outline-info btn-sm">
                                                 Documents
                                                 <i class="fa-solid fa-download"></i>
                                             </a>
 
-                                        }
+                                       
                                     }
                                 </div>
                             </div>
@@ -114,8 +112,11 @@
             </div>
         </div>
     </div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination pagination-container d-flex justify-content-center">
+    <nav aria-label="Page navigation example" class="pagenav">
+        <input type="hidden" asp-for="CurrentPage" id="CurrentPage" />
+        <input type="hidden" asp-for="sortColumn" id="SortColumn" />
+        <input type="hidden" asp-for="sortOrder" id="SortOrder" />
+        <ul class="pagination pagination-container d-flex justify-content-center" id="pagination">
             @{
                 int i;
 
@@ -130,7 +131,7 @@
                 @for (i = 1; i <= Model.TotalPages; i++)
                 {
 
-                    <li class="page-item"><a href="#" data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
+                    <li class="page-item"><a data-page="@i" class="@(i == Model.CurrentPage ? "active" : "") page-link">@i</a></li>
                 }
                 if (Model.CurrentPage < Model.TotalPages)
                 {
@@ -145,22 +146,16 @@
     </nav>
 </div>
 <script>
-    var pageglobal = 1;
+    //var pageglobal = 1;
     var sortOrderglobal = false;
     var sortColumnglobal = "createdDate";
-    var reqtypeElements = document.getElementsByClassName('sortbtn');
-    for (var i = 0; i < reqtypeElements.length; i++) {
-        reqtypeElements[i].addEventListener('click', sort);
-    }
-    $(".pagination-container a").on("click", function (e) {
-        e.preventDefault();
-        console.log("hhhh");
-        var page = $(this).data('page');
-        pageglobal = page;
-        console.log(sortOrderglobal);
+    function searchbtn() {
+        var page = $("#CurrentPage").val();
+        var sortColumnglobal = $("#SortColumn").val();
+        var sortOrderglobal = $("#SortOrder").val();
+        console.log(page);
         console.log(sortColumnglobal);
-
-
+        console.log(sortOrderglobal);
         $.ajax({
             url: "@Url.Action("Index", "Dashboard")",
             type: "GET",
@@ -171,24 +166,32 @@
             },
             success: function (data) {
                 var bodyContent = $(data).find('tbody').html();
-                var page = $(data).find('.pagenav').html();
-                $('#pagination').html(page);
+                var pagedata = $(data).find('.pagenav').html();
+               
+                $('.pagenav').html(pagedata);
                 $("#history").html(bodyContent);
-                console.log("AJAX success");
             },
             error: function (error) {
                 console.error("Error:", error);
             }
         });
+    }
+   
+    var reqtypeElements = document.getElementsByClassName('sortbtn');
+    for (var i = 0; i < reqtypeElements.length; i++) {
+        reqtypeElements[i].addEventListener('click', sort);
+    }
+    $(document).on('click', '.page-link', function () {
+        var page = $(this).data('page');
+        $('#CurrentPage').val(page);
+        searchbtn();
     });
     function sort() {
         console.log("etfh");
         var e = $(this).data("value");
         var sortOrder = sortOrderglobal;
         var sortColumn = e;
-        var page = pageglobal;
-
-        debugger;
+       
         if (e == sortColumnglobal) {
             if (sortOrder == true) {
                 sortOrderglobal = false;
@@ -206,29 +209,9 @@
                 sortOrderglobal = true;
             }
         }
-
-        console.log(sortOrderglobal);
-        console.log(sortColumnglobal);
-        $.ajax({
-            type: "GET",
-            url: '@Url.Action("Index", "Dashboard")',
-            data: {
-                page: page,
-                sortColumn: sortColumnglobal,
-                sortOrder: sortOrderglobal,
-            },
-            success: function (data) {
-                console.log(data);
-                var bodyContent = $(data).find('tbody').html();
-                var page = $(data).find('.pagenav').html();
-                $('#pagination').html(page);
-                $("#history").html(bodyContent);
-                console.log("AJAX success");
-            },
-            error: function (error) {
-                console.log("Error:", error);
-            }
-        });
+        $('#SortOrder').val(sortOrderglobal);
+        $('#SortColumn').val(sortColumnglobal);
+        searchbtn();
     }
 </script>
 

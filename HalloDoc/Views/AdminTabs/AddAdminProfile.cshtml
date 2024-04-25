@@ -3,7 +3,7 @@
 *@
 @{
     Layout = "_AdminDashboardLayout";
-    ViewData["Title"] = "View Case";
+    ViewData["Title"] = "Admin Profile";
 }
 @using HalloDoc.Entity.Models.ViewModel;
 @using static HalloDoc.Entity.Models.Constant;
@@ -79,8 +79,6 @@
                         <label class="form-check-label" for="flexCheckDisabled"> @items.Name </label>
                     </div>
             }
-
-
         </div>
      
       <p class="h5 p-1"><b>Mailing & Billing Information</b></p>
@@ -127,8 +125,6 @@
 </div>
 
 <script>
-   
-    // Event listener for the "Back" button
     document.addEventListener('click', function (event) {
         if (event.target.classList.contains('backButton')) {
             history.back();
@@ -137,13 +133,11 @@
 
     $('#mainform').on('submit', function (e) {
         event.preventDefault();
-        
         var clonedForm = $(this).clone();
         if (!$('#mainform')[0].checkValidity()) {
             return;
         }
         let checkboxes = document.querySelectorAll('input[name="RegionIds"]:checked');
-       
         let RegionIdList = [];
         checkboxes.forEach((checkbox) => {
             RegionIdList.push(checkbox.value);

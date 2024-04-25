@@ -119,11 +119,11 @@
         if (btnid == "search") {
             $('#CurrentPage').val(1);
         }
-        var formData = $('#myform').serialize(); // Serialize form data
+        var formData = $('#myform').serialize();
         $.ajax({
             type: "POST",
             url: '@Url.Action("Recordsblock", "AdminTabs")',
-            data: formData, // Send serialized form data
+            data: formData, 
             success: function (data) {
                 var bodyContent = $(data).find('tbody').html();
                 $('#patientbody').html(bodyContent);

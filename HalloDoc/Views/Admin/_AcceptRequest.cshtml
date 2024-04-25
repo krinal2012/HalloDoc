@@ -32,7 +32,6 @@
     function RejectCase() {
         var RequestId = $("#RequestID_ModelAcceptCase").val();
         var Notes = $("#notes").val();
-
         $.ajax({
             type: "POST",
             url: '@Url.Action("RejectCase", "Admin")',

@@ -81,11 +81,14 @@
                             }
                             @if (Crredntials.Role() == "Admin")
                             {
-                                <li>
-                                    <a class="dropdown-item" data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase">
-                                        <i class="bi bi-journals"></i> Assign Case
-                                    </a>
-                                </li>
+                               @if(item.ProviderName !=null)
+                                {
+                                    <li>
+                                        <a class="dropdown-item" data-bs-toggle="modal" onclick="Assigncaseid(@item.RequestId)" data-bs-target=" #assigncase">
+                                            <i class="bi bi-journals"></i> Assign Case
+                                        </a>
+                                    </li>
+                                }
                                 <li>
                                     <a class="dropdown-item" data-bs-toggle="modal" onclick="Canclecaseid('@item.RequestId','@item.PatientName')" data-bs-target=" #Cancelcase">
                                         <i class="bi bi-x-circle">
@@ -269,7 +272,6 @@
 
     $(".pagination-container a").on("click", function (e) {
         e.preventDefault();
-        console.log("hhhh");
         var page = $(this).data('page');
         var pagesize = $('#pagesizedropdown').val();
         pageglobal = page;
@@ -330,9 +332,6 @@
                 sortOrderglobal = true;
             }
         }
-        //localStorage.setItem('sortOrderglobal', sortOrderglobal);
-        //localStorage.setItem('sortColumnglobal', sortColumnglobal);
-
         console.log(sortOrderglobal);
         console.log(sortColumnglobal);
         $.ajax({

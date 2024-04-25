@@ -21,8 +21,7 @@ namespace HalloDoc.Entity.Models.ViewModel
         public string Pass { get; set; }
         [Compare("Pass", ErrorMessage = "Password doesn't match.")]
         public string ConformPass { get; set; }
-        [RegularExpression(@"([0-9]{10})", ErrorMessage = "It must be of 10 numerics")]
-        public string? Mobile { get; set; }
+        public string Mobile { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
         public int State { get; set; }

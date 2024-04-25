@@ -3,13 +3,8 @@ using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.Pqc.Crypto.Lms;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
@@ -344,6 +339,7 @@ namespace HalloDoc.Repository.Repository
                                      Address1 = p.Address1,
                                      Address2 = p.Address2,
                                      City = p.City,
+                                     State = p.RegionId,
                                      ZipCode = p.Zip,
                                      BusinessName = p.BusinessName,
                                      BusinessWebsite = p.BusinessWebsite,
@@ -444,6 +440,7 @@ namespace HalloDoc.Repository.Repository
                 Data.Address1 = AdminProfile.Address1;
                 Data.Address2 = AdminProfile.Address2;
                 Data.City = AdminProfile.City;
+                Data.RegionId = AdminProfile.State;
                 Data.Zip = AdminProfile.ZipCode;
                 Data.Mobile = AdminProfile.Mobile;
                 _context.Physicians.Update(Data);

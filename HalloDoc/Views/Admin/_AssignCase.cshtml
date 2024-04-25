@@ -6,7 +6,6 @@
                 <h5 class="modal-title text-white bg-info" id="staticBackdropLabel"> Assign Request</h5>
                 <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-       
             <form method="post" asp-action="AssignCase" asp-controller="Admin" id="AssignForm" class="form-floating needs-validation" novalidate>
                 <input type="hidden" name="requestid" id="RequestID_ModelAssignCase" />
             <div class="modal-body">
@@ -31,6 +30,7 @@
                     </span>
                 </div>
                 <textarea name="Notes" class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="Description"></textarea>
+            </div>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-outline-info">Submit</button>
@@ -61,5 +61,4 @@
             }
         });
     }
-   
 </script>

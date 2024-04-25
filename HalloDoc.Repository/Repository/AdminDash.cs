@@ -70,6 +70,7 @@ namespace HalloDoc.Repository.Repository
                                && (Region == -1 || rc.RegionId == Region)
                                && (requesttype == -1 || req.RequestTypeId == requesttype)
                                && (userid == -1 || req.PhysicianId == userid)
+                               && (req.IsDeleted == new BitArray(1))
                         orderby req.CreatedDate descending
                         select new AdminList
                         {
@@ -127,6 +128,7 @@ namespace HalloDoc.Repository.Repository
                 CurrentPage = page,
                 TotalPages = totalPages,
                 Count = totalItemCount,
+                PageSize = pagesize
             };
             return viewModel;
         }

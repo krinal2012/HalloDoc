@@ -319,7 +319,7 @@ namespace HalloDoc.Controllers
         }
         public IActionResult SendAgreementModal(int requestid)
         {
-            Entity.DataModels.Request obj = _context.Requests.FirstOrDefault(x => x.RequestId == requestid);
+            Entity.DataModels.RequestClient obj = _context.RequestClients.FirstOrDefault(x => x.RequestId == requestid);
             sendAgreement sendAgreement = new() { RequestId = requestid, PhoneNumber = obj.PhoneNumber, Email = obj.Email };
             return View("_sendAgreement", sendAgreement);
         }

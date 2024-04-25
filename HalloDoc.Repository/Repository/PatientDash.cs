@@ -18,12 +18,12 @@ namespace HalloDoc.Repository.Repository
         }
         public PaginatedViewModel<PatientDashList> PatientList(int id,  int page, int pagesize, string sortColumn, string sortOrder)
         {
-            var list = _context.Requests.Include(x => x.RequestWiseFiles).Where(x => x.UserId == id).Select(x => new PatientDashList
+            var list = _context.Requests.Include(x => x.RequestWiseFiles).Where(x => x.UserId == id && x.IsDeleted== new BitArray(1)).Select(x => new PatientDashList
             {
                 createdDate = x.CreatedDate,
                 Status = (status)x.Status,
                 RequestId = x.RequestId,
-                Fcount = x.RequestWiseFiles.Count()
+                Fcount = x.RequestWiseFiles.Where(r=>r.IsDeleted == new BitArray(1)).Count()
             }).ToList();
             switch (sortColumn)
             {
@@ -61,6 +61,7 @@ namespace HalloDoc.Repository.Repository
             user.City = singleUser.City;
             user.State = (int?)(RegionList?)singleUser.RegionId ?? 0;
             user.Zipcode = singleUser.ZipCode;
+            user.DOB = new DateTime((int)singleUser.IntYear, Convert.ToInt32(singleUser.StrMonth.Trim()), (int)singleUser.IntDate);
             return user;
         }
         public void EditProfile(int id, viewProfile vp)
@@ -90,7 +91,7 @@ namespace HalloDoc.Repository.Repository
         public List<viewDocument> viewDocuments(int requestid)
         {
             var items = _context.RequestWiseFiles.Include(m => m.Request)
-                .Where(x => x.RequestId == requestid).Select(m => new viewDocument
+                .Where(x => x.RequestId == requestid && x.IsDeleted == new BitArray(1)).Select(m => new viewDocument
                 {
                     uploaddate = m.CreatedDate,   
                     FirstName = m.Request.FirstName,

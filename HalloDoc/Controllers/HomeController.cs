@@ -35,7 +35,7 @@ namespace HellodocMVC.Controllers
         {
             if (_Ilogin.SendResetLink(Email))
             {
-                _notyf.Success("Mail Send  Successfully..!");
+                //_notyf.Success("Mail Send  Successfully..!");
             }
             else
             {

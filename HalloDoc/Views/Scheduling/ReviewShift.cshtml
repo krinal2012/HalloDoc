@@ -97,7 +97,6 @@
     {
     <script type="text/javascript">
         $(document).ready(function () {
-            // Event listener for checkbox changes
             $(document).on('change', '.table tbody input[type="checkbox"]', function () {
                 var checkedValues = [];
                 $('.table tbody input[type="checkbox"]:checked').each(function () {
@@ -118,14 +117,13 @@
         $('#deletedbtn').click(function () {
             var approvedValue = $('#deleted').val();
             console.log(approvedValue)
-            // Check if the value is null or empty
             if (approvedValue === null || approvedValue.trim() === '') {
                 Swal.fire({
                     icon: "error",
-                    title: "Not Select Any Shift ...",
-                    text: "Plz Select first At Leat One Shift!"
+                    title: "Not Selected Any Shift ...",
+                    text: "Please Select at least One Shift!"
                 });
-                return; // Exit the function
+                return; 
             }
             Swal.fire({
                 title: "Do you want to Delete Shifts ?",
@@ -138,7 +136,6 @@
                     $('#deletedform').submit();
                 }
                 console.log(result);
-                /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     Swal.fire("Delete!", "", "success");
                 } else if (result.isDenied) {
@@ -149,14 +146,13 @@
         $('#approvedbtn').click(function () {
             var approvedValue = $('#approved').val();
             console.log(approvedValue)
-            // Check if the value is null or empty
             if (approvedValue === null || approvedValue.trim() === '') {
                 Swal.fire({
                     icon: "error",
-                    title: "Not Select Any Shift ...",
-                    text: "Plz Select first At Leat One Shift!"
+                    title: "Not Selected Any Shift ...",
+                    text: "Please Select at least One Shift!"
                 });
-                return; // Exit the function
+                return; 
             }
             Swal.fire({
                 title: "Do you want to Approved Shifts ?",
@@ -169,7 +165,6 @@
                     $('#approvedform').submit();
                 }
                 console.log(result);
-                /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     Swal.fire("Approved!", "", "success");
                 } else if (result.isDenied) {
@@ -188,7 +183,6 @@
                 url: '@Url.Action("RequestedShift", "Scheduling")?regionId=' + region,
                 cache: false,
                 success: function (response) {
-                    console.log(response);
                     var bodyContent = $(response).find('tbody').html();
                     $('#shiftbody').html(bodyContent);
                 },

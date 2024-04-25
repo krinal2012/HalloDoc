@@ -202,7 +202,6 @@
         $('input[name="RegionIds"]:checked').each(function () {
             checkboxes.push(this.value);
         });
-        console.log(admindata);
         $.ajax({
             type: 'POST',
             url: '@Url.Action("AddAdminAccount", "AdminTabs")',

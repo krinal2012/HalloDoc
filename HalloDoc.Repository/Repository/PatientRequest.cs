@@ -5,6 +5,8 @@ using HalloDoc.Repository.Repository.Interface;
 using System.Collections;
 using HalloDoc.Entity.Models;
 using static HalloDoc.Entity.Models.Constant;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace HalloDoc.Repository.Repository
 {
@@ -16,6 +18,21 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
             _emailConfig = emailConfiguration;
+        }
+        public string GenerateSHA256(string input)
+        {
+            var bytes = Encoding.UTF8.GetBytes(input);
+            using (var hashEngine = SHA256.Create())
+            {
+                var hashedBytes = hashEngine.ComputeHash(bytes, 0, bytes.Length);
+                var sb = new StringBuilder();
+                foreach (var b in hashedBytes)
+                {
+                    var hex = b.ToString("x2");
+                    sb.Append(hex);
+                }
+                return sb.ToString();
+            }
         }
         public  void PatientReq(viewPatientReq viewPatientReq)
         {
@@ -31,7 +48,7 @@ namespace HalloDoc.Repository.Repository
                 Guid g = Guid.NewGuid();
                 Aspnetuser.Id = g.ToString();
                 Aspnetuser.UserName = viewPatientReq.FirstName;
-                Aspnetuser.PasswordHash = viewPatientReq.Pass;
+                Aspnetuser.PasswordHash = GenerateSHA256(viewPatientReq.Pass);
                 Aspnetuser.Email = viewPatientReq.Email;
                 Aspnetuser.PhoneNumber = viewPatientReq.Mobile;
                 Aspnetuser.CreatedDate = DateTime.Now;
@@ -66,7 +83,10 @@ namespace HalloDoc.Repository.Repository
             {
                 Request.UserId = isexist.UserId;
             }
-           
+            else
+            {
+                Request.UserId = User.UserId;
+            }
             Request.FirstName = viewPatientReq.FirstName;
             Request.LastName = viewPatientReq.LastName;
             Request.Email = viewPatientReq.Email;

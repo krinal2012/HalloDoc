@@ -17,16 +17,11 @@
 </head>
 ﻿
 <div class="align-self-center w-sm-50">
-    @* <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
-    <strong class="text-info">
-    <i class="fa fa-chevron-left" aria-hidden="true"></i> Back
-    </strong>
-    </a> *@
     <h3 class="py-3">Login To Your Account</h3>
     <strong class="text-danger">@ViewData["error"]</strong>
     <form asp-action="Validate" asp-controller="AdminHome" method="post">
         <div class="form-floating mb-4 email">
-            <input asp-for="Email" type="email" value="Admin@gmail.com" class="form-control shadow-none" id="floatingInput" placeholder="name@example.com">
+            <input asp-for="Email" type="email" value="Admin@gmail.com" class="form-control shadow-none" id="floatingInput" placeholder="name@example.com" required>
             <label class="bg-transparent" for="floatingInput">Email</label>
             <button type="button" class="btn-sm">
                 <i class="fa fa-sm fa-user-circle field-icon"></i>
@@ -34,7 +29,7 @@
             <span class="text-danger"></span>
         </div>
         <div class="form-floating mb-4 password">
-            <input asp-for="PasswordHash" type="password" value="Admin" class="form-control shadow-none eyehide" id="floatingPassword" placeholder="Password">
+            <input asp-for="PasswordHash" type="password" value="Admin" class="form-control shadow-none eyehide" id="floatingPassword" placeholder="Password" required>
             <label for="floatingPassword">Password</label>
             <button type="button" class="btn-sm" onclick="toggle()">
                 <span class="fa fa-xs fa-eye-slash fa-lg field-icon toggle-password"></span>

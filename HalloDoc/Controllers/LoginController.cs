@@ -52,7 +52,7 @@ namespace HellodocMVC.Controllers
             user.Email = Email;
             user.PasswordHash = Password;
             UserInfo u = await _Login.CheckAccessLogin(user);
-            if (user == null)
+            if (u == null)
             {
                 ViewData["Error"] = " Your Username or password is incorrect. ";
                 return View("../Home/Login");

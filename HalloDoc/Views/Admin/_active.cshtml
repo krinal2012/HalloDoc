@@ -1,9 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@using static HalloDoc.Entity.Models.Constant;
+﻿@using static HalloDoc.Entity.Models.Constant;
 @using HalloDoc.Entity.Models.ViewModel;
 @model PaginatedViewModel<AdminList>;
 <div class="table-responsive dNone ">
@@ -112,10 +107,16 @@
                                     <i class="fa fa-shopping-cart"></i> Orders
                                 </a>
                             </li>
-                           
+                            @if (Crredntials.Role() == "Admin")
+                            {
                                 <li><a class="dropdown-item" onclick="isEncounterFinalized(@item.RequestId)"><i class="fa-regular fa-rectangle-list"></i> Encounter</a></li>
+                            }
+                            @if (Crredntials.Role() == "Physician" && item.Status == 4)
+                            {
+                                <li><a class="dropdown-item" data-bs-toggle="modal" onclick="Encounterid(@item.RequestId)" data-bs-target=" #EncounterTOC"><i class="bi bi-card-text"></i> Encounter</a></li>
+                            }
                           
-
+                            
                         </ul>
                     </td>
                 </tr>
@@ -127,7 +128,7 @@
     @foreach (var item in Model.AdminList)
     {
         <div class="accordion-item mobile-table text-secondary">
-            <h2 class="accordion-header" id="flush-heading-@item.RequestId">
+            <div class="accordion-header fs-2" id="flush-heading-@item.RequestId">
                 <div class="h5 p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-@item.RequestId" aria-expanded="false" aria-controls="collapse_@item.RequestId">
                     <div class="row w-100">
                         <div class="col-6 mb-3 h4">
@@ -148,7 +149,7 @@
                         </div>
                     </div>
                 </div>
-            </h2>
+            </div>
             <div id="flush-@item.RequestId" class="accordion-collapse collapse mb-3 border-top" data-bs-parent="#accordionExample">
                 <div class="accordion-body container-fluid">
                     <p> <i class="fa fa-envelope border border-info rounded-pill p-1 me-2"></i> Email : @item.Email</p>
@@ -250,7 +251,6 @@
 
     $(".pagination-container a").on("click", function (e) {
         e.preventDefault();
-        console.log("hhhh");
         var page = $(this).data('page');
         var pagesize = $('#pagesizedropdown').val();
         pageglobal = page;
@@ -279,7 +279,6 @@
     });
 
     function sort() {
-        console.log("etfh");
         var e = $(this).data("value");
         var sortOrder = sortOrderglobal;
         var sortColumn = e;
@@ -310,8 +309,6 @@
                 sortOrderglobal = true;
             }
         }
-        //localStorage.setItem('sortOrderglobal', sortOrderglobal);
-        //localStorage.setItem('sortColumnglobal', sortColumnglobal);
         console.log(sortOrderglobal);
         console.log(sortColumnglobal);
         $.ajax({
