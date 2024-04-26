@@ -132,12 +132,12 @@ namespace HalloDoc.Repository.Repository
         }
         public List<Role> RolePhyscian()
         {
-            var role = _context.Roles.Where(r => r.AccountType == 3).ToList();
+            var role = _context.Roles.Where(r => r.AccountType == 3 && r.IsDeleted==new BitArray(1)).ToList();
             return (role);
         }
         public List<Role> RoleAdmin()
         {
-            var role = _context.Roles.Where(r => r.AccountType == 2).ToList();
+            var role = _context.Roles.Where(r => r.AccountType == 2 && r.IsDeleted == new BitArray(1)).ToList();
             return (role);
         }
         public bool ProfilePassword(string Password, int AdminID)
@@ -716,7 +716,6 @@ namespace HalloDoc.Repository.Repository
         public CreateRole ViewEditRole(int RoleId)
         {
             CreateRole? v = (from p in _context.Roles
-
                              where p.RoleId == RoleId
                              select new CreateRole
                              {
@@ -910,10 +909,10 @@ namespace HalloDoc.Repository.Repository
                      .Where(pp => (string.IsNullOrEmpty(search.FirstName) || pp.FirstName.ToLower().Contains(search.FirstName.ToLower()))
                                && (string.IsNullOrEmpty(search.LastName) || pp.LastName.ToLower().Contains(search.LastName.ToLower()))
                                && (string.IsNullOrEmpty(search.Email) || pp.Email.ToLower().Contains(search.Email.ToLower()))
-                               && (string.IsNullOrEmpty(search.Mobile) || pp.Mobile.Contains(search.Mobile)))
+                               && (string.IsNullOrEmpty(search.Mobile) || pp.Mobile.Contains(search.Mobile))
+                               && pp.IsDeleted == new BitArray(1))
                      .ToList();
             SearchInputs data = new SearchInputs();
-
             int totalItemCount = His.Count();
             int totalPages = (int)Math.Ceiling(totalItemCount / (double)search.PageSize);
             List<User> list1 = His.Skip((search.CurrentPage - 1) * search.PageSize).Take(search.PageSize).ToList();
@@ -932,7 +931,7 @@ namespace HalloDoc.Repository.Repository
                                              join phys in _context.Physicians
                                              on req.PhysicianId equals phys.PhysicianId into physGroup
                                              from p in physGroup.DefaultIfEmpty()
-                                             where req.UserId == UserId
+                                             where req.UserId == UserId && req.IsDeleted==new BitArray(1)
                                              select new PatientDashList
                                              {
                                                  PatientName = rc.FirstName + " " + rc.LastName,

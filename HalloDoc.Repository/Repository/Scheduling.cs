@@ -2,8 +2,10 @@
 using HalloDoc.Entity.DataModels;
 using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository.Interface;
+using iText.Commons.Actions.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 
 namespace HalloDoc.Repository.Repository
@@ -14,6 +16,78 @@ namespace HalloDoc.Repository.Repository
         public Scheduling(HelloDocContext context)
         {
             _context = context;
+        }
+        public DayWiseScheduling Daywise(int regionid, DateTime currentDate)
+        {
+            DayWiseScheduling day = new DayWiseScheduling
+            {
+                date = currentDate,
+                physicians = _context.Physicians.Where(p => p.IsDeleted == new BitArray(new[] { false })).ToList(),
+                shiftdetails = _context.ShiftDetailRegions.Include(u => u.ShiftDetail).ThenInclude(u => u.Shift).Where(u => u.RegionId == regionid && u.IsDeleted == new BitArray(new[] { false })).Select(u => u.ShiftDetail).ToList()
+            };
+            if (regionid == 0)
+            {
+                day.shiftdetails = _context.ShiftDetails.Include(u => u.Shift).Where(u => u.IsDeleted == new BitArray(new[] { false })).ToList();
+            }
+            return day;
+        }
+        public WeekWiseScheduling Weekwise(int regionid, DateTime currentDate)
+        {
+            WeekWiseScheduling week = new()
+            {
+                date = currentDate,
+                physicians = _context.Physicians.Where(p => p.IsDeleted == new BitArray(new[] { false })).ToList(),
+                shiftdetails = _context.ShiftDetailRegions.Include(u => u.ShiftDetail).ThenInclude(u => u.Shift).ThenInclude(u => u.Physician).Where(u => u.IsDeleted == new BitArray(new[] { false })).Where(u => u.RegionId == regionid).Select(u => u.ShiftDetail).ToList()
+            };
+            if (regionid == 0)
+            {
+                week.shiftdetails = _context.ShiftDetails.Include(u => u.Shift).ThenInclude(u => u.Physician).Where(u => u.IsDeleted == new BitArray(new[] { false })).ToList();
+            }
+            return week;
+        }
+        public MonthWiseScheduling Monthwise(int regionid, DateTime currentDate, int phyid)
+        {
+            MonthWiseScheduling month = new()
+            {
+                date = currentDate,
+                shiftdetails = _context.ShiftDetailRegions
+                    .Include(u => u.ShiftDetail)
+                        .ThenInclude(u => u.Shift)
+                            .ThenInclude(u => u.Physician)
+                    .Where(u => u.IsDeleted == new BitArray(new[] { false }) && u.RegionId == regionid)
+                    .Select(u => u.ShiftDetail)
+                    .ToList()
+            };
+            if (regionid == 0)
+            {
+                month.shiftdetails = _context.ShiftDetails
+                    .Include(u => u.Shift)
+                        .ThenInclude(u => u.Physician)
+                    .Where(u => u.IsDeleted == new BitArray(new[] { false }) && u.Shift.Physician.IsDeleted == new BitArray(new[] { false }))
+                    .ToList();
+            }
+            else
+            {
+                month.shiftdetails = _context.ShiftDetailRegions
+                    .Include(u => u.ShiftDetail)
+                        .ThenInclude(u => u.Shift)
+                            .ThenInclude(u => u.Physician)
+                    .Where(u => u.IsDeleted == new BitArray(new[] { false }) && u.RegionId == regionid && u.ShiftDetail.Shift.Physician.IsDeleted == new BitArray(new[] { false }))
+                    .Select(u => u.ShiftDetail)
+                    .ToList();
+            }
+            if (phyid > 0 )
+            {
+                month.shiftdetails = _context.ShiftDetailRegions
+                    .Include(u => u.ShiftDetail)
+                        .ThenInclude(u => u.Shift)
+                            .ThenInclude(u => u.Physician)
+                    .Where(u => u.IsDeleted == new BitArray(new[] { false }) && u.ShiftDetail.Shift.PhysicianId == phyid)
+                    .Select(u => u.ShiftDetail)
+                    .ToList();
+             
+            }
+            return month;
         }
         public void AddShift(SchedulingData model, List<string?>? chk, string adminId)
         {
@@ -155,7 +229,7 @@ namespace HalloDoc.Repository.Repository
 
             }
         }
-        public void ViewShift(int shiftdetailid)
+        public SchedulingData ViewShift(int shiftdetailid)
         {
             SchedulingData modal = new SchedulingData();
             var shiftdetail = _context.ShiftDetails.FirstOrDefault(u => u.ShiftDetailId == shiftdetailid);
@@ -175,7 +249,7 @@ namespace HalloDoc.Repository.Repository
             modal.starttime = shiftdetail.StartTime;
             modal.endtime = shiftdetail.EndTime;
             modal.shiftdetailid = shiftdetailid;
-
+            return modal;
         }
         public void ViewShiftreturn(SchedulingData modal)
         {
@@ -391,3 +465,39 @@ namespace HalloDoc.Repository.Repository
 
     }
 }
+
+
+//public List<Physician> PhysicianAll()
+//{
+//    List<Physician> result = new List<Physician>();
+//    result = _context.Physicians.ToList();
+//    return result;
+//}
+
+
+
+
+
+
+
+
+//public MonthWiseScheduling MonthwisePhysician(DateTime currentDate, int id)
+//{
+//    MonthWiseScheduling month = new()
+//    {
+//        date = currentDate,
+//        shiftdetails = _context.Shiftdetailregions
+//            .Include(u => u.Shiftdetail)
+//                .ThenInclude(u => u.Shift)
+//                    .ThenInclude(u => u.Physician)
+//            .Where(u => u.Isdeleted == new BitArray(new[] { false }) && u.Shiftdetail.Shift.Physicianid == id)
+//            .Select(u => u.Shiftdetail)
+//            .ToList()
+//    };
+//    return month;
+//}
+
+
+
+
+

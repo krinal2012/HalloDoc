@@ -46,10 +46,8 @@ namespace HalloDoc.Entity.Models
             message.To.Add(new MailboxAddress("", "pehek11482@fashlend.com"));
             message.Subject = Subject;
 
-            // Create the multipart/mixed container to hold the message body and attachments
             var multipart = new Multipart("mixed");
 
-            // Create HTML body part
             var bodyPart = new TextPart("html")
             {
                 Text = Body
@@ -62,7 +60,6 @@ namespace HalloDoc.Entity.Models
                 {
                     if (!string.IsNullOrEmpty(attachmentPath) && File.Exists(attachmentPath))
                     {
-                        // Create MimePart for attachment
                         var attachment = new MimePart()
                         {
                             Content = new MimeContent(File.OpenRead(attachmentPath), ContentEncoding.Default),
@@ -70,14 +67,11 @@ namespace HalloDoc.Entity.Models
                             ContentTransferEncoding = ContentEncoding.Base64,
                             FileName = Path.GetFileName(attachmentPath)
                         };
-
-                        // Add attachment to multipart container
                         multipart.Add(attachment);
                     }
                 }
             }
 
-            // Set the message body to the multipart container
             message.Body = multipart;
 
             using (var client = new MailKit.Net.Smtp.SmtpClient())
@@ -102,7 +96,7 @@ namespace HalloDoc.Entity.Models
         public async Task<bool> SendSMS(string receiverPhoneNumber, string message)
         {
             string accountSid = "AC09c996ef33c00e604b6cdc2985e48969";
-            string authToken = "8f40b61e748139a83d6789d896e95104";
+            string authToken = "a2eee755cfb5a2897276d365d65f23aa";
             string twilioPhoneNumber = "+12513698731";
 
             TwilioClient.Init(accountSid, authToken);
