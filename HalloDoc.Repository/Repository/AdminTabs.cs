@@ -22,7 +22,7 @@ namespace HalloDoc.Repository.Repository
             _context = context;
             _emailConfig = emailConfig;
         }
-        public string GenerateSHA256(string input)
+        public static string GenerateSHA256(string input)
         {
             var bytes = Encoding.UTF8.GetBytes(input);
             using (var hashEngine = SHA256.Create())

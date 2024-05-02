@@ -52,6 +52,8 @@ public partial class HelloDocContext : DbContext
 
     public virtual DbSet<PhysicianNotification> PhysicianNotifications { get; set; }
 
+    public virtual DbSet<PhysicianPayrate> PhysicianPayrates { get; set; }
+
     public virtual DbSet<PhysicianRegion> PhysicianRegions { get; set; }
 
     public virtual DbSet<Region> Regions { get; set; }
@@ -85,6 +87,12 @@ public partial class HelloDocContext : DbContext
     public virtual DbSet<ShiftDetailRegion> ShiftDetailRegions { get; set; }
 
     public virtual DbSet<Smslog> Smslogs { get; set; }
+
+    public virtual DbSet<Timesheet> Timesheets { get; set; }
+
+    public virtual DbSet<TimesheetDetail> TimesheetDetails { get; set; }
+
+    public virtual DbSet<TimesheetReciept> TimesheetReciepts { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -283,6 +291,13 @@ public partial class HelloDocContext : DbContext
                 .HasConstraintName("PhysicianNotification_PhysicianId_fkey");
         });
 
+        modelBuilder.Entity<PhysicianPayrate>(entity =>
+        {
+            entity.HasKey(e => e.PhysicianId).HasName("PhysicianPayrate_pkey");
+
+            entity.Property(e => e.PhysicianId).ValueGeneratedNever();
+        });
+
         modelBuilder.Entity<PhysicianRegion>(entity =>
         {
             entity.HasKey(e => e.PhysicianRegionId).HasName("PhysicianRegion_pkey");
@@ -478,6 +493,31 @@ public partial class HelloDocContext : DbContext
             entity.HasOne(d => d.Request).WithMany(p => p.Smslogs).HasConstraintName("SMSLog_RequestId_fkey");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Smslogs).HasConstraintName("SMSLog_RoleId_fkey");
+        });
+
+        modelBuilder.Entity<Timesheet>(entity =>
+        {
+            entity.HasKey(e => e.TimesheetId).HasName("Timesheet_pkey");
+
+            entity.Property(e => e.TimesheetId).ValueGeneratedNever();
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.Timesheets)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Timesheet_PhysicianId_fkey");
+        });
+
+        modelBuilder.Entity<TimesheetDetail>(entity =>
+        {
+            entity.HasKey(e => e.TimesheetDetailsId).HasName("TimesheetDetails_pkey");
+
+            entity.Property(e => e.TimesheetDetailsId).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<TimesheetReciept>(entity =>
+        {
+            entity.HasKey(e => e.TimesheetRecieptId).HasName("TimesheetReciept_pkey");
+
+            entity.Property(e => e.TimesheetRecieptId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<User>(entity =>

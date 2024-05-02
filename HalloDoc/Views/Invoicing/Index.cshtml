@@ -1,0 +1,88 @@
+﻿@{
+    Layout = "_AdminDashboardLayout";
+    ViewData["Title"] = "Invoicing";
+}
+
+
+<div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
+    <div class="d-flex align-self-center">
+        <h3>Timesheets</h3>
+    </div>
+    <div class=" btn d-flex justify-content-end">
+        <button class="btn border border-info text-info shadow-none backButton">
+            <i class="fa fa-angle-left pe-1 text-info"> </i> Back
+        </button>
+    </div>
+</div>
+<div class="bg-white reqform container p-3 ">
+    <form class="d-flex justify-content-between align-items-center">
+        <div class="col-3  form-floating">
+            <select class="form-select" id="daterange">
+                @{
+                    string date = @DateTime.Now.ToString("MM/yyyy");
+                }
+                <option value="01/@date - 14/@date"> 01/@date - 14/@date</option>
+                <option value="15/@date - @DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)/@date"> 15/@date - @DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)/@date</option>
+            </select>
+            <label class="form-label">Search by Timesheet Period </label>
+        </div>
+        @* @if(!Model.isFinalize)
+        {*@
+        <div>
+            <button type="button" class="btn btn-outline-info" onclick="finalizetimesheet()">Finalize Timesheet</button>
+        </div>
+        @*}*@
+    </form>
+    <table class="table mt-3">
+        <tr class="table-secondary">
+            <th>Shift Date</th>
+            <th>Shift</th>
+            <th>Nightshift Weekend</th>
+            <th>Housecall</th>
+            <th>Housecall Nights Weekend</th>
+            <th>Phone Consults</th>
+            <th>Phone Consults Night Weekend</th>
+            <th>Batch Testing</th>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</div>
+<div class="bg-white reqform container p-3 mt-3">
+    <table class="table ">
+        <tr class="table-secondary">
+            <th>Date</th>
+            <th>Item</th>
+            <th>Amount</th>
+            <th>Bill</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</div>
+
+<script>
+
+    function finalizetimesheet() {
+        var dateRange = $("#daterange").val();
+        let dates = [];
+        dates = dateRange.split(" - ");
+        var startDate = dates[0];
+        var endDate = dates[1];
+        console.log(startDate);
+        console.log(endDate);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("FinalizeTime", "Invoicing")',
+            data: { startDate: startDate, endDate: endDate },
+            success: function (response){
+                console.log(response);
+                $('body').html(response);
+            },
+            error: function (error) {
+                console.log('Error sending data', error);
+            }
+        });
+    }
+</script>

@@ -21,6 +21,7 @@ builder.Services.AddScoped<ILogin, Login>();
 builder.Services.AddScoped<IJWTInterface, JWTService>();
 builder.Services.AddScoped<IAdminTabs, AdminTabs>();
 builder.Services.AddScoped<IScheduling, Scheduling>();
+builder.Services.AddScoped<IInvoicing, Invoicing>();
 builder.Services.AddNotyf(config => { config.DurationInSeconds = 3; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
 var app = builder.Build();
 

@@ -161,4 +161,7 @@ public partial class Physician
 
     [InverseProperty("Physician")]
     public virtual ICollection<Smslog> Smslogs { get; set; } = new List<Smslog>();
+
+    [InverseProperty("Physician")]
+    public virtual ICollection<Timesheet> Timesheets { get; set; } = new List<Timesheet>();
 }
