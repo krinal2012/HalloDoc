@@ -499,25 +499,19 @@ public partial class HelloDocContext : DbContext
         {
             entity.HasKey(e => e.TimesheetId).HasName("Timesheet_pkey");
 
-            entity.Property(e => e.TimesheetId).ValueGeneratedNever();
-
-            entity.HasOne(d => d.Physician).WithMany(p => p.Timesheets)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Timesheet_PhysicianId_fkey");
+            entity.HasOne(d => d.Physician).WithMany(p => p.Timesheets).HasConstraintName("Timesheet_PhysicianId_fkey");
         });
 
         modelBuilder.Entity<TimesheetDetail>(entity =>
         {
             entity.HasKey(e => e.TimesheetDetailsId).HasName("TimesheetDetails_pkey");
 
-            entity.Property(e => e.TimesheetDetailsId).ValueGeneratedNever();
+            entity.Property(e => e.TimesheetDetailsId).UseIdentityAlwaysColumn();
         });
 
         modelBuilder.Entity<TimesheetReciept>(entity =>
         {
             entity.HasKey(e => e.TimesheetRecieptId).HasName("TimesheetReciept_pkey");
-
-            entity.Property(e => e.TimesheetRecieptId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<User>(entity =>

@@ -12,7 +12,7 @@ public partial class Timesheet
     [Key]
     public int TimesheetId { get; set; }
 
-    public int PhysicianId { get; set; }
+    public int? PhysicianId { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
     public DateTime? StartDate { get; set; }
@@ -32,5 +32,5 @@ public partial class Timesheet
 
     [ForeignKey("PhysicianId")]
     [InverseProperty("Timesheets")]
-    public virtual Physician Physician { get; set; } = null!;
+    public virtual Physician? Physician { get; set; }
 }

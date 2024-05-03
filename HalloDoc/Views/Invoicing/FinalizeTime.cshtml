@@ -6,7 +6,7 @@
 @using static HalloDoc.Entity.Models.Constant;
 @model TimesheetModel;
 <div class="container">
-    @*<input type="hidden" asp-for="DateRange" value="" />*@
+    
     <div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
         <div class="d-flex align-self-center">
             <h3>Timesheets</h3>
@@ -18,44 +18,46 @@
         </div>
     </div>
     <form>
-    <div class="bg-white reqform container p-3 ">
-        <table class="table mt-3">
-            <tr class="table-secondary">
-                <th> Date</th>
-                <th>On Call Hours</th>
-                <th>Total Hours</th>
-                <th>Weekend/Holidays</th>
-                <th>Number of Housecall</th>
-                <th>Number of Consult</th>
-            </tr>
-           
+        <input type="hidden" asp-for="startDate" value="@Model.startDate" id="startdate" />
+        <input type="hidden" asp-for="endDate" value="@Model.endDate" id="endDate" />
+        <div class="bg-white reqform container p-3 ">
+            <table class="table mt-3">
+                <tr class="table-secondary">
+                    <th> Date</th>
+                    <th>On Call Hours</th>
+                    <th>Total Hours</th>
+                    <th>Weekend/Holidays</th>
+                    <th>Number of Housecall</th>
+                    <th>Number of Consult</th>
+                </tr>
+
                 @for (var i = Model.startDate.Date; i <= Model.endDate.Date; i = i.AddDays(1))
                 {
-                <tr>
-                    <td>@i.ToString("dd/MM/yyyy")</td>
-                    <td class="text-center">
-                        0
-                    </td>
-                    <td>
-                        <input type="text" name="TotalHours" class="form-control">
-                    </td>
-                    <td class="text-center">
-                        <input type="text"  class="form-check-input" type="checkbox" name="IsWeekend">
-                    </td>
-                    <td>
-                        <input type="text" name="NoofHousecall" class="form-control">
-                    </td>
-                    <td>
-                        <input type="text"  name="NoofPhoneConsult" class="form-control">
-                    </td>
+                    <tr>
+                        <td>@i.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">
+                            0
+                        </td>
+                        <td>
+                            <input type="number" name="TotalHours" class="form-control">
+                        </td>
+                        <td class="text-center">
+                            <input class="form-check-input" type="checkbox" name="IsWeekend">
+                        </td>
+                        <td>
+                            <input type="number" name="NoofHousecall" class="form-control">
+                        </td>
+                        <td>
+                            <input type="number" name="NoofPhoneConsult" class="form-control">
+                        </td>
 
-                </tr>
+                    </tr>
                 }
-           
-        </table>
-        <butoon type="button" class="btn btn-info" onclick="submitform()">Submit</butoon>
+
+            </table>
+            <butoon type="button" class="btn btn-info" onclick="submitform()">Submit</butoon>
+        </div>
     </form>
-    </div>
     <button class="btn btn-info mt-2">Add Receipts</button>
     <div class="bg-white reqform container p-3 mt-3" style="display:none;">
         <table class="table ">
@@ -73,14 +75,49 @@
     </div>
 </div>
 <script>
-  
-    function submitform(){
-        let data = document.querySelectorAll('input[name="TotalHours"]')
-        let datalist =[];
-        data.forEach((item)=>{
-            datalist.push(item.value);
+
+    function submitform() {
+
+        let TotalHoursList = [];
+        $('input[name="TotalHours"]').each(function () {
+            TotalHoursList.push($(this).val());
         });
-        console.log(datalist);
-        
+        console.log(TotalHoursList);
+        let IsWeekendList = [];
+        $('input[name="IsWeekend"]').each(function () {
+            IsWeekendList.push($(this).is(':checked'));
+        });
+        console.log(IsWeekendList);
+        let NoofHousecallList = [];
+        $('input[name="NoofHousecall"]').each(function () {
+            NoofHousecallList.push($(this).val());
+        });
+        console.log(NoofHousecallList);
+        let NoofPhoneConsultList = [];
+        $('input[name="NoofPhoneConsult"]').each(function () {
+            NoofPhoneConsultList.push($(this).val());
+        });
+        console.log(NoofPhoneConsultList);
+        var sendInfo = {
+            startDate: $("#startdate").val(),
+            endDate: $("#endDate").val(),
+            TotalHours: TotalHoursList,
+            IsWeekend: IsWeekendList,
+            NoofHousecall: NoofHousecallList,
+            NoofPhoneConsult: NoofPhoneConsultList
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("TimeSheetSave", "Invoicing")',
+            dataType: 'json', // Set the content type as JSON
+            data: sendInfo,
+            success: function (data) {
+                console.log("AJAX success");
+                location.reload();
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
     }
 </script>

@@ -1,5 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using HalloDoc.Entity.DataContext;
+using HalloDoc.Entity.DataModels;
+using HalloDoc.Entity.Models.ViewModel;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.Repository.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +30,13 @@ namespace HalloDoc.Controllers
             var res = _Invoicing.TimeSheetData(sd, ed);
             
             return PartialView("FinalizeTime",res);
+        }
+        [HttpPost]
+        public IActionResult TimeSheetSave(TimesheetModel sendInfo)
+        {
+            var res = _Invoicing.TimeSheetSave(sendInfo);
+            return RedirectToAction("FinalizeTime", new { sendInfo.startDate, sendInfo.endDate });
+
         }
     }
 }

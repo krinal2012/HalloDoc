@@ -11,5 +11,6 @@ namespace HalloDoc.Repository.Repository.Interface
     public interface IInvoicing
     {
         public TimesheetModel TimeSheetData(DateTime startDate, DateTime endDate);
+        public bool TimeSheetSave(TimesheetModel model);
     }
 }

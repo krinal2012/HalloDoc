@@ -1,5 +1,6 @@
 ﻿
 using HalloDoc.Entity.DataModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace HalloDoc.Entity.Models.ViewModel
 {
@@ -10,15 +11,11 @@ namespace HalloDoc.Entity.Models.ViewModel
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
         public List<TimesheetDetail> TimeSheetData { get; set; }
-        public int? OnCallHours { get; set; }
-
-        public int? TotalHours { get; set; }
-
-        public bool? IsWeekend { get; set; }
-
-        public int? NoofHousecall { get; set; }
-
-        public int? NoofPhoneConsult { get; set; }
+        public List<string> OnCallHours { get; set; }
+        public List<string> TotalHours { get; set; }
+        public List<bool> IsWeekend { get; set; }
+        public List<string> NoofHousecall { get; set; }
+        public List<string> NoofPhoneConsult { get; set; }
 
     }
 }
