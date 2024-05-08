@@ -6,7 +6,6 @@
 @using static HalloDoc.Entity.Models.Constant;
 @model TimesheetModel;
 <div class="container">
-    
     <div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
         <div class="d-flex align-self-center">
             <h3>Timesheets</h3>
@@ -23,7 +22,7 @@
         <div class="bg-white reqform container p-3 ">
             <table class="table mt-3">
                 <tr class="table-secondary">
-                    <th> Date</th>
+                    <th>Date</th>
                     <th>On Call Hours</th>
                     <th>Total Hours</th>
                     <th>Weekend/Holidays</th>
@@ -31,35 +30,33 @@
                     <th>Number of Consult</th>
                 </tr>
 
-                @for (var i = Model.startDate.Date; i <= Model.endDate.Date; i = i.AddDays(1))
+                @for (var i = Model.startDate; i <= Model.endDate; i = i.AddDays(1))
                 {
+                    var item = (Model.TimeSheetData != null) ? Model.TimeSheetData.FirstOrDefault(id => id.Date == i) : null;
                     <tr>
                         <td>@i.ToString("dd/MM/yyyy")</td>
-                        <td class="text-center">
-                            0
-                        </td>
+                        <td class="text-center">0</td>
                         <td>
-                            <input type="number" name="TotalHours" class="form-control">
+                            <input type="number" name="TotalHours" class="form-control" value="@(item != null && item.TotalHours !=null ? item.TotalHours : "")">
                         </td>
                         <td class="text-center">
-                            <input class="form-check-input" type="checkbox" name="IsWeekend">
+                            <input class="form-check-input" type="checkbox" name="IsWeekend" @(item != null && item.IsWeekend == true ? "checked" : "")>
                         </td>
                         <td>
-                            <input type="number" name="NoofHousecall" class="form-control">
+                            <input type="number" name="NoofHousecall" class="form-control" value="@(item != null && item.NoofHousecall!=null ? item.NoofHousecall : "")">
                         </td>
                         <td>
-                            <input type="number" name="NoofPhoneConsult" class="form-control">
+                            <input type="number" name="NoofPhoneConsult" class="form-control" value="@(item != null && item.NoofPhoneConsult!=null ? item.NoofPhoneConsult : "")">
                         </td>
-
                     </tr>
                 }
-
             </table>
+
             <butoon type="button" class="btn btn-info" onclick="submitform()">Submit</butoon>
         </div>
     </form>
-    <button class="btn btn-info mt-2">Add Receipts</button>
-    <div class="bg-white reqform container p-3 mt-3" style="display:none;">
+    <button class="btn btn-info mt-2" onclick="toggleTable()">Add Receipts</button>
+    <div class="bg-white reqform container p-3 mt-3" style="display:none;" id="receiptsTable">
         <table class="table ">
             <tr class="table-secondary">
                 <th>Date</th>
@@ -68,6 +65,53 @@
                 <th>Bill</th>
                 <th>Action</th>
             </tr>
+
+            @for (var i = Model.startDate.Date; i <= Model.endDate.Date; i = i.AddDays(1))
+            {
+
+                var item = (Model.TimesheetRecieptData != null) ? Model.TimesheetRecieptData.FirstOrDefault(id => id.Date == i) : null;
+                <tr>
+                    <td>@i.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <input type="text" name="item" class="form-control" value="@(item != null && item.Item !=null ? item.Item : "")">
+                    </td>
+                    <td>
+                        <input type="number" name="Amount" class="form-control" value="@(item != null && item.Amount!=null ? item.Amount : "")">
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-between bg-light border border-secondary rounded">
+                            <button type="button" id="choosenfile" class="col btn text-start text-secondary" onclick="document.getElementById('files').click()">
+                                Select File
+                            </button>
+                            <input id="files" type="file" class="d-none form-control doc_uploder" name="UploadFile">
+                            <button type="submit" class="btn btn-info text-white py-2" value="Upload">
+                                <i class="fa fa-cloud-upload"></i>
+                                <span class="dNone"> Upload </span>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:none;">
+                            <div class=" btn d-flex justify-content-between">
+                                <a class="btn btn-outline-info shadow-none">
+                                    Edit
+                                </a>
+                                <a class="btn btn-outline-info shadow-none">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                        <div class=" btn d-flex justify-content-between" >
+                            <a class="btn btn-outline-info shadow-none" onclick="SaveReciept()">
+                                Save
+                            </a>
+                            <a class="btn btn-outline-info shadow-none">
+                                Cancel
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
         </table>
     </div>
     <div class="d-flex justify-content-end">
@@ -75,9 +119,7 @@
     </div>
 </div>
 <script>
-
     function submitform() {
-
         let TotalHoursList = [];
         $('input[name="TotalHours"]').each(function () {
             TotalHoursList.push($(this).val());
@@ -97,14 +139,26 @@
         $('input[name="NoofPhoneConsult"]').each(function () {
             NoofPhoneConsultList.push($(this).val());
         });
-        console.log(NoofPhoneConsultList);
+        let itemsList = [];
+        $('input[name="item"]').each(function () {
+            itemsList.push($(this).val());
+        });
+        console.log(itemsList);
+        let AmountList = [];
+        $('input[name="Amount"]').each(function () {
+            AmountList.push($(this).val());
+        });
+        console.log(AmountList);
         var sendInfo = {
             startDate: $("#startdate").val(),
             endDate: $("#endDate").val(),
             TotalHours: TotalHoursList,
             IsWeekend: IsWeekendList,
             NoofHousecall: NoofHousecallList,
-            NoofPhoneConsult: NoofPhoneConsultList
+            NoofPhoneConsult: NoofPhoneConsultList,
+            Amount: AmountList,
+            //Bills:,
+            Items: itemsList
         }
         $.ajax({
             type: "POST",
@@ -115,9 +169,36 @@
                 console.log("AJAX success");
                 location.reload();
             },
-            error: function (error) {
-                console.log("Error:", error);
+            error: function (xhr, status, error) {
+                console.error("Error: " + status + " - " + xhr.responseText);
             }
         });
     }
+    function toggleTable() {
+        $('#receiptsTable').toggle();
+    }
+    //function SaveReciept(){
+    //    let modelList = [];
+    //    function collectData() {
+    //        $('.model-input').each(function () {
+    //            let input = $(this);
+    //            modelList.push({
+    //                propertyName: input.val() // Replace 'propertyName' with the actual property name of your model
+    //            });
+    //        });
+    //    }
+    //    $.ajax({
+    //        type: "POST",
+    //        url: '@Url.Action("SaveRecieptSave", "Invoicing")',
+    //        dataType: 'json', // Set the content type as JSON
+    //        data: sendInfo,
+    //        success: function (data) {
+    //            console.log("AJAX success");
+    //            location.reload();
+    //        },
+    //        error: function (xhr, status, error) {
+    //            console.error("Error: " + status + " - " + xhr.responseText);
+    //        }
+    //    });
+    //}
 </script>

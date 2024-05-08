@@ -80,8 +80,8 @@
                 console.log(response);
                 $('body').html(response);
             },
-            error: function (error) {
-                console.log('Error sending data', error);
+            error: function (xhr, status, error) {
+                console.error("Error: " + status + " - " + xhr.responseText);
             }
         });
     }

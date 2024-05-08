@@ -28,15 +28,14 @@ namespace HalloDoc.Controllers
             DateTime sd = DateTime.ParseExact(startDate, "dd/MM/yyyy", provider);
             DateTime ed = DateTime.ParseExact(endDate, "dd/MM/yyyy", provider);
             var res = _Invoicing.TimeSheetData(sd, ed);
-            
-            return PartialView("FinalizeTime",res);
+            return View(res);
         }
+
         [HttpPost]
         public IActionResult TimeSheetSave(TimesheetModel sendInfo)
         {
             var res = _Invoicing.TimeSheetSave(sendInfo);
             return RedirectToAction("FinalizeTime", new { sendInfo.startDate, sendInfo.endDate });
-
         }
     }
 }

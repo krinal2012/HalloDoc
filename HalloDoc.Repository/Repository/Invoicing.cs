@@ -23,8 +23,11 @@ namespace HalloDoc.Repository.Repository
         {
             var result = _context.TimesheetDetails.Where(r => r.Date >= startDate.Date && r.Date <= endDate.Date).
                 ToList();
+            var data = _context.TimesheetReciepts.Where(r => r.Date >= startDate.Date && r.Date <= endDate.Date).
+                ToList();
             TimesheetModel t = new();
             t.TimeSheetData = result;
+            t.TimesheetRecieptData = data;
             t.endDate = endDate;
             t.startDate = startDate;
             return t;
@@ -32,56 +35,147 @@ namespace HalloDoc.Repository.Repository
         public bool TimeSheetSave(TimesheetModel model)
         {
             var count = 0;
-            Timesheet data = new Timesheet();
-            data.StartDate = model.startDate;
-            data.EndDate = model.endDate;
-            data.IsFinalized = false;
-            data.CreatedDate = DateTime.Now;
-            _context.Timesheets.Add(data);
-            _context.SaveChanges();
-            for (var i = model.startDate; i <= model.endDate; i = i.AddDays(1))
+            try
             {
-                TimesheetDetail detail = new TimesheetDetail();
-                detail.Date = default;
-                if (model.TotalHours[count] != null)
+                var timesheet = _context.Timesheets
+                .FirstOrDefault(r => r.StartDate == model.startDate && r.EndDate == model.endDate);
+                if (timesheet == null)
                 {
-                    detail.Date = i;
-                    detail.TotalHours = Convert.ToInt32(model.TotalHours[count]);
+                    return false;
                 }
-                if (model.IsWeekend[count] != false)
+                var timesheetId = timesheet.TimesheetId;
+                for (var i = model.startDate; i <= model.endDate; i = i.AddDays(1))
                 {
-                    detail.Date = i;
-                    detail.IsWeekend = model.IsWeekend[count];
-                }
-                if (model.NoofPhoneConsult[count] != null)
-                {
-                    detail.Date = i;
-                    detail.NoofPhoneConsult = Convert.ToInt32(model.NoofPhoneConsult[count]);
-                }
-                if (model.NoofHousecall[count] != null)
-                {
-                    detail.Date = i;
-                    detail.NoofHousecall = Convert.ToInt32(model.NoofHousecall[count]);
-                }
-                if (detail.Date != default)
-                {
-                    var isExist = _context.TimesheetDetails.Any(x => x.Date == detail.Date);
-                    if (isExist)
+                    var detail = _context.TimesheetDetails.FirstOrDefault(x => x.Date == i && x.TimesheetId == timesheetId);
+                    var reciept = _context.TimesheetReciepts.FirstOrDefault(x => x.Date == i && x.TimesheetDetailsId == detail.TimesheetDetailsId);
+                    if (detail != null)
                     {
-                        detail.ModifiedDate = DateTime.Now;
-                        _context.TimesheetDetails.Update(detail);
-                        _context.SaveChanges();
+                        detail.Date = default;
+                        if (model.TotalHours[count] != null)
+                        {
+                            detail.Date = i;
+                            detail.TotalHours = Convert.ToInt32(model.TotalHours[count]);
+                        }
+                        if (model.IsWeekend[count] != false)
+                        {
+                            detail.Date = i;
+                            detail.IsWeekend = model.IsWeekend[count];
+                        }
+                        if (model.NoofPhoneConsult[count] != null)
+                        {
+                            detail.Date = i;
+                            detail.NoofPhoneConsult = Convert.ToInt32(model.NoofPhoneConsult[count]);
+                        }
+                        if (model.NoofHousecall[count] != null)
+                        {
+                            detail.Date = i;
+                            detail.NoofHousecall = Convert.ToInt32(model.NoofHousecall[count]);
+                        }
+                        if (detail.Date != default)
+                        {
+                            detail.TimesheetId = timesheetId;
+                            detail.ModifiedDate = DateTime.Now;
+                            _context.TimesheetDetails.Update(detail);
+                            _context.SaveChanges();
+                        }
+
                     }
                     else
                     {
-                        detail.CratedDate = DateTime.Now;
-                        _context.TimesheetDetails.Add(detail);
-                        _context.SaveChanges();
+                        detail = new TimesheetDetail();
+                        detail.Date = default;
+                        if (model.TotalHours[count] != null)
+                        {
+                            detail.Date = i;
+                            detail.TotalHours = Convert.ToInt32(model.TotalHours[count]);
+                        }
+                        if (model.IsWeekend[count] != false)
+                        {
+                            detail.Date = i;
+                            detail.IsWeekend = model.IsWeekend[count];
+                        }
+                        if (model.NoofPhoneConsult[count] != null)
+                        {
+                            detail.Date = i;
+                            detail.NoofPhoneConsult = Convert.ToInt32(model.NoofPhoneConsult[count]);
+                        }
+                        if (model.NoofHousecall[count] != null)
+                        {
+                            detail.Date = i;
+                            detail.NoofHousecall = Convert.ToInt32(model.NoofHousecall[count]);
+                        }
+                        if (detail.Date != default)
+                        {
+                            detail.TimesheetId = timesheetId;
+                            detail.CratedDate = DateTime.Now;
+                            _context.TimesheetDetails.Add(detail);
+                            _context.SaveChanges();
+                        }
+
                     }
+                    if(reciept != null)
+                    {
+                        reciept.Date = default;
+                        if (model.Items[count] != null)
+                        {
+                            reciept.Date = i;
+                            reciept.Item =model.Items[count];
+                        }
+                        //if (model.Bills[count] != null)
+                        //{
+                        //    reciept.Date = i;
+                        //    reciept.BillName = model.Bills[count];
+                        //}
+                        if (model.Amount[count] != null)
+                        {
+                            reciept.Date = i;
+                            reciept.Amount = Convert.ToInt32(model.Amount[count]);
+                        }
+                        if (reciept.Date != default)
+                        {
+                            reciept.TimesheetDetailsId = detail.TimesheetDetailsId;
+                            reciept.ModifiedDate = DateTime.Now;
+                            _context.TimesheetReciepts.Update(reciept);
+                            _context.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        reciept = new TimesheetReciept();
+                        reciept.Date = default;
+                        if (model.Items[count] != null)
+                        {
+                            reciept.Date = i;
+                            reciept.Item = model.Items[count];
+                        }
+                        //if (model.Bills[count] != null)
+                        //{
+                        //    reciept.Date = i;
+                        //    reciept.BillName = model.Bills[count];
+                        //}
+                        if (model.Amount[count] != null)
+                        {
+                            reciept.Date = i;
+                            reciept.Amount = Convert.ToInt32(model.Amount[count]);
+                        }
+                        if (reciept.Date != default)
+                        {
+                            reciept.TimesheetDetailsId = detail.TimesheetDetailsId;
+                            reciept.CreatedDate = DateTime.Now;
+                            _context.TimesheetReciepts.Add(reciept);
+                            _context.SaveChanges();
+                        }
+                    }
+                    count++;
                 }
-                count++;
+                return true;
             }
-            return true;
+            catch (Exception ex)
+            {
+                return false;
+
+            }
+
         }
 
     }
