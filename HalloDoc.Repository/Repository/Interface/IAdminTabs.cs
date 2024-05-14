@@ -45,5 +45,7 @@ namespace HalloDoc.Repository.Repository.Interface
         public SearchInputs RecordsEmailLog(SearchInputs search);
         public SearchInputs RecordsSMSLog(SearchInputs search);
         public bool ContactAdmin(int ProviderId, string Notes);
+        public PhysicianPayrate PayrateData(int physicianId);
+        public bool PayratePost(PhysicianPayrate data);
     }
 }

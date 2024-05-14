@@ -12,7 +12,7 @@ public partial class TimesheetReciept
     [Key]
     public int TimesheetRecieptId { get; set; }
 
-    public int TimesheetDetailsId { get; set; }
+    public int? TimesheetDetailsId { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
     public DateTime Date { get; set; }
@@ -30,4 +30,10 @@ public partial class TimesheetReciept
 
     [Column(TypeName = "timestamp without time zone")]
     public DateTime? ModifiedDate { get; set; }
+
+    public int? TimesheetId { get; set; }
+
+    [ForeignKey("TimesheetId")]
+    [InverseProperty("TimesheetReciepts")]
+    public virtual Timesheet? Timesheet { get; set; }
 }

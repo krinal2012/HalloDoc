@@ -31,4 +31,8 @@ public partial class TimesheetDetail
 
     [Column(TypeName = "timestamp without time zone")]
     public DateTime? ModifiedDate { get; set; }
+
+    [ForeignKey("TimesheetId")]
+    [InverseProperty("TimesheetDetails")]
+    public virtual Timesheet Timesheet { get; set; } = null!;
 }

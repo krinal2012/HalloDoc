@@ -33,4 +33,10 @@ public partial class Timesheet
     [ForeignKey("PhysicianId")]
     [InverseProperty("Timesheets")]
     public virtual Physician? Physician { get; set; }
+
+    [InverseProperty("Timesheet")]
+    public virtual ICollection<TimesheetDetail> TimesheetDetails { get; set; } = new List<TimesheetDetail>();
+
+    [InverseProperty("Timesheet")]
+    public virtual ICollection<TimesheetReciept> TimesheetReciepts { get; set; } = new List<TimesheetReciept>();
 }

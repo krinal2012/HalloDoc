@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Upload\" />
+    <Folder Include="wwwroot\Upload\Reciept\" />
   </ItemGroup>
 
   <ItemGroup>

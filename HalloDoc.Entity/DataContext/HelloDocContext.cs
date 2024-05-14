@@ -507,11 +507,17 @@ public partial class HelloDocContext : DbContext
             entity.HasKey(e => e.TimesheetDetailsId).HasName("TimesheetDetails_pkey");
 
             entity.Property(e => e.TimesheetDetailsId).UseIdentityAlwaysColumn();
+
+            entity.HasOne(d => d.Timesheet).WithMany(p => p.TimesheetDetails)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("TimesheetDetails_TimesheetId_fkey");
         });
 
         modelBuilder.Entity<TimesheetReciept>(entity =>
         {
             entity.HasKey(e => e.TimesheetRecieptId).HasName("TimesheetReciept_pkey");
+
+            entity.HasOne(d => d.Timesheet).WithMany(p => p.TimesheetReciepts).HasConstraintName("TimesheetReciept_TimesheetId_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>

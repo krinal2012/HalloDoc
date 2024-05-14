@@ -220,7 +220,25 @@ namespace HalloDoc.Controllers
             }
             return RedirectToAction("EditProvider", new { PhysicianId = physiciansData.Physicianid });
         }
-        public IActionResult EditBilling(PhysiciansData physiciansData)
+        public IActionResult ProvidersPayrate(int PhysicianId)
+        {
+            var payratedata = _IAdminTabs.PayrateData(PhysicianId);
+            return View(payratedata);
+        }
+        public IActionResult PayratePost(PhysicianPayrate data)
+        {
+            bool res = _IAdminTabs.PayratePost(data);
+            if (res)
+            {
+                _notyf.Success("Data Added Successfully");
+            }
+            else
+            {
+                _notyf.Error("Error occured");
+            }
+            return View("ProvidersPayrate",data);
+        }
+            public IActionResult EditBilling(PhysiciansData physiciansData)
         {
             if (_IAdminTabs.EditBilling(physiciansData))
             {

@@ -2,7 +2,8 @@
     Layout = "_AdminDashboardLayout";
     ViewData["Title"] = "Invoicing";
 }
-
+@using HalloDoc.Entity.Models.ViewModel;
+@model TimesheetModel;
 
 <div class="d-flex justify-content-between align-items-center container pb-1 mt-4">
     <div class="d-flex align-self-center">
@@ -16,15 +17,32 @@
 </div>
 <div class="bg-white reqform container p-3 ">
     <form class="d-flex justify-content-between align-items-center">
-        <div class="col-3  form-floating">
-            <select class="form-select" id="daterange">
-                @{
-                    string date = @DateTime.Now.ToString("MM/yyyy");
-                }
-                <option value="01/@date - 14/@date"> 01/@date - 14/@date</option>
-                <option value="15/@date - @DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)/@date"> 15/@date - @DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)/@date</option>
-            </select>
-            <label class="form-label">Search by Timesheet Period </label>
+        <div class=" d-flex me-2">
+            @if (Crredntials.Role() == "Admin")
+            {
+                <div class="form-floating me-2">
+                    <select class="form-select" name="PhysicianId" required id="PhysicianId">
+
+                        @foreach (var physician in ViewBag.Physician)
+                        {
+                            <option value="@physician.PhysicianId">@physician.FirstName @physician.LastName</option>
+                        }
+                    </select>
+                    <label class="form-label">Search by Physician </label>
+                </div>
+            }
+            <div class="form-floating">
+                <select class="form-select" id="daterange" onchange="timesheetshow()">
+                    @{
+                        string date = @DateTime.Now.ToString("MM/yyyy");
+                    }
+                    
+                    <option value="01/@date - 14/@date"> 01/@date - 14/@date</option>
+                    <option value="15/@date - @DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)/@date"> 15/@date - @DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)/@date</option>
+                </select>
+                <label class="form-label">Search by Timesheet </label>
+            </div>
+
         </div>
         @* @if(!Model.isFinalize)
         {*@
@@ -33,50 +51,50 @@
         </div>
         @*}*@
     </form>
-    <table class="table mt-3">
-        <tr class="table-secondary">
-            <th>Shift Date</th>
-            <th>Shift</th>
-            <th>Nightshift Weekend</th>
-            <th>Housecall</th>
-            <th>Housecall Nights Weekend</th>
-            <th>Phone Consults</th>
-            <th>Phone Consults Night Weekend</th>
-            <th>Batch Testing</th>
-        </tr>
-        <tr>
-        </tr>
-    </table>
 </div>
-<div class="bg-white reqform container p-3 mt-3">
-    <table class="table ">
-        <tr class="table-secondary">
-            <th>Date</th>
-            <th>Item</th>
-            <th>Amount</th>
-            <th>Bill</th>
-            <th>Action</th>
-        </tr>
-        <tr>
-        </tr>
-    </table>
-</div>
+<div id="timesheet"></div>
 
 <script>
+    $(document).ready(function () {
+        timesheetshow();
+    });
+    function timesheetshow() {
+        var dateRange = $("#daterange").val();
+        let dates = [];
+        dates = dateRange.split(" - ");
+        var startDate = dates[0];
+        var endDate = dates[1];
+        var physicianid = $("#PhysicianId").val();
+        console.log(startDate);
+        console.log(endDate);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("TimeSheetData", "Invoicing")',
+            data: { startDate: startDate, endDate: endDate, PhysicianId: physicianid },
+            success: function (response) {
+                console.log(response);
+                $("#timesheet").html(response);
 
+            },
+            error: function (xhr, status, error) {
+                console.error("Error: " + status + " - " + xhr.responseText);
+            }
+        });
+    }
     function finalizetimesheet() {
         var dateRange = $("#daterange").val();
         let dates = [];
         dates = dateRange.split(" - ");
         var startDate = dates[0];
         var endDate = dates[1];
+        var physicianid = $("#PhysicianId").val();
         console.log(startDate);
         console.log(endDate);
         $.ajax({
             type: 'POST',
             url: '@Url.Action("FinalizeTime", "Invoicing")',
-            data: { startDate: startDate, endDate: endDate },
-            success: function (response){
+            data: { startDate: startDate, endDate: endDate, PhysicianId: physicianid },
+            success: function (response) {
                 console.log(response);
                 $('body').html(response);
             },

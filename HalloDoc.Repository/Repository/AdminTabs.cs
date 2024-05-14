@@ -9,6 +9,7 @@ using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using static HalloDoc.Entity.Models.Constant;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Region = HalloDoc.Entity.DataModels.Region;
 
 namespace HalloDoc.Repository.Repository
@@ -1182,6 +1183,52 @@ namespace HalloDoc.Repository.Repository
             catch (Exception)
             {
                 return false;
+            }
+        }
+        public PhysicianPayrate PayrateData(int physicianId)
+        {
+            var data = _context.PhysicianPayrates.Where(x=>x.PhysicianId==physicianId).FirstOrDefault();
+           if(data == null)
+            {
+                data = new PhysicianPayrate();
+                data.PhysicianId = physicianId;
+            }
+            return data;
+        }
+        public bool PayratePost(PhysicianPayrate data)
+        {
+            var res = _context.PhysicianPayrates.Where(req => req.PhysicianId == data.PhysicianId).FirstOrDefault();
+            if (res != null)
+            {
+                res.Shift = data.Shift;
+                res.NightShiftWeekend = data.NightShiftWeekend;
+                res.HouseCalls = data.HouseCalls;
+                res.HouseCallsNightWeekend= data.HouseCallsNightWeekend;
+                res.PhoneConsults = data.PhoneConsults;
+                res.PhoneConsultsNightWeekend = data.PhoneConsultsNightWeekend;
+                res.BatchTesting = data.BatchTesting;
+                res.ModifiedDate = DateTime.Now;
+                _context.PhysicianPayrates.Update(res);
+                _context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                res = new PhysicianPayrate
+                {
+                    PhysicianId = data.PhysicianId,
+                    Shift = data.Shift,
+                    NightShiftWeekend = data.NightShiftWeekend,
+                    HouseCalls = data.HouseCalls,
+                    HouseCallsNightWeekend = data.HouseCallsNightWeekend,
+                    PhoneConsults = data.PhoneConsults,
+                    PhoneConsultsNightWeekend = data.PhoneConsultsNightWeekend,
+                    BatchTesting = data.BatchTesting,
+                    CreatedDate = DateTime.Now,
+                };
+                _context.PhysicianPayrates.Add(res);
+                _context.SaveChanges();
+                return true;
             }
         }
 
