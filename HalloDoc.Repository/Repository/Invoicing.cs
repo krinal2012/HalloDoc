@@ -22,7 +22,7 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
         }
-        public TimesheetModel TimeSheetData(DateTime startDate, DateTime endDate,int PhysicianId)
+        public TimesheetModel TimeSheetData(DateTime? startDate, DateTime? endDate,int PhysicianId)
         {
             var timesheetId = _context.Timesheets.Where(r => r.StartDate == startDate && r.EndDate == endDate && r.PhysicianId==PhysicianId).Select(r=> r.TimesheetId).FirstOrDefault();
             var result = _context.TimesheetDetails.Where(r => r.TimesheetId==timesheetId).ToList();
@@ -33,10 +33,11 @@ namespace HalloDoc.Repository.Repository
             {
                 TimeSheetData = result,
                 TimesheetRecieptData = data,
-                endDate = endDate,
-                startDate = startDate,
+                endDate = (DateTime)endDate,
+                startDate = (DateTime)startDate,
                 TimesheetId = timesheetId,
-                PhysicianPayrateData=payratedata
+                PhysicianPayrateData=payratedata,
+                PhysicianId = PhysicianId,
             };
             return t;
         }
@@ -211,6 +212,7 @@ namespace HalloDoc.Repository.Repository
                     }
                     if (reciept.Date != default)
                     {
+                        reciept.TimesheetId = model.TimesheetId;
                         reciept.CreatedDate = DateTime.Now;
                         _context.TimesheetReciepts.Add(reciept);
                         _context.SaveChanges();

@@ -24,6 +24,7 @@
             int noOfPhoneConsultSum = 0;
 
         }
+        <input type="hidden" asp-for="PhysicianId" value="@Model.PhysicianId" id="PhysicianId" />
         <input type="hidden" asp-for="startDate" value="@Model.startDate" id="startdate" />
         <input type="hidden" asp-for="endDate" value="@Model.endDate" id="endDate" />
         <input type="hidden" asp-for="TimesheetId" value="@Model.TimesheetId" id="timesheetId" />
@@ -185,7 +186,8 @@
     {
         <div class=" text-end my-2">
             <form asp-action="ApproveTimesheet" asp-controller="Invoicing" class="d-flex justify-content-end">
-                <input asp-for="TimesheetId" type="hidden" />
+                <input type="hidden" asp-for="PhysicianId" value="@Model.PhysicianId" id="PhysicianId" />
+                <input type="hidden" asp-for="TimesheetId" value="@Model.TimesheetId" id="timesheetId" />
                 <div class="bg-white me-2 form-floating ">
                     <input name="Bonus" class="form-control rounded numeric-input" type="text" placeholder=Suchtext>
                     <label for="floatingInput">Bonus Amount</label>
@@ -201,7 +203,7 @@
     else
     {
         <div class="d-flex justify-content-end my-2">
-            <a class="btn btn-info " asp-action="FinalizeTimesheet" asp-controller="Invoicing" asp-route-timesheetId="@Model.TimesheetId">Finalize</a>
+            <a class="btn btn-info " asp-action="FinalizeTimesheet" asp-controller="Invoicing" asp-route-timesheetId="@Model.TimesheetId" asp-route-physicianId="@Model.PhysicianId">Finalize</a>
         </div>
     }
 </div>
@@ -241,6 +243,8 @@
         var sendInfo = {
             startDate: $("#startdate").val(),
             endDate: $("#endDate").val(),
+            TimesheetId: $("#TimesheetId").val(),
+            PhysicianId: $("#PhysicianId").val(),
             TotalHours: TotalHoursList,
             IsWeekend: IsWeekendList,
             NoofHousecall: NoofHousecallList,
@@ -266,10 +270,10 @@
 
     $('.save').click(function () {
         var row = $(this).closest('tr');
-        var clonedForm = row.closest('form');
-        if (!clonedForm.checkValidity()) {
-            return;
-        }
+        //var clonedForm = row.closest('form');
+        //if (!clonedForm.checkValidity()) {
+        //    return;
+        //}
 
         var dateString = row.find('.Date').text();
         var sd = moment(dateString, "DD/MM/YYYY").startOf('day').format('YYYY-MM-DD HH:mm:ss');
@@ -284,6 +288,8 @@
         var fileInput = row.find('input[name="Bill"]')[0];
         var file = fileInput.files[0];
         formData.append('Bill', file);
+        formData.append('PhysicianId',$("#PhysicianId").val());
+        formData.append('TimesheetId', $("#timesheetId").val());
 
         $.ajax({
             url: '@Url.Action("RecieptSave", "Invoicing")',

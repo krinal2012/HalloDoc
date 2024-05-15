@@ -8,8 +8,9 @@ namespace HalloDoc.Entity.Models.ViewModel
     public class TimesheetModel
     {
         public string DateRange { get; set; }
-        public bool isFinalize { get; set; } = false;
+        public bool isFinalized { get; set; } = false;
         public int TimesheetId { get; set; }
+        public int PhysicianId { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
         public IFormFile Bill { get; set; }

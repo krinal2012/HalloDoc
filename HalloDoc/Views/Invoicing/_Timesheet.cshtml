@@ -1,6 +1,7 @@
 ﻿﻿@{
     Layout = null;
 }
+<input type="hidden" name="TimesheetId" id="TimesheetId" value="@(Model != null ? Model.TimesheetId : 0)" />
 <div class="bg-white reqform container p-3 ">
     @if (Model.TimeSheetData.Count > 0)
     {

@@ -17,6 +17,7 @@
 </div>
 <div class="bg-white reqform container p-3 ">
     <form class="d-flex justify-content-between align-items-center">
+        
         <div class=" d-flex me-2">
             @if (Crredntials.Role() == "Admin")
             {
@@ -44,12 +45,12 @@
             </div>
 
         </div>
-        @* @if(!Model.isFinalize)
+       @*  @if(!Model.isFinalized)
         {*@
         <div>
             <button type="button" class="btn btn-outline-info" onclick="finalizetimesheet()">Finalize Timesheet</button>
         </div>
-        @*}*@
+       @* }*@
     </form>
 </div>
 <div id="timesheet"></div>
@@ -87,13 +88,14 @@
         dates = dateRange.split(" - ");
         var startDate = dates[0];
         var endDate = dates[1];
+        var TimesheetId = $("#TimesheetId").val();
         var physicianid = $("#PhysicianId").val();
         console.log(startDate);
         console.log(endDate);
         $.ajax({
             type: 'POST',
             url: '@Url.Action("FinalizeTime", "Invoicing")',
-            data: { startDate: startDate, endDate: endDate, PhysicianId: physicianid },
+            data: { TimesheetId: TimesheetId, PhysicianId: physicianid },
             success: function (response) {
                 console.log(response);
                 $('body').html(response);
